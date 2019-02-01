@@ -16,6 +16,9 @@
     <Filter Include="src\Scenes">
       <UniqueIdentifier>{a6d28fd1-c07a-4930-a9c8-12b781e1f850}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Framework">
+      <UniqueIdentifier>{dfef5ba3-f369-4a55-9b1c-bf2509579e63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -28,6 +31,9 @@
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainMenu.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tutorial.cpp">
       <Filter>src\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\MainMenu.h">
       <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tutorial.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputDevices.h">
+      <Filter>src\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
