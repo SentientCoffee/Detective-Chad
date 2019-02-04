@@ -27,11 +27,12 @@ bool Tutorial::init() {
 void Tutorial::onExit() { Scene::onExit(); }
 
 void Tutorial::initSprites() {
-	background = Sprite::create();
+	background = Sprite::create("temp/background.jpg");
+	background->setScale(2.0f);
 	background->setPosition(windowSize.x / 2, windowSize.y / 2);
 
-	player = Sprite::create("temp/square.png");
-	player->setScale(0.2);
+	player = Sprite::create("characters/chad/chad-right.png");
+	//player->setScale(0.2);
 	player->setPosition(windowSize.x / 2, windowSize.y / 2);
 
 	this->addChild(background, -100);
@@ -76,17 +77,39 @@ void Tutorial::initMouseListener() {
 
 void Tutorial::update(float dt) {
 
-	if (keyboard.keyDown[(int)EventKeyboard::KeyCode::KEY_W]) {
+	typedef EventKeyboard::KeyCode KB;
+
+	if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_D]) {
+		Vec2 newPosition(1, 1);
+		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed));
+	}
+	else if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_A]) {
+		Vec2 newPosition(-1, 1);
+		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed));
+	}
+	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_D]) {
+		Vec2 newPosition(1, -1);
+		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed));
+	}
+	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_A]) {
+		Vec2 newPosition(-1, -1);
+		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed));
+	}
+	else if (keyboard.keyDown[(int)KB::KEY_W]) {
+		player->setTexture("characters/chad/chad-up.png");
 		player->setPositionY(player->getPositionY() + playerSpeed);
 	}
-	else if (keyboard.keyDown[(int)EventKeyboard::KeyCode::KEY_S]) {
+	else if (keyboard.keyDown[(int)KB::KEY_S]) {
+		player->setTexture("characters/chad/chad-down.png");
 		player->setPositionY(player->getPositionY() - playerSpeed);
 	}
 
-	if (keyboard.keyDown[(int)EventKeyboard::KeyCode::KEY_D]) {
+	else if (keyboard.keyDown[(int)KB::KEY_D]) {
+		player->setTexture("characters/chad/chad-right.png");
 		player->setPositionX(player->getPositionX() + playerSpeed);
 	}
-	else if (keyboard.keyDown[(int)EventKeyboard::KeyCode::KEY_A]) {
+	else if (keyboard.keyDown[(int)KB::KEY_A]) {
+		player->setTexture("characters/chad/chad-left.png");
 		player->setPositionX(player->getPositionX() - playerSpeed);
 	}
 
