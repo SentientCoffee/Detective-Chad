@@ -5,6 +5,8 @@
 
 #include "cocos2d.h"
 #include "InputDevices.h"
+#include "Character.h"
+#include "Primitives.h"
 
 class Tutorial : public cocos2d::Scene {
 public:
@@ -16,6 +18,8 @@ public:
 	virtual void onExit();
 
 	void initSprites();
+	void initHitboxes();
+
 	void initPauseMenu();
 
 	void initKeyboardListener();
@@ -33,7 +37,7 @@ private:
 	cocos2d::Size visibleSize;
 
 	cocos2d::Sprite* background;
-	cocos2d::Sprite* player;
+	g3nts::Character* player;
 
 	cocos2d::Menu* pauseMenu;
 
@@ -42,7 +46,11 @@ private:
 	cocos2d::EventListenerMouse* mouseListener;
 	cocos2d::EventListenerKeyboard* keyboardListener;
 
-	float playerSpeed = 5.0f;
+	
+
+	//cocos2d::Camera* camera;
+
+	float playerSpeed = 400.0f;
 };
 
 #endif
