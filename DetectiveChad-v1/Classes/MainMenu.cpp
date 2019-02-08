@@ -23,7 +23,8 @@ bool MainMenu::init() {
 void MainMenu::onExit() { Scene::onExit(); }
 
 void MainMenu::initMenu() {
-	background = Sprite::create();
+	background = Sprite::create("temp/chadpaper1.png");
+	background->setScale(0.8333333f);
 	background->setPosition(windowSize.x / 2, windowSize.y / 2);
 
 	title = Label::createWithTTF("Detective Chad", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);

@@ -26,6 +26,7 @@ public:
 	void initMouseListener();
 
 	void update(float dt);
+	void togglePause();
 
 	CREATE_FUNC(Tutorial);
 
@@ -40,6 +41,7 @@ private:
 	g3nts::Character* player;
 
 	cocos2d::Menu* pauseMenu;
+	cocos2d::Vec2 playerPosition;
 
 	Input::Mouse mouse;
 	Input::Keyboard keyboard;
@@ -49,6 +51,7 @@ private:
 	
 
 	//cocos2d::Camera* camera;
+	bool gamePaused = false;
 
 	float playerSpeed = 400.0f;
 };

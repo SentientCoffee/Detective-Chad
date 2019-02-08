@@ -1,4 +1,5 @@
 #include "Tutorial.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
@@ -49,9 +50,30 @@ void Tutorial::initHitboxes() {
 }
 
 void Tutorial::initPauseMenu() {
-	Label* title = Label::createWithTTF("PAUSED", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	
-	title->enableShadow();
+	Label* titleLabel = Label::createWithTTF("PAUSED", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	titleLabel->enableShadow();
+
+	Label* resumeLabel = Label::createWithTTF("Resume", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* exitLabel = Label::createWithTTF("Back to Main Menu", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	resumeLabel->enableShadow();
+	exitLabel->enableShadow();
+
+	MenuItemLabel* titleItem = MenuItemLabel::create(titleLabel);
+	MenuItemLabel* resumeButton = MenuItemLabel::create(resumeLabel, [&](Ref* sender) {
+		togglePause();
+	});
+	MenuItemLabel* exitButton = MenuItemLabel::create(exitLabel, [&](Ref* sender) {
+		Scene* mainMenuScene = MainMenu::createScene();
+		director->replaceScene(TransitionFade::create(2, mainMenuScene));
+	});
+
+	titleItem->setPosition(0, windowSize.y * 0.35);
+	resumeButton->setPosition(0, -(windowSize.y * 0.25));
+	exitButton->setPosition(0, -(windowSize.y * 0.35));
+
+	pauseMenu = Menu::create(titleItem, resumeButton, exitButton, NULL);
+	this->addChild(pauseMenu, 100);
+	pauseMenu->setVisible(false);
 }
 
 void Tutorial::initKeyboardListener() {
@@ -64,9 +86,9 @@ void Tutorial::initKeyboardListener() {
 	keyboardListener->onKeyReleased = [&](EventKeyboard::KeyCode key, Event* kEvent) {
 		keyboard.keyDown[(int)key] = false;
 
-		/*if (key == EventKeyboard::KeyCode::KEY_ESCAPE) {
+		if (key == EventKeyboard::KeyCode::KEY_ESCAPE) {
 			togglePause();
-		}*/
+		}
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
@@ -87,7 +109,7 @@ void Tutorial::initMouseListener() {
 void Tutorial::update(float dt) {
 	typedef EventKeyboard::KeyCode KB;
 
-	//this->getDefaultCamera()->setPosition(player->getPosition());
+	this->getDefaultCamera()->setPosition(player->getPosition());
 
 	if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_D]) {
 		cocos2d::Vec2 newPosition(1, 1);
@@ -126,4 +148,24 @@ void Tutorial::update(float dt) {
 		player->setPosition(player->getPosition().x - playerSpeed * dt, player->getPosition().y);
 	}
 
+}
+
+void Tutorial::togglePause() {
+	gamePaused = !gamePaused;
+	pauseMenu->setPosition(player->getPosition());
+
+	if (gamePaused) {
+		playerPosition = player->getPosition();
+		player->getSprite()->setVisible(false);
+
+		this->unscheduleUpdate();
+		pauseMenu->setVisible(true);
+	}
+	else {
+		pauseMenu->setVisible(false);
+		this->scheduleUpdate();
+
+		player->setPosition(playerPosition);
+		player->getSprite()->setVisible(true);
+	}
 }
