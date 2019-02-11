@@ -16,16 +16,13 @@ bool Tutorial::init() {
 	visibleSize = director->getVisibleSize();
 
 	initSprites();
-	initHitboxes();
+	initWalls();
 	initPauseMenu();
+	
 	initMouseListener();
 	initKeyboardListener();
 
-	//camera = Camera::createOrthographic(windowSize.x, windowSize.y, 1, 1000);
-	//camera->lookAt(Vec3(player->getPosition().x, player->getPosition().y, 0), Vec3::UNIT_Z);
-	//
-	//this->addChild(camera, 1000);
-	//this->getDefaultCamera()->setVisible(false);
+	showHitboxes();
 
 	this->scheduleUpdate();
 
@@ -35,18 +32,41 @@ bool Tutorial::init() {
 void Tutorial::onExit() { Scene::onExit(); }
 
 void Tutorial::initSprites() {
-	background = Sprite::create("temp/background-map.png");
-	//background->setScale(2.0f);
-	background->setPosition(windowSize.x / 2, windowSize.y / 2);
+	background = Sprite::create("temp/background-map2.png");
+	background->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	background->setPosition(0, 0);
+	background->setScale(levelScale);
 
-	player = new g3nts::Character(cocos2d::Vec2(windowSize.x / 2, windowSize.y / 2), "characters/chad/chad-right.png");
+	playerPosition = Vec2(1080, 760) * levelScale;
+	player = new g3nts::Character(playerPosition, "characters/chad/chad-left.png");
+	this->getDefaultCamera()->setPosition(player->getPosition());
+
+	testLabel = Label::createWithTTF("COLLISION!", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	testLabel->enableOutline(Color4B(Color4F(1, 0, 0, 1)), 5);
+	this->addChild(testLabel, -10);
+	testLabel->setVisible(false);
 
 	this->addChild(background, -100);
-	this->addChild(player->getSprite());
+	player->addToScene(this);
 }
 
-void Tutorial::initHitboxes() {
+void Tutorial::initWalls() {
+	upperHouseWall   = g3nts::PrimitiveRect(	Vec2(32  , 865) * levelScale, Vec2(1228, 870) * levelScale	);
+	lowerHouseWall   = g3nts::PrimitiveRect(	Vec2(32  , 30 ) * levelScale, Vec2(1228, 35)  * levelScale	);
+	leftHouseWall    = g3nts::PrimitiveRect(	Vec2(32  , 30 ) * levelScale, Vec2(37  , 870) * levelScale	);
+	rightHouseWall_1 = g3nts::PrimitiveRect(	Vec2(1223, 30 ) * levelScale, Vec2(1228, 427) * levelScale	);
+	rightHouseWall_2 = g3nts::PrimitiveRect(	Vec2(1223, 605) * levelScale, Vec2(1228, 870) * levelScale	);
 
+	walls.push_back(upperHouseWall);
+	walls.push_back(lowerHouseWall);
+	walls.push_back(leftHouseWall);
+	walls.push_back(rightHouseWall_1);
+	walls.push_back(rightHouseWall_2);
+
+	for (g3nts::PrimitiveRect wall : walls) {
+		this->addChild(wall.getNode(), -10);
+		wall.getNode()->setVisible(false);
+	}
 }
 
 void Tutorial::initPauseMenu() {
@@ -106,53 +126,87 @@ void Tutorial::initMouseListener() {
 
 }
 
+void Tutorial::showHitboxes() {
+	player->getHitbox().getNode()->setVisible(true);
+	for(g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
+}
+
 void Tutorial::update(float dt) {
 	typedef EventKeyboard::KeyCode KB;
-
+	
+	// CAMERA MOVEMENT (Camera follows the player)
 	this->getDefaultCamera()->setPosition(player->getPosition());
 
+	// PLAYER MOVEMENT
+	cocos2d::Vec2 newPosition(0, 0);
+	// Up and right (W + D)
 	if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_D]) {
-		cocos2d::Vec2 newPosition(1, 1);
+		newPosition = Vec2(1, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up-right.png");
-		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
+		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
+	// Up and left (W + A)
 	else if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_A]) {
-		cocos2d::Vec2 newPosition(-1, 1);
+		newPosition = Vec2(-1, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up-left.png");
-		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
+		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
+	// Down and right (S + D)
 	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_D]) {
-		cocos2d::Vec2 newPosition(1, -1);
+		newPosition = Vec2(1, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down-right.png");
-		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
+		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
+	// Down and left (S + A)
 	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_A]) {
-		cocos2d::Vec2 newPosition(-1, -1);
+		newPosition = Vec2(-1, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down-left.png");
-		player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
+		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
+	// Up (W)
 	else if (keyboard.keyDown[(int)KB::KEY_W]) {
+		newPosition = Vec2(0, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up.png");
-		player->setPosition(player->getPosition().x, player->getPosition().y + playerSpeed * dt);
+		//player->setPosition(player->getPosition().x, player->getPosition().y + playerSpeed * dt);
 	}
+	// Down (S)
 	else if (keyboard.keyDown[(int)KB::KEY_S]) {
+		newPosition = Vec2(0, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down.png");
-		player->setPosition(player->getPosition().x, player->getPosition().y - playerSpeed * dt);
+		//player->setPosition(player->getPosition().x, player->getPosition().y - playerSpeed * dt);
 	}
+	// Left (A)
 	else if (keyboard.keyDown[(int)KB::KEY_D]) {
+		newPosition = Vec2(1, 0);
 		player->getSprite()->setTexture("characters/chad/chad-right.png");
-		player->setPosition(player->getPosition().x + playerSpeed * dt, player->getPosition().y);
+		//player->setPosition(player->getPosition().x + playerSpeed * dt, player->getPosition().y);
 	}
+	// Right (D)
 	else if (keyboard.keyDown[(int)KB::KEY_A]) {
+		newPosition = Vec2(-1, 0);
 		player->getSprite()->setTexture("characters/chad/chad-left.png");
-		player->setPosition(player->getPosition().x - playerSpeed * dt, player->getPosition().y);
+		//player->setPosition(player->getPosition().x - playerSpeed * dt, player->getPosition().y);
 	}
+
+	testLabel->setVisible(false);
+	
+	for (g3nts::PrimitiveRect wall : walls) {
+		if (g3nts::isColliding(player->getHitbox(), wall)) {
+			testLabel->setPosition(player->getPosition() - Vec2(200, 200));
+			testLabel->setVisible(true);
+			//player->setPosition();
+			newPosition = Vec2(0, 0);
+		}
+	}
+	
+	player->getHitbox().setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
+	//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 
 }
 
 void Tutorial::togglePause() {
 	gamePaused = !gamePaused;
-	pauseMenu->setPosition(player->getPosition());
+	pauseMenu->setPosition(this->getDefaultCamera()->getPosition());
 
 	if (gamePaused) {
 		playerPosition = player->getPosition();

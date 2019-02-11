@@ -12,12 +12,14 @@ namespace g3nts {
 	class Character {
 	public:
 		Character();
-		Character(cocos2d::Vec2 position, string spritePath);
+		Character(cocos2d::Vec2& position, string spritePath);
 		~Character();
 
 		cocos2d::Sprite* getSprite() const;
 		cocos2d::Vec2 getPosition() const;
 		PrimitiveRect getHitbox() const;
+
+		void addToScene(cocos2d::Scene* scene);
 
 		void setPosition(cocos2d::Vec2& position);
 		void setPosition(const float x, const float y);
