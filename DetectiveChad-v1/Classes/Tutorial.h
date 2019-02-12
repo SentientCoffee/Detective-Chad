@@ -4,8 +4,9 @@
 #define __TUTORIAL_SCENE_H__
 
 #include "cocos2d.h"
-#include "InputDevices.h"
 #include "Character.h"
+#include "Collision.h"
+#include "InputDevices.h"
 #include "Primitives.h"
 
 class Tutorial : public cocos2d::Scene {
@@ -18,14 +19,17 @@ public:
 	virtual void onExit();
 
 	void initSprites();
-	void initHitboxes();
+	void initWalls();
 
 	void initPauseMenu();
 
 	void initKeyboardListener();
 	void initMouseListener();
 
+	void showHitboxes();
+
 	void update(float dt);
+	void togglePause();
 
 	CREATE_FUNC(Tutorial);
 
@@ -39,18 +43,28 @@ private:
 	cocos2d::Sprite* background;
 	g3nts::Character* player;
 
+	g3nts::PrimitiveRect upperHouseWall;
+	g3nts::PrimitiveRect lowerHouseWall;
+	g3nts::PrimitiveRect leftHouseWall;
+	g3nts::PrimitiveRect rightHouseWall_1;
+	g3nts::PrimitiveRect rightHouseWall_2;
+	
+
+	std::vector<g3nts::PrimitiveRect> walls;
+
 	cocos2d::Menu* pauseMenu;
+	cocos2d::Vec2 playerPosition;
 
 	Input::Mouse mouse;
 	Input::Keyboard keyboard;
 	cocos2d::EventListenerMouse* mouseListener;
 	cocos2d::EventListenerKeyboard* keyboardListener;
 
-	
+	cocos2d::Label* testLabel;
 
-	//cocos2d::Camera* camera;
-
+	bool gamePaused = false;
 	float playerSpeed = 400.0f;
+	float levelScale = 1.25f;
 };
 
 #endif
