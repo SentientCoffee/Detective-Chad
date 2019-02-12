@@ -3,7 +3,7 @@
 USING_NS_CC;
 
 g3nts::Character::Character() {}
-g3nts::Character::Character(cocos2d::Vec2& position, string spritePath) : _position(position), _sprite(Sprite::create(spritePath)) {
+g3nts::Character::Character(Vec2& position, string spritePath) : _position(position), _sprite(Sprite::create(spritePath)) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 
@@ -15,20 +15,20 @@ g3nts::Character::Character(cocos2d::Vec2& position, string spritePath) : _posit
 	);
 }
 
-g3nts::Character::~Character() { _sprite = nullptr; /*_hitbox = nullptr;*/ }
+g3nts::Character::~Character() { _sprite = nullptr; }
 
-cocos2d::Sprite* g3nts::Character::getSprite() const { return _sprite; }
-cocos2d::Vec2 g3nts::Character::getPosition() const  { return _position; }
+Sprite* g3nts::Character::getSprite() const { return _sprite; }
+Vec2 g3nts::Character::getPosition() const  { return _position; }
 g3nts::PrimitiveRect g3nts::Character::getHitbox() const { return _hitbox; }
 
-void g3nts::Character::setPosition(cocos2d::Vec2& position){
+void g3nts::Character::setPosition(Vec2& position){
 	_position = position;
 	_sprite->setPosition(position);
 	_hitbox.setPosition(position);
 }
 void g3nts::Character::setPosition(const float x, const float y) { setPosition(Vec2(x, y)); }
 
-void g3nts::Character::addToScene(cocos2d::Scene* scene) {
+void g3nts::Character::addToScene(Scene* scene) {
 	scene->addChild(_sprite);
 	scene->addChild(_hitbox.getNode());
 	_hitbox.getNode()->setVisible(false);

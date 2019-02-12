@@ -32,36 +32,69 @@ bool Tutorial::init() {
 void Tutorial::onExit() { Scene::onExit(); }
 
 void Tutorial::initSprites() {
-	background = Sprite::create("temp/background-map2.png");
-	background->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	background->setPosition(0, 0);
-	background->setScale(levelScale);
+	floorplan = Sprite::create("backgrounds/apartment-floorplan.png");
+	floorplan->setScale(levelScale);
+	floorplan->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	floorplan->setPosition(Vec2(-800, -1050) * levelScale);
+	
+	aptWalls = Sprite::create("backgrounds/apartment-walls.png");
+	aptWalls->setScale(levelScale);
+	aptWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	aptWalls->setPosition(Vec2(-800, -1050) * levelScale);
 
 	playerPosition = Vec2(1080, 760) * levelScale;
 	player = new g3nts::Character(playerPosition, "characters/chad/chad-left.png");
 	this->getDefaultCamera()->setPosition(player->getPosition());
 
-	testLabel = Label::createWithTTF("COLLISION!", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	/*testLabel = Label::createWithTTF("COLLISION!", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	testLabel->enableOutline(Color4B(Color4F(1, 0, 0, 1)), 5);
 	this->addChild(testLabel, -10);
-	testLabel->setVisible(false);
+	testLabel->setVisible(false);*/
 
-	this->addChild(background, -100);
+	this->addChild(floorplan, -10);
+	this->addChild(aptWalls, 10);
 	player->addToScene(this);
 }
 
 void Tutorial::initWalls() {
-	upperHouseWall   = g3nts::PrimitiveRect(	Vec2(32  , 865) * levelScale, Vec2(1228, 870) * levelScale	);
-	lowerHouseWall   = g3nts::PrimitiveRect(	Vec2(32  , 30 ) * levelScale, Vec2(1228, 35)  * levelScale	);
-	leftHouseWall    = g3nts::PrimitiveRect(	Vec2(32  , 30 ) * levelScale, Vec2(37  , 870) * levelScale	);
-	rightHouseWall_1 = g3nts::PrimitiveRect(	Vec2(1223, 30 ) * levelScale, Vec2(1228, 427) * levelScale	);
-	rightHouseWall_2 = g3nts::PrimitiveRect(	Vec2(1223, 605) * levelScale, Vec2(1228, 870) * levelScale	);
+	//Level boundaries
+	upperBoundary = g3nts::PrimitiveRect(Vec2(-180, 1300) * levelScale, Vec2(2000, 1300) * levelScale);
+	lowerBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(2000, -300) * levelScale);
+	leftBoundary  = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(-180, 1300) * levelScale);
+	rightBoundary = g3nts::PrimitiveRect(Vec2(2000, -300) * levelScale, Vec2(2000, 1300) * levelScale);
 
-	walls.push_back(upperHouseWall);
-	walls.push_back(lowerHouseWall);
-	walls.push_back(leftHouseWall);
-	walls.push_back(rightHouseWall_1);
-	walls.push_back(rightHouseWall_2);
+	// Outer walls
+	upperHouseWall   = g3nts::PrimitiveRect(	Vec2( 0  , 900) * levelScale, Vec2(1600, 900) * levelScale	);
+	lowerHouseWall   = g3nts::PrimitiveRect(	Vec2( 0  ,  0 ) * levelScale, Vec2(1600,  0 ) * levelScale	);
+	leftHouseWall    = g3nts::PrimitiveRect(	Vec2( 0  ,  2 ) * levelScale, Vec2( 0  , 900) * levelScale	);
+	rightHouseWall_1 = g3nts::PrimitiveRect(	Vec2(1600,  0 ) * levelScale, Vec2(1600, 400) * levelScale	);
+	rightHouseWall_2 = g3nts::PrimitiveRect(	Vec2(1600, 600) * levelScale, Vec2(1600, 900) * levelScale	);
+
+	// Inner horizontal walls
+	bathroomDoorway_1   = g3nts::PrimitiveRect(	Vec2( 0  , 600) * levelScale, Vec2(100 , 600) * levelScale	);
+	bathroomDoorway_2   = g3nts::PrimitiveRect(	Vec2(300 , 600) * levelScale, Vec2(400 , 600) * levelScale	);
+	bedroomDoorway_1    = g3nts::PrimitiveRect(	Vec2(400 , 600) * levelScale, Vec2(1000, 600) * levelScale	);
+	bedroomDoorway_2    = g3nts::PrimitiveRect(	Vec2(1200, 600) * levelScale, Vec2(1600, 600) * levelScale	);
+	livingRoomDoorway_1 = g3nts::PrimitiveRect(	Vec2( 0  , 350) * levelScale, Vec2(150 , 350) * levelScale	);
+	livingRoomDoorway_2 = g3nts::PrimitiveRect(	Vec2(350 , 350) * levelScale, Vec2(1400, 350) * levelScale	);
+	
+	// Inner vertical walls
+	verticalBathroomWall	 = g3nts::PrimitiveRect(	Vec2(400 , 600) * levelScale, Vec2(400 , 900) * levelScale	);
+	vecticalLivingRoomWall_1 = g3nts::PrimitiveRect(	Vec2(1200, 250) * levelScale, Vec2(1200, 600) * levelScale	);
+	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(	Vec2(1200,  0 ) * levelScale, Vec2(1200, 50 ) * levelScale	);
+
+	// Add all the walls to the walls vector
+	walls.push_back(upperBoundary); walls.push_back(lowerBoundary);
+	walls.push_back(leftBoundary);  walls.push_back(rightBoundary);
+
+	walls.push_back(upperHouseWall); walls.push_back(lowerHouseWall);
+	walls.push_back(leftHouseWall); walls.push_back(rightHouseWall_1); walls.push_back(rightHouseWall_2);
+
+	walls.push_back(bathroomDoorway_1); walls.push_back(bathroomDoorway_2);
+	walls.push_back(bedroomDoorway_1); walls.push_back(bedroomDoorway_2);
+	walls.push_back(livingRoomDoorway_1); walls.push_back(livingRoomDoorway_2);
+	
+	walls.push_back(verticalBathroomWall); walls.push_back(vecticalLivingRoomWall_1); walls.push_back(vecticalLivingRoomWall_2);
 
 	for (g3nts::PrimitiveRect wall : walls) {
 		this->addChild(wall.getNode(), -10);
@@ -182,11 +215,11 @@ void Tutorial::update(float dt) {
 
 	player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	
-	testLabel->setVisible(false);
+	//testLabel->setVisible(false);
 	for (g3nts::PrimitiveRect wall : walls) {
 		if (g3nts::isColliding(player->getHitbox(), wall)) {
-			testLabel->setPosition(player->getPosition() - Vec2(200, 200));
-			testLabel->setVisible(true);
+			//testLabel->setPosition(player->getPosition() - Vec2(200, 200));
+			//testLabel->setVisible(true);
 			player->setPosition(player->getPosition() - (newPosition.getNormalized() * playerSpeed * dt));
 		}
 	}
