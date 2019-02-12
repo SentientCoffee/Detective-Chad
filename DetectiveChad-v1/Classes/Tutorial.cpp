@@ -143,64 +143,54 @@ void Tutorial::update(float dt) {
 	if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_D]) {
 		newPosition = Vec2(1, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up-right.png");
-		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
 	// Up and left (W + A)
 	else if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_A]) {
 		newPosition = Vec2(-1, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up-left.png");
-		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
 	// Down and right (S + D)
 	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_D]) {
 		newPosition = Vec2(1, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down-right.png");
-		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
 	// Down and left (S + A)
 	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_A]) {
 		newPosition = Vec2(-1, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down-left.png");
-		//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	}
 	// Up (W)
 	else if (keyboard.keyDown[(int)KB::KEY_W]) {
 		newPosition = Vec2(0, 1);
 		player->getSprite()->setTexture("characters/chad/chad-up.png");
-		//player->setPosition(player->getPosition().x, player->getPosition().y + playerSpeed * dt);
 	}
 	// Down (S)
 	else if (keyboard.keyDown[(int)KB::KEY_S]) {
 		newPosition = Vec2(0, -1);
 		player->getSprite()->setTexture("characters/chad/chad-down.png");
-		//player->setPosition(player->getPosition().x, player->getPosition().y - playerSpeed * dt);
 	}
 	// Left (A)
 	else if (keyboard.keyDown[(int)KB::KEY_D]) {
 		newPosition = Vec2(1, 0);
 		player->getSprite()->setTexture("characters/chad/chad-right.png");
-		//player->setPosition(player->getPosition().x + playerSpeed * dt, player->getPosition().y);
 	}
 	// Right (D)
 	else if (keyboard.keyDown[(int)KB::KEY_A]) {
 		newPosition = Vec2(-1, 0);
 		player->getSprite()->setTexture("characters/chad/chad-left.png");
-		//player->setPosition(player->getPosition().x - playerSpeed * dt, player->getPosition().y);
 	}
 
-	testLabel->setVisible(false);
+	player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 	
+	testLabel->setVisible(false);
 	for (g3nts::PrimitiveRect wall : walls) {
 		if (g3nts::isColliding(player->getHitbox(), wall)) {
 			testLabel->setPosition(player->getPosition() - Vec2(200, 200));
 			testLabel->setVisible(true);
-			//player->setPosition();
-			newPosition = Vec2(0, 0);
+			player->setPosition(player->getPosition() - (newPosition.getNormalized() * playerSpeed * dt));
 		}
 	}
 	
-	player->getHitbox().setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
-	//player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
 
 }
 
