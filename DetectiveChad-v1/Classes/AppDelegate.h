@@ -48,7 +48,7 @@ public:
     virtual bool applicationDidFinishLaunching();
 
     /**
-    @brief  Called when the application moves to the background
+    @brief  Called when the application moves to the floorplan
     @param  the pointer of the application
     */
     virtual void applicationDidEnterBackground();
