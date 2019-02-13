@@ -25,19 +25,35 @@ bool g3nts::Item::operator==(const Item& item) { return _id == item._id; }
 bool g3nts::Item::operator!=(const Item& item) { return _id != item._id; }
 
 Sprite* g3nts::Item::getSprite() const { return _sprite; }
-Vec2 g3nts::Item::getPosition() const  { return _position; }
 g3nts::PrimitiveRect g3nts::Item::getHitbox() const { return _hitbox; }
 
-void g3nts::Item::addToScene(Scene* scene) {
-	scene->addChild(_sprite);
-	scene->addChild(_hitbox.getNode());
+Vec2 g3nts::Item::getAcceleration() const { return _acceleration; }
+Vec2 g3nts::Item::getVelocity() const { return _velocity; }
+Vec2 g3nts::Item::getPosition() const { return _position; }
+
+void g3nts::Item::addForce(cocos2d::Vec2& force) { _acceleration = force; }
+void g3nts::Item::setVelocity(cocos2d::Vec2& velocity) { _velocity = velocity; }
+void g3nts::Item::setPosition(Vec2& position) { _position = position; }
+
+void g3nts::Item::addToScene(Scene* scene, const int zIndex) {
+	scene->addChild(_sprite, zIndex);
+	scene->addChild(_hitbox.getNode(), zIndex);
 	_hitbox.getNode()->setVisible(false);
 }
 
-void g3nts::Item::setPosition(Vec2& position) {
-	_position = position;
-	_sprite->setPosition(position);
-	_hitbox.setPosition(position);
-}
+void g3nts::Item::update(const float dt) {
+	if (_acceleration.getLengthSq() > _maxAccel * _maxAccel) {
+		_acceleration = _acceleration.getNormalized() * _maxAccel;
+	}
 
-void g3nts::Item::setPosition(const float x, const float y) { setPosition(Vec2(x, y)); }
+	_velocity += _acceleration * dt;
+	if (_velocity.getLengthSq() > _maxVelocity * _maxVelocity) {
+		_velocity = _velocity.getNormalized() * _maxVelocity;
+	}
+
+	_position += _velocity * dt;
+	_sprite->setPosition(_position);
+	_hitbox.setPosition(_position);
+	
+	_acceleration = Vec2(0, 0);
+}

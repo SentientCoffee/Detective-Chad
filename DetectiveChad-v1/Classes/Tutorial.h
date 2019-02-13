@@ -7,6 +7,7 @@
 #include "Character.h"
 #include "Collision.h"
 #include "InputDevices.h"
+#include "Item.h"
 #include "Primitives.h"
 
 class Tutorial : public cocos2d::Scene {
@@ -19,6 +20,7 @@ public:
 	virtual void onExit();
 
 	void initSprites();
+	void initItems();
 	void initWalls();
 
 	void initPauseMenu();
@@ -40,11 +42,16 @@ private:
 	cocos2d::Vec2 windowSize, origin;      // Window size and origin (point (0, 0))
 	cocos2d::Size visibleSize;             // Visible size of the window
 
-	cocos2d::Sprite* floorplan;           // Background sprite
-	cocos2d::Sprite* aptWalls;                // Sprite for just the walls
+	cocos2d::Sprite* floorplan;            // Background sprite
+	cocos2d::Sprite* aptWalls;             // Sprite for just the walls
 	g3nts::Character* player;              // Player character (object controlled by user)
 
-	// ALL THE WALLS IN THE TUTORIAL LEVEL
+	g3nts::Item* shirt_1;
+	g3nts::Item* shirt_2;
+
+	std::vector<g3nts::Item*> items;
+
+	// ALL THE BOUNDARIES IN THE TUTORIAL LEVEL
 	g3nts::PrimitiveRect upperBoundary;
 	g3nts::PrimitiveRect lowerBoundary;
 	g3nts::PrimitiveRect rightBoundary;
@@ -74,15 +81,16 @@ private:
 
 	// Mouse and keyboard structs, along with their listeners
 	Input::Mouse mouse;
-	Input::Keyboard keyboard;
 	cocos2d::EventListenerMouse* mouseListener;
+	Input::Keyboard keyboard;
 	cocos2d::EventListenerKeyboard* keyboardListener;
 
 	//cocos2d::Label* testLabel;   // To test for collisions
 
 	bool gamePaused = false;       // Bool to check if the game is paused
+	float levelScale = 1.35f;      // Scaling of the level
+	
 	float playerSpeed = 400.0f;    // Player's normal speed
-	float levelScale = 1.25f;      // Scaling of the level
 };
 
 #endif
