@@ -1,8 +1,8 @@
 #include "Collision.h"
 
 bool g3nts::isColliding(g3nts::PrimitiveRect& r1, g3nts::PrimitiveRect& r2) {
-	if (r1.getStartPosition().x >= r2.getEndPosition().x || r1.getEndPosition().x <= r2.getStartPosition().x) return false;
-	if (r1.getStartPosition().y >= r2.getEndPosition().y || r1.getEndPosition().y <= r2.getStartPosition().y) return false;
+	if (r1.getStartPosition().x > r2.getEndPosition().x || r1.getEndPosition().x < r2.getStartPosition().x) return false;
+	if (r1.getStartPosition().y > r2.getEndPosition().y || r1.getEndPosition().y < r2.getStartPosition().y) return false;
 
 	return true;
 }

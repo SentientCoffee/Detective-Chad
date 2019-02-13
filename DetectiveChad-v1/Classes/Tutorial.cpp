@@ -16,6 +16,7 @@ bool Tutorial::init() {
 	visibleSize = director->getVisibleSize();
 
 	initSprites();
+	initItems();
 	initWalls();
 	initPauseMenu();
 	
@@ -46,6 +47,8 @@ void Tutorial::initSprites() {
 	player = new g3nts::Character(playerPosition, "characters/chad/chad-left.png");
 	this->getDefaultCamera()->setPosition(player->getPosition());
 
+	
+
 	/*testLabel = Label::createWithTTF("COLLISION!", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	testLabel->enableOutline(Color4B(Color4F(1, 0, 0, 1)), 5);
 	this->addChild(testLabel, -10);
@@ -53,7 +56,21 @@ void Tutorial::initSprites() {
 
 	this->addChild(floorplan, -10);
 	this->addChild(aptWalls, 10);
+
 	player->addToScene(this);
+}
+
+void Tutorial::initItems() {
+	shirt_1 = new g3nts::Item(Vec2(900, 720) * levelScale, "items/shirt.png");
+	shirt_2 = new g3nts::Item(Vec2(900, 680) * levelScale, "items/shirt.png");
+	
+	items.push_back(shirt_1);
+	items.push_back(shirt_2);
+
+	for (g3nts::Item* item : items) {
+		item->addToScene(this, -1);
+	}
+
 }
 
 void Tutorial::initWalls() {
@@ -142,6 +159,16 @@ void Tutorial::initKeyboardListener() {
 		if (key == EventKeyboard::KeyCode::KEY_ESCAPE) {
 			togglePause();
 		}
+		else if (key == EventKeyboard::KeyCode::KEY_SPACE) {
+			player->getSprite()->setTexture("characters/chad/chad-flex.png");
+
+			for (g3nts::Item* item : items) {
+				if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
+					Vec2 direction = item->getPosition() - player->getPosition();
+					item->setVelocity(direction.getNormalized() * 1000.0f);
+				}
+			}
+		}
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
@@ -156,12 +183,12 @@ void Tutorial::initMouseListener() {
 	mouseListener->onMouseScroll = [&](Event* mEvent) {};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
-
 }
 
 void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
 	for(g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
+	for(g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
 }
 
 void Tutorial::update(float dt) {
@@ -213,18 +240,52 @@ void Tutorial::update(float dt) {
 		player->getSprite()->setTexture("characters/chad/chad-left.png");
 	}
 
+
 	player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
-	
+
+	//player->update(dt);
+	for (g3nts::Item* item : items) {
+
+		if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
+			item->setVelocity(newPosition.getNormalized() * 500.0f);
+		}
+	}
 	//testLabel->setVisible(false);
 	for (g3nts::PrimitiveRect wall : walls) {
 		if (g3nts::isColliding(player->getHitbox(), wall)) {
 			//testLabel->setPosition(player->getPosition() - Vec2(200, 200));
 			//testLabel->setVisible(true);
 			player->setPosition(player->getPosition() - (newPosition.getNormalized() * playerSpeed * dt));
+			//player->update(-dt);
+		}
+		for (g3nts::Item* item : items) {
+			if (g3nts::isColliding(item->getHitbox(), wall)) {
+				if (wall.getWidth() == 0)
+					item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
+				else if (wall.getHeight() == 0)
+					item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
+			}
 		}
 	}
-	
 
+	for (g3nts::Item* item : items) {
+		
+		if (item->getVelocity().getLengthSq() > 5.0f) item->addForce(-Vec2(item->getVelocity().getNormalized() * 1000.0f));
+		else item->setVelocity(Vec2(0, 0));
+
+		item->update(dt);
+	}
+
+	/*if (keyboard.keyDown[(int)KB::KEY_SPACE]) {
+		for (g3nts::Item* item : items) {
+			if (item->getPosition().getDistanceSq(player->getPosition()) <= 500.0f) {
+				Vec2 direction = item->getPosition() - player->getPosition();
+
+				if (item->getVelocity().getLengthSq() > 5.0f) item->addForce(-Vec2(item->getVelocity().getNormalized() * 1000.0f));
+				else item->setVelocity(Vec2(0, 0));
+			}
+		}
+	}*/
 }
 
 void Tutorial::togglePause() {
