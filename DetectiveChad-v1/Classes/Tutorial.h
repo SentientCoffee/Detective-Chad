@@ -90,7 +90,7 @@ private:
 	bool gamePaused = false;       // Bool to check if the game is paused
 	float levelScale = 1.35f;      // Scaling of the level
 	
-	float playerSpeed = 400.0f;    // Player's normal speed
+	//float playerSpeed = 400.0f;    // Player's normal speed
 };
 
 #endif

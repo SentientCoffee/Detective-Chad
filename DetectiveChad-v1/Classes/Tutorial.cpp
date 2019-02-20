@@ -47,8 +47,6 @@ void Tutorial::initSprites() {
 	player = new g3nts::Character(playerPosition, "characters/chad/chad-left.png");
 	this->getDefaultCamera()->setPosition(player->getPosition());
 
-	
-
 	/*testLabel = Label::createWithTTF("COLLISION!", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	testLabel->enableOutline(Color4B(Color4F(1, 0, 0, 1)), 5);
 	this->addChild(testLabel, -10);
@@ -113,6 +111,7 @@ void Tutorial::initWalls() {
 	
 	walls.push_back(verticalBathroomWall); walls.push_back(vecticalLivingRoomWall_1); walls.push_back(vecticalLivingRoomWall_2);
 
+	// Add all the walls to the scene
 	for (g3nts::PrimitiveRect wall : walls) {
 		this->addChild(wall.getNode(), -10);
 		wall.getNode()->setVisible(false);
@@ -171,6 +170,10 @@ void Tutorial::initKeyboardListener() {
 		}
 	};
 
+	for (unsigned int i = 0; i < 256; i++) {
+		keyboard.keyDown[i] = false;
+	}
+
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 }
 
@@ -192,100 +195,63 @@ void Tutorial::showHitboxes() {
 }
 
 void Tutorial::update(float dt) {
-	typedef EventKeyboard::KeyCode KB;
-	
+
 	// CAMERA MOVEMENT (Camera follows the player)
-	this->getDefaultCamera()->setPosition(player->getPosition());
-
-	// PLAYER MOVEMENT
-	cocos2d::Vec2 newPosition(0, 0);
-	// Up and right (W + D)
-	if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_D]) {
-		newPosition = Vec2(1, 1);
-		player->getSprite()->setTexture("characters/chad/chad-up-right.png");
+	if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
+		this->getDefaultCamera()->setPositionX(player->getPosition().x);
 	}
-	// Up and left (W + A)
-	else if (keyboard.keyDown[(int)KB::KEY_W] && keyboard.keyDown[(int)KB::KEY_A]) {
-		newPosition = Vec2(-1, 1);
-		player->getSprite()->setTexture("characters/chad/chad-up-left.png");
+	if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
+		this->getDefaultCamera()->setPositionY(player->getPosition().y);
 	}
-	// Down and right (S + D)
-	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_D]) {
-		newPosition = Vec2(1, -1);
-		player->getSprite()->setTexture("characters/chad/chad-down-right.png");
-	}
-	// Down and left (S + A)
-	else if (keyboard.keyDown[(int)KB::KEY_S] && keyboard.keyDown[(int)KB::KEY_A]) {
-		newPosition = Vec2(-1, -1);
-		player->getSprite()->setTexture("characters/chad/chad-down-left.png");
-	}
-	// Up (W)
-	else if (keyboard.keyDown[(int)KB::KEY_W]) {
-		newPosition = Vec2(0, 1);
-		player->getSprite()->setTexture("characters/chad/chad-up.png");
-	}
-	// Down (S)
-	else if (keyboard.keyDown[(int)KB::KEY_S]) {
-		newPosition = Vec2(0, -1);
-		player->getSprite()->setTexture("characters/chad/chad-down.png");
-	}
-	// Left (A)
-	else if (keyboard.keyDown[(int)KB::KEY_D]) {
-		newPosition = Vec2(1, 0);
-		player->getSprite()->setTexture("characters/chad/chad-right.png");
-	}
-	// Right (D)
-	else if (keyboard.keyDown[(int)KB::KEY_A]) {
-		newPosition = Vec2(-1, 0);
-		player->getSprite()->setTexture("characters/chad/chad-left.png");
-	}
-
-
-	player->setPosition(player->getPosition() + (newPosition.getNormalized() * playerSpeed * dt));
-
-	//player->update(dt);
+	
+	// Update the player
+	player->update(dt);
+	
 	for (g3nts::Item* item : items) {
 
+		// Check item collision with player
 		if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
-			item->setVelocity(newPosition.getNormalized() * 500.0f);
+			
+			if (item->getVelocity().getLengthSq() == 0) {
+
+				Vec2 direction = item->getPosition() - player->getPosition();
+				item->setVelocity(direction.getNormalized() * 500.0f);
+			
+			}
+
 		}
+
 	}
-	//testLabel->setVisible(false);
+
 	for (g3nts::PrimitiveRect wall : walls) {
-		if (g3nts::isColliding(player->getHitbox(), wall)) {
-			//testLabel->setPosition(player->getPosition() - Vec2(200, 200));
-			//testLabel->setVisible(true);
-			player->setPosition(player->getPosition() - (newPosition.getNormalized() * playerSpeed * dt));
-			//player->update(-dt);
+
+		// Check player collision with walls
+		if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
+			player->update(-dt);
 		}
+
+		// Check item collision with walls
 		for (g3nts::Item* item : items) {
+
 			if (g3nts::isColliding(item->getHitbox(), wall)) {
+
 				if (wall.getWidth() == 0)
 					item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
 				else if (wall.getHeight() == 0)
 					item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
+
 			}
+
 		}
+
 	}
-
+	
+	// Update all items in the scene
 	for (g3nts::Item* item : items) {
-		
-		if (item->getVelocity().getLengthSq() > 5.0f) item->addForce(-Vec2(item->getVelocity().getNormalized() * 1000.0f));
-		else item->setVelocity(Vec2(0, 0));
-
 		item->update(dt);
 	}
 
-	/*if (keyboard.keyDown[(int)KB::KEY_SPACE]) {
-		for (g3nts::Item* item : items) {
-			if (item->getPosition().getDistanceSq(player->getPosition()) <= 500.0f) {
-				Vec2 direction = item->getPosition() - player->getPosition();
 
-				if (item->getVelocity().getLengthSq() > 5.0f) item->addForce(-Vec2(item->getVelocity().getNormalized() * 1000.0f));
-				else item->setVelocity(Vec2(0, 0));
-			}
-		}
-	}*/
 }
 
 void Tutorial::togglePause() {

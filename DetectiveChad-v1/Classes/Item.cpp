@@ -42,18 +42,34 @@ void g3nts::Item::addToScene(Scene* scene, const int zIndex) {
 }
 
 void g3nts::Item::update(const float dt) {
+	// Add friction to already moving objects
+	if (_velocity.getLengthSq() > 5.0f) {
+		_acceleration = -(_velocity.getNormalized() * 1000.0f);
+	}
+	else {
+		_acceleration = Vec2(0, 0);
+		_velocity = Vec2(0, 0);
+	}
+	
+	// Clamp acceleration
 	if (_acceleration.getLengthSq() > _maxAccel * _maxAccel) {
 		_acceleration = _acceleration.getNormalized() * _maxAccel;
 	}
 
+	// Add acceleration to velocity
 	_velocity += _acceleration * dt;
+	// Clamp velocity
 	if (_velocity.getLengthSq() > _maxVelocity * _maxVelocity) {
 		_velocity = _velocity.getNormalized() * _maxVelocity;
 	}
 
+	// Set position
 	_position += _velocity * dt;
+
+	// Set the position of the player to the new calculated position
 	_sprite->setPosition(_position);
 	_hitbox.setPosition(_position);
 	
+	// Reset acceleration
 	_acceleration = Vec2(0, 0);
 }
