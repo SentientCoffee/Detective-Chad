@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+//#include "HelloWorldScene.h"
 #include "MainMenu.h"
 
 // #define USE_AUDIO_ENGINE 1
@@ -24,12 +24,8 @@ static cocos2d::Size designResolutionSize = cocos2d::Size(1600, 900);
 //static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 //static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
-AppDelegate::AppDelegate()
-{
-}
-
-AppDelegate::~AppDelegate() 
-{
+AppDelegate::AppDelegate() {}
+AppDelegate::~AppDelegate() {
 #if USE_AUDIO_ENGINE
     AudioEngine::end();
 #elif USE_SIMPLE_AUDIO_ENGINE
@@ -39,11 +35,9 @@ AppDelegate::~AppDelegate()
 
 // if you want a different context, modify the value of glContextAttrs
 // it will affect all platforms
-void AppDelegate::initGLContextAttrs()
-{
+void AppDelegate::initGLContextAttrs() {
     // set OpenGL context attributes: red,green,blue,alpha,depth,stencil,multisamplesCount
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
-
     GLView::setGLContextAttrs(glContextAttrs);
 }
 
@@ -56,16 +50,17 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
-    auto director = Director::getInstance();
-    auto glview = director->getOpenGLView();
+    Director* director = Director::getInstance();
+    GLView* glview = director->getOpenGLView();
 
     if(!glview) {
         glview = GLViewImpl::createWithRect("Detective Chad", Rect(0, 0, designResolutionSize.width, designResolutionSize.height), 1.0f, false);
+		glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
         director->setOpenGLView(glview);
     }
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    //director->setAnimationInterval(1.0f / 60);
+    director->setAnimationInterval(1.0f / 60);
 
     //// Set the design resolution
     //glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
@@ -85,14 +80,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //{        
     //    director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
     //}
-
     //register_all_packages();
 
-    // create a scene. it's an autorelease object
-    //auto scene = HelloWorld::createScene();
+    // Create and run the main menu scene
 	cocos2d::Scene* mainMenuScene = MainMenu::createScene();
-
-    // run
     director->runWithScene(mainMenuScene);
 
     return true;
@@ -100,8 +91,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 // This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.
 void AppDelegate::applicationDidEnterBackground() {
-//    Director::getInstance()->stopAnimation();
-//
+    Director::getInstance()->stopAnimation();
+
 //#if USE_AUDIO_ENGINE
 //    AudioEngine::pauseAll();
 //#elif USE_SIMPLE_AUDIO_ENGINE
@@ -112,8 +103,8 @@ void AppDelegate::applicationDidEnterBackground() {
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-//    Director::getInstance()->startAnimation();
-//
+    Director::getInstance()->startAnimation();
+
 //#if USE_AUDIO_ENGINE
 //    AudioEngine::resumeAll();
 //#elif USE_SIMPLE_AUDIO_ENGINE

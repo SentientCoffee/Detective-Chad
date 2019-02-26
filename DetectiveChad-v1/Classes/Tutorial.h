@@ -28,10 +28,10 @@ public:
 	void initKeyboardListener();
 	void initMouseListener();
 
-	void showHitboxes();
-
 	void update(float dt);
 	void togglePause();
+	
+	void showHitboxes();
 
 	CREATE_FUNC(Tutorial);
 
@@ -43,7 +43,10 @@ private:
 	cocos2d::Size visibleSize;             // Visible size of the window
 
 	cocos2d::Sprite* floorplan;            // Background sprite
-	cocos2d::Sprite* aptWalls;             // Sprite for just the walls
+	cocos2d::Sprite* upperWalls;           // Sprites for just the upper walls
+	cocos2d::Sprite* middleWalls;          // Sprites for just the middle walls
+	cocos2d::Sprite* lowerWalls;           // Sprites for just the lower walls
+	
 	g3nts::Character* player;              // Player character (object controlled by user)
 
 	g3nts::Item* shirt_1;
@@ -85,12 +88,8 @@ private:
 	Input::Keyboard keyboard;
 	cocos2d::EventListenerKeyboard* keyboardListener;
 
-	//cocos2d::Label* testLabel;   // To test for collisions
-
 	bool gamePaused = false;       // Bool to check if the game is paused
 	float levelScale = 1.35f;      // Scaling of the level
-	
-	float playerSpeed = 400.0f;    // Player's normal speed
 };
 
 #endif

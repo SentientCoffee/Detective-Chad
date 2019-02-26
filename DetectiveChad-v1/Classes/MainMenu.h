@@ -26,8 +26,8 @@ private:
 	cocos2d::Vec2 windowSize, origin;
 	cocos2d::Size visibleSize;
 
-	cocos2d::Sprite* floorplan;
-	cocos2d::Label* title;
+	cocos2d::Sprite* background;
+	//cocos2d::Label* title;
 	cocos2d::Menu* menu;
 
 	cocos2d::EventListenerMouse* mouseListener;
