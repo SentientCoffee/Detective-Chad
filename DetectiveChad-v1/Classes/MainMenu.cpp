@@ -23,16 +23,11 @@ bool MainMenu::init() {
 void MainMenu::onExit() { Scene::onExit(); }
 
 void MainMenu::initMenu() {
-	floorplan = Sprite::create("temp/chadpaper1.png");
-	floorplan->setScale(0.8333333f);
-	floorplan->setPosition(windowSize.x / 2, windowSize.y / 2);
+	background = Sprite::create("ui/mainmenuscreen.png");
+	background->setPosition(windowSize.x / 2, windowSize.y / 2);
 
-	title = Label::createWithTTF("Detective Chad", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	title->setPosition(visibleSize.width / 2, visibleSize.height * 0.8);
-	title->enableShadow();	title->enableBold();
-
-	Label* startLabel = Label::createWithTTF("Start", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* exitLabel = Label::createWithTTF("Exit", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* startLabel = Label::createWithTTF("Start", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* exitLabel = Label::createWithTTF("Exit", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	startLabel->enableShadow();
 	exitLabel->enableShadow();
 
@@ -44,13 +39,12 @@ void MainMenu::initMenu() {
 		director->end();
 	});
 
-	startButton->setPosition(0, -(windowSize.y * 0.25));
-	exitButton->setPosition(0, -(windowSize.y * 0.35));
+	startButton->setPosition(20, -(windowSize.y * 0.18));
+	exitButton->setPosition(20, -(windowSize.y * 0.35));
 
 
 	menu = Menu::create(startButton, exitButton, NULL);
 
-	this->addChild(floorplan, -100);
-	this->addChild(title);
+	this->addChild(background, -100);
 	this->addChild(menu);
 }

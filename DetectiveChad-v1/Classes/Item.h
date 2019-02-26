@@ -13,7 +13,7 @@ namespace g3nts {
 	public:
 
 		Item();
-		Item(cocos2d::Vec2& position, string spritePath);
+		Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable = false);
 		~Item();
 
 		bool operator<(const Item& item);
@@ -27,6 +27,9 @@ namespace g3nts {
 		cocos2d::Vec2 getAcceleration() const;
 		cocos2d::Vec2 getVelocity() const;
 		cocos2d::Vec2 getPosition() const;
+
+		bool isBreakable() const;
+		void setBreakable(const bool isBreakable);
 
 		void addForce(cocos2d::Vec2& force);
 		void setVelocity(cocos2d::Vec2& velocity);
@@ -45,6 +48,7 @@ namespace g3nts {
 		cocos2d::Vec2 _position;
 
 		float _maxVelocity = 500.0f, _maxAccel = 1000.0f;
+		bool _isBreakable;
 
 		int _id;
 		static int idCount;

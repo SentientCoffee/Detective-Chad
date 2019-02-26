@@ -5,15 +5,15 @@ USING_NS_CC;
 int g3nts::Item::idCount = 0;
 
 g3nts::Item::Item() {}
-g3nts::Item::Item(Vec2& position, string spritePath) : _id(idCount++), _position(position), _sprite(Sprite::create(spritePath)) {
+g3nts::Item::Item(Vec2& position, string spritePath, const bool isBreakable) : _id(idCount++), _isBreakable(isBreakable), _position(position), _sprite(Sprite::create(spritePath)) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 
 	_hitbox = g3nts::PrimitiveRect(
-		Vec2(_sprite->getPosition().x - (_sprite->getContentSize().width / 2.0f),
-			_sprite->getPosition().y - (_sprite->getContentSize().height / 2.0f)),
-		Vec2(_sprite->getPosition().x + (_sprite->getContentSize().width / 2.0f),
-			_sprite->getPosition().y + (_sprite->getContentSize().height / 2.0f))
+		Vec2(_sprite->getPosition().x - (_sprite->getContentSize().width  / 2.0f),
+			 _sprite->getPosition().y - (_sprite->getContentSize().height / 2.0f)),
+		Vec2(_sprite->getPosition().x + (_sprite->getContentSize().width  / 2.0f),
+			 _sprite->getPosition().y + (_sprite->getContentSize().height / 2.0f))
 	);
 }
 
@@ -31,6 +31,9 @@ Vec2 g3nts::Item::getAcceleration() const { return _acceleration; }
 Vec2 g3nts::Item::getVelocity() const { return _velocity; }
 Vec2 g3nts::Item::getPosition() const { return _position; }
 
+bool g3nts::Item::isBreakable() const { return _isBreakable; }
+void g3nts::Item::setBreakable(const bool isBreakable) { _isBreakable = isBreakable; }
+
 void g3nts::Item::addForce(cocos2d::Vec2& force) { _acceleration = force; }
 void g3nts::Item::setVelocity(cocos2d::Vec2& velocity) { _velocity = velocity; }
 void g3nts::Item::setPosition(Vec2& position) { _position = position; }
@@ -43,7 +46,7 @@ void g3nts::Item::addToScene(Scene* scene, const int zIndex) {
 
 void g3nts::Item::update(const float dt) {
 	// Add friction to already moving objects
-	if (_velocity.getLengthSq() > 5.0f) {
+	if (_velocity.getLengthSq() > 25.0f) {
 		_acceleration = -(_velocity.getNormalized() * 1000.0f);
 	}
 	else {
