@@ -60,6 +60,7 @@
     <ClCompile Include="..\Classes\Item.cpp">
       <Filter>src\Framework\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Mirror.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -90,6 +91,9 @@
       <Filter>src\Framework\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Item.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Mirror.h">
       <Filter>src\Framework\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
