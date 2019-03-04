@@ -18,7 +18,8 @@ bool Tutorial::init() {
 	initLevel();
 	initWalls();
 	initPauseMenu();
-	
+	initUI();
+
 	initMouseListener();
 	initKeyboardListener();
 
@@ -81,13 +82,13 @@ void Tutorial::initLevel() {
 	floorplan->setScale(levelScale);
 	floorplan->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
 	floorplan->setPosition(Vec2(-800, -1050) * levelScale);
-	
+
 	// Upper walls sprite
 	upperWalls = Sprite::create("backgrounds/apartment-walls-upper.png");
 	upperWalls->setScale(levelScale);
 	upperWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
 	upperWalls->setPosition(Vec2(-800, -1050) * levelScale);
-	
+
 	// Middle walls sprite
 	middleWalls = Sprite::create("backgrounds/apartment-walls-middle.png");
 	middleWalls->setScale(levelScale);
@@ -100,19 +101,19 @@ void Tutorial::initLevel() {
 	lowerWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
 	lowerWalls->setPosition(Vec2(-800, -1050) * levelScale);
 
-	this->addChild(floorplan  , -1000);
-	this->addChild(upperWalls ,    0 );
-	this->addChild(middleWalls,   10 );
-	this->addChild(lowerWalls ,   20 );
+	this->addChild(floorplan, -1000);
+	this->addChild(upperWalls, 0);
+	this->addChild(middleWalls, 10);
+	this->addChild(lowerWalls, 20);
 }
 
 void Tutorial::initItems() {
-	shirt_1 = new g3nts::Item(Vec2(900 , 720) * levelScale, spriteCache->getSpriteFrameByName("items/shirt.png"));
+	shirt_1 = new g3nts::Item(Vec2(900, 720) * levelScale, spriteCache->getSpriteFrameByName("items/shirt.png"));
 	shirt_2 = new g3nts::Item(Vec2(1050, 680) * levelScale, spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
 	magGlass_1 = new g3nts::Item(Vec2(900, 720) * levelScale, spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
-	
+
 	bathroomMirror = new g3nts::Mirror(Vec2(170, 890) * levelScale, spriteCache->getSpriteFrameByName("items/mirror.png"));
-	
+
 	items.push_back(shirt_1);
 	items.push_back(shirt_2);
 	items.push_back(magGlass_1);
@@ -128,27 +129,27 @@ void Tutorial::initWalls() {
 	//Level boundaries
 	upperBoundary = g3nts::PrimitiveRect(Vec2(-180, 1300) * levelScale, Vec2(2000, 1300) * levelScale);
 	lowerBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(2000, -300) * levelScale);
-	leftBoundary  = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(-180, 1300) * levelScale);
+	leftBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(-180, 1300) * levelScale);
 	rightBoundary = g3nts::PrimitiveRect(Vec2(2000, -300) * levelScale, Vec2(2000, 1300) * levelScale);
 
 	// Outer walls
-	upperHouseWall   = g3nts::PrimitiveRect(Vec2( 0  , 950) * levelScale, Vec2(1600, 900) * levelScale);
-	lowerHouseWall   = g3nts::PrimitiveRect(Vec2( 0  ,  0 ) * levelScale, Vec2(1600,  0 ) * levelScale);
-	leftHouseWall    = g3nts::PrimitiveRect(Vec2( 0  ,  2 ) * levelScale, Vec2( 0  , 900) * levelScale);
-	rightHouseWall_1 = g3nts::PrimitiveRect(Vec2(1600,  0 ) * levelScale, Vec2(1600, 400) * levelScale);
+	upperHouseWall = g3nts::PrimitiveRect(Vec2(0, 950) * levelScale, Vec2(1600, 900) * levelScale);
+	lowerHouseWall = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1600, 0) * levelScale);
+	leftHouseWall = g3nts::PrimitiveRect(Vec2(0, 2) * levelScale, Vec2(0, 900) * levelScale);
+	rightHouseWall_1 = g3nts::PrimitiveRect(Vec2(1600, 0) * levelScale, Vec2(1600, 400) * levelScale);
 	rightHouseWall_2 = g3nts::PrimitiveRect(Vec2(1600, 600) * levelScale, Vec2(1600, 900) * levelScale);
 
 	// Inner horizontal walls
-	bathroomDoorway_1   = g3nts::PrimitiveRect(Vec2( 0  , 650) * levelScale, Vec2(100 , 600) * levelScale);
-	bathroomDoorway_2   = g3nts::PrimitiveRect(Vec2(300 , 650) * levelScale, Vec2(1000, 600) * levelScale);
-	bedroomDoorway	    = g3nts::PrimitiveRect(Vec2(1200, 650) * levelScale, Vec2(1600, 600) * levelScale);
-	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2( 0  , 400) * levelScale, Vec2(150 , 350) * levelScale);
-	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(350 , 400) * levelScale, Vec2(1400, 350) * levelScale);
-	
+	bathroomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 650) * levelScale, Vec2(100, 600) * levelScale);
+	bathroomDoorway_2 = g3nts::PrimitiveRect(Vec2(300, 650) * levelScale, Vec2(1000, 600) * levelScale);
+	bedroomDoorway = g3nts::PrimitiveRect(Vec2(1200, 650) * levelScale, Vec2(1600, 600) * levelScale);
+	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 400) * levelScale, Vec2(150, 350) * levelScale);
+	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(350, 400) * levelScale, Vec2(1400, 350) * levelScale);
+
 	// Inner vertical walls
-	verticalBathroomWall	 = g3nts::PrimitiveRect(Vec2(400 , 650) * levelScale, Vec2(400 , 900) * levelScale);
+	verticalBathroomWall = g3nts::PrimitiveRect(Vec2(400, 650) * levelScale, Vec2(400, 900) * levelScale);
 	vecticalLivingRoomWall_1 = g3nts::PrimitiveRect(Vec2(1200, 250) * levelScale, Vec2(1200, 600) * levelScale);
-	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(Vec2(1200,  0 ) * levelScale, Vec2(1200, 50 ) * levelScale);
+	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(Vec2(1200, 0) * levelScale, Vec2(1200, 50) * levelScale);
 
 	// Add all the walls to the walls vector
 	walls.push_back(upperBoundary); walls.push_back(lowerBoundary);
@@ -159,7 +160,7 @@ void Tutorial::initWalls() {
 
 	walls.push_back(bathroomDoorway_1); walls.push_back(bathroomDoorway_2); walls.push_back(bedroomDoorway);
 	walls.push_back(livingRoomDoorway_1); walls.push_back(livingRoomDoorway_2);
-	
+
 	walls.push_back(verticalBathroomWall); walls.push_back(vecticalLivingRoomWall_1); walls.push_back(vecticalLivingRoomWall_2);
 
 	// Add all the walls to the scene
@@ -254,6 +255,64 @@ void Tutorial::initMouseListener() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 }
 
+void Tutorial::initUI() {
+	//flex_state = player.getFlexState();
+	//evidence_num = tutorial.getEvidence();
+
+	//placeholder values
+	flex_state = false;
+	evidence_num = 2;
+	UI_Scale = .2;
+	//setting UI sprites
+	flexing_meter = Sprite::create("ui/flexing.png");
+	flex_meter = Sprite::create("ui/unflex.png");
+
+	for (int i = 0;i < evidence_num;i++)
+	{
+		evidence.push_back(Sprite::create("ui/evidence.png"));
+		broken_evidence.push_back(Sprite::create("ui/broken.png"));
+		evidence_state.push_back(true);
+	}
+
+	//setting UI size scaling
+	flexing_meter->setScale(UI_Scale);
+	flex_meter->setScale(UI_Scale);
+	for (int i = 0;i < evidence_num;i++)
+	{
+		evidence[i]->setScale(UI_Scale);
+	}
+
+	//setting UI position
+	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
+	if (flex_state)
+		flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
+	else
+		flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
+
+
+	for (int i = 0;i < evidence_num;i++)
+	{
+		if (evidence_state[i])
+			evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
+		else
+			broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+	}
+
+	//adding UI to scene
+	if (flex_state)
+		this->addChild(flexing_meter, 1000);
+	else
+		this->addChild(flex_meter, 1000);
+
+	for (int i = 0;i < evidence_num;i++)
+	{
+		if (evidence_state[i])
+			this->addChild(evidence[i], 1000);
+		else
+			this->addChild(broken_evidence[i], 1000);
+	}
+}
+
 void Tutorial::update(float dt) {
 
 	// CAMERA MOVEMENT (Camera follows the player)
@@ -263,7 +322,23 @@ void Tutorial::update(float dt) {
 	if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
 		this->getDefaultCamera()->setPositionY(player->getPosition().y);
 	}
-	
+
+	// UI MOVEMENT (UI follows camera)
+	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
+	if (flex_state)
+		flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
+	else
+		flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
+
+
+	for (int i = 0;i < evidence_num;i++)
+	{
+		if (evidence_state[i])
+			evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
+		else
+			broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+	}
+
 	// Update the player
 	player->update(dt);
 
@@ -271,7 +346,7 @@ void Tutorial::update(float dt) {
 	player->setZIndex(25);
 	if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 10) player->setZIndex(15);
 	if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 10)      player->setZIndex(5);
-	
+
 
 	for (g3nts::Item* item : items) {
 		// Update all items in the scene
@@ -347,6 +422,6 @@ void Tutorial::togglePause() {
 void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
 	bathroomMirror->getHitbox().getNode()->setVisible(true);
-	for(g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
-	for(g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
+	for (g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
+	for (g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
 }
