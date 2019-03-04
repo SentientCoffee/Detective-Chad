@@ -10,58 +10,42 @@ void Tutorial::onEnter() { Scene::onEnter(); }
 bool Tutorial::init() {
 	if (!Scene::init()) return false;
 
-	director = Director::getInstance();
-	windowSize = director->getWinSizeInPixels();
-	origin = director->getVisibleOrigin();
-	visibleSize = director->getVisibleSize();
-	
-	playerPosition = Vec2(1080, 760) * levelScale;
-	this->getDefaultCamera()->setPosition(playerPosition);
+	initDirector();
+	initSpriteCache();
 
-	initSprites();
+	initPlayer();
 	initItems();
+	initLevel();
 	initWalls();
 	initPauseMenu();
 	
 	initMouseListener();
 	initKeyboardListener();
 
-	showHitboxes();
+	//showHitboxes();
 
 	this->scheduleUpdate();
-
 	return true;
 }
 
 void Tutorial::onExit() { Scene::onExit(); }
 
-void Tutorial::initSprites() {
-	SpriteFrameCache* spriteCache = SpriteFrameCache::getInstance();
+void Tutorial::initDirector() {
+	director = Director::getInstance();
+
+	windowSize = director->getWinSizeInPixels();
+	origin = director->getVisibleOrigin();
+	visibleSize = director->getVisibleSize();
+}
+
+void Tutorial::initSpriteCache() {
+	spriteCache = SpriteFrameCache::getInstance();
 	spriteCache->addSpriteFramesWithFile("characters/characters.plist");
+}
 
-	// Floor plan sprite
-	floorplan = Sprite::create("backgrounds/apartment-floorplan.png");
-	floorplan->setScale(levelScale);
-	floorplan->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	floorplan->setPosition(Vec2(-800, -1050) * levelScale);
-	
-	// Upper walls sprite
-	upperWalls = Sprite::create("backgrounds/apartment-walls-upper.png");
-	upperWalls->setScale(levelScale);
-	upperWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	upperWalls->setPosition(Vec2(-800, -1050) * levelScale);
-	
-	// Middle walls sprite
-	middleWalls = Sprite::create("backgrounds/apartment-walls-middle.png");
-	middleWalls->setScale(levelScale);
-	middleWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	middleWalls->setPosition(Vec2(-800, -1050) * levelScale);
-
-	// Lower walls sprite
-	lowerWalls = Sprite::create("backgrounds/apartment-walls-lower.png");
-	lowerWalls->setScale(levelScale);
-	lowerWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	lowerWalls->setPosition(Vec2(-800, -1050) * levelScale);
+void Tutorial::initPlayer() {
+	playerPosition = Vec2(1080, 760) * levelScale;
+	this->getDefaultCamera()->setPosition(playerPosition);
 
 	// Playable character with animations
 	player = new g3nts::Character(playerPosition, spriteCache->getSpriteFrameByName("chad/idle/left/01.png"));
@@ -87,12 +71,38 @@ void Tutorial::initSprites() {
 
 	player->addAnimation("flex", "chad/flex/%02d.png", 1);
 
-	this->addChild(floorplan, -100);
-	this->addChild(upperWalls, 20);
-	this->addChild(middleWalls, 20);
-	this->addChild(lowerWalls, 20);
-	player->addToScene(this);
+	player->addToScene(this, 2);
+}
 
+void Tutorial::initLevel() {
+	// Floor plan sprite
+	floorplan = Sprite::create("backgrounds/apartment-floorplan.png");
+	floorplan->setScale(levelScale);
+	floorplan->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	floorplan->setPosition(Vec2(-800, -1050) * levelScale);
+	
+	// Upper walls sprite
+	upperWalls = Sprite::create("backgrounds/apartment-walls-upper.png");
+	upperWalls->setScale(levelScale);
+	upperWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	upperWalls->setPosition(Vec2(-800, -1050) * levelScale);
+	
+	// Middle walls sprite
+	middleWalls = Sprite::create("backgrounds/apartment-walls-middle.png");
+	middleWalls->setScale(levelScale);
+	middleWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	middleWalls->setPosition(Vec2(-800, -1050) * levelScale);
+
+	// Lower walls sprite
+	lowerWalls = Sprite::create("backgrounds/apartment-walls-lower.png");
+	lowerWalls->setScale(levelScale);
+	lowerWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	lowerWalls->setPosition(Vec2(-800, -1050) * levelScale);
+
+	this->addChild(floorplan  , -1000);
+	this->addChild(upperWalls ,    0 );
+	this->addChild(middleWalls,   10 );
+	this->addChild(lowerWalls ,   20 );
 }
 
 void Tutorial::initItems() {
@@ -103,7 +113,7 @@ void Tutorial::initItems() {
 	items.push_back(shirt_2);
 
 	for (g3nts::Item* item : items) {
-		item->addToScene(this, -1);
+		item->addToScene(this);
 	}
 
 }
@@ -124,9 +134,8 @@ void Tutorial::initWalls() {
 
 	// Inner horizontal walls
 	bathroomDoorway_1   = g3nts::PrimitiveRect(Vec2( 0  , 650) * levelScale, Vec2(100 , 600) * levelScale);
-	bathroomDoorway_2   = g3nts::PrimitiveRect(Vec2(300 , 650) * levelScale, Vec2(400 , 600) * levelScale);
-	bedroomDoorway_1    = g3nts::PrimitiveRect(Vec2(400 , 650) * levelScale, Vec2(1000, 600) * levelScale);
-	bedroomDoorway_2    = g3nts::PrimitiveRect(Vec2(1200, 650) * levelScale, Vec2(1600, 600) * levelScale);
+	bathroomDoorway_2   = g3nts::PrimitiveRect(Vec2(300 , 650) * levelScale, Vec2(1000, 600) * levelScale);
+	bedroomDoorway	    = g3nts::PrimitiveRect(Vec2(1200, 650) * levelScale, Vec2(1600, 600) * levelScale);
 	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2( 0  , 400) * levelScale, Vec2(150 , 350) * levelScale);
 	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(350 , 400) * levelScale, Vec2(1400, 350) * levelScale);
 	
@@ -142,8 +151,7 @@ void Tutorial::initWalls() {
 	walls.push_back(upperHouseWall); walls.push_back(lowerHouseWall);
 	walls.push_back(leftHouseWall); walls.push_back(rightHouseWall_1); walls.push_back(rightHouseWall_2);
 
-	walls.push_back(bathroomDoorway_1); walls.push_back(bathroomDoorway_2);
-	walls.push_back(bedroomDoorway_1); walls.push_back(bedroomDoorway_2);
+	walls.push_back(bathroomDoorway_1); walls.push_back(bathroomDoorway_2); walls.push_back(bedroomDoorway);
 	walls.push_back(livingRoomDoorway_1); walls.push_back(livingRoomDoorway_2);
 	
 	walls.push_back(verticalBathroomWall); walls.push_back(vecticalLivingRoomWall_1); walls.push_back(vecticalLivingRoomWall_2);
@@ -178,7 +186,7 @@ void Tutorial::initPauseMenu() {
 	exitButton->setPosition(0, -(windowSize.y * 0.35));
 
 	pauseMenu = Menu::create(titleItem, resumeButton, exitButton, NULL);
-	this->addChild(pauseMenu, 100);
+	this->addChild(pauseMenu, 1000);
 	pauseMenu->setVisible(false);
 }
 
@@ -239,8 +247,20 @@ void Tutorial::update(float dt) {
 	
 	// Update the player
 	player->update(dt);
+
+	// Update player sprite to be on top or behind walls
+	player->setZIndex(22);
+	if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 10) player->setZIndex(12);
+	if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 10)      player->setZIndex(2);
 	
+
 	for (g3nts::Item* item : items) {
+		// Update all items in the scene
+		item->update(dt);
+
+		item->setZIndex(21);
+		if (item->getPosition().y > livingRoomDoorway_1.getEndPosition().y) item->setZIndex(11);
+		if (item->getPosition().y > bedroomDoorway.getEndPosition().y)      item->setZIndex(1);
 
 		// Check item collision with player
 		if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
@@ -250,13 +270,16 @@ void Tutorial::update(float dt) {
 			if (item->getVelocity().getLengthSq() <= 50 * 50)
 				item->setVelocity(direction.getNormalized() * 500.0f);
 			else {
+
 				if (player->getDirection().getLengthSq() == 0) {
 					item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.2f);
 				}
 				else {
 					item->setVelocity(direction.getNormalized() * 500.0f);
 				}
+
 			}
+
 		}
 
 	}
@@ -284,22 +307,6 @@ void Tutorial::update(float dt) {
 
 	}
 
-	//update wall sprites
-	if (player->getPosition().y < upperHouseWall.getEndPosition().y + 10) upperWalls->setLocalZOrder(-2);
-	else upperWalls->setLocalZOrder(1);
-
-	if (player->getPosition().y < bedroomDoorway_1.getEndPosition().y + 10) middleWalls->setLocalZOrder(-2);
-	else middleWalls->setLocalZOrder(1);
-	
-	if (player->getPosition().y < livingRoomDoorway_1.getEndPosition().y + 10) lowerWalls->setLocalZOrder(-2);
-	else lowerWalls->setLocalZOrder(1);
-
-	// Update all items in the scene
-	for (g3nts::Item* item : items) {
-		item->update(dt);
-	}
-
-
 }
 
 void Tutorial::togglePause() {
@@ -307,9 +314,6 @@ void Tutorial::togglePause() {
 	pauseMenu->setPosition(this->getDefaultCamera()->getPosition());
 
 	if (gamePaused) {
-		//playerPosition = player->getPosition();
-		//player->getSprite()->setVisible(false);
-
 		player->getKeyboardListener()->setEnabled(false);
 		this->unscheduleUpdate();
 		pauseMenu->setVisible(true);
@@ -318,9 +322,6 @@ void Tutorial::togglePause() {
 		pauseMenu->setVisible(false);
 		this->scheduleUpdate();
 		player->getKeyboardListener()->setEnabled(true);
-
-		//player->setPosition(playerPosition);
-		//player->getSprite()->setVisible(true);
 	}
 }
 

@@ -20,6 +20,7 @@ namespace g3nts {
 		Character(cocos2d::Vec2& position, string spritePath);
 		~Character();
 
+		const int getZIndex() const;
 		cocos2d::Sprite* getSprite() const;
 		cocos2d::Vec2 getPosition() const;
 		cocos2d::Vec2 getDirection() const;
@@ -30,10 +31,11 @@ namespace g3nts {
 		void setPosition(const float x, const float y);
 		void setDirection(cocos2d::Vec2& direction);
 		void setDirection(const float x, const float y);
+		void setZIndex(const int zIndex);
 
 		void addAnimation(string tag, string file, const unsigned int numFrames);
 		void runAnimation(string tag);
-		void addToScene(cocos2d::Scene* scene);
+		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 		void update(const float dt);
 
 		//void addAnimationFrames(SpriteFrames spriteFrames, string tag);

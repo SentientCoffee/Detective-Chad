@@ -27,11 +27,12 @@ g3nts::Character::~Character() {
 	}*/
 }
 
+const int g3nts::Character::getZIndex() const { return _sprite->getLocalZOrder(); }
 Sprite* g3nts::Character::getSprite() const { return _sprite; }
 Vec2 g3nts::Character::getPosition() const  { return _position; }
 Vec2 g3nts::Character::getDirection() const { return _playerDirection; }
 g3nts::PrimitiveRect g3nts::Character::getHitbox() const { return _hitbox; }
-EventListenerKeyboard * g3nts::Character::getKeyboardListener() const { return _keyboardListener; }
+EventListenerKeyboard* g3nts::Character::getKeyboardListener() const { return _keyboardListener; }
 
 void g3nts::Character::setPosition(Vec2& position){
 	_position = position;
@@ -42,6 +43,11 @@ void g3nts::Character::setPosition(const float x, const float y) { setPosition(V
 
 void g3nts::Character::setDirection(cocos2d::Vec2& direction) { _playerDirection = direction; }
 void g3nts::Character::setDirection(const float x, const float y) { setDirection(Vec2(x, y)); }
+
+void g3nts::Character::setZIndex(const int zIndex) {
+	_sprite->setLocalZOrder(zIndex);
+	_hitbox.getNode()->setLocalZOrder(zIndex);
+}
 
 void g3nts::Character::initKeyboardListener() {
 	_keyboardListener = EventListenerKeyboard::create();
@@ -82,9 +88,9 @@ void g3nts::Character::runAnimation(string tag) {
 	_sprite->runAction(animate);
 }
 
-void g3nts::Character::addToScene(Scene* scene) {
-	scene->addChild(_sprite);
-	scene->addChild(_hitbox.getNode());
+void g3nts::Character::addToScene(Scene* scene, const int zIndex) {
+	scene->addChild(_sprite, zIndex);
+	scene->addChild(_hitbox.getNode(), zIndex);
 	_hitbox.getNode()->setVisible(false);
 	scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener->clone(), scene);
 }

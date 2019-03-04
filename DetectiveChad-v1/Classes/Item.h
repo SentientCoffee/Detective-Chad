@@ -23,6 +23,7 @@ namespace g3nts {
 
 		cocos2d::Sprite* getSprite() const;
 		PrimitiveRect getHitbox() const;
+		const int getZIndex() const;
 
 		cocos2d::Vec2 getAcceleration() const;
 		cocos2d::Vec2 getVelocity() const;
@@ -34,6 +35,7 @@ namespace g3nts {
 		void addForce(cocos2d::Vec2& force);
 		void setVelocity(cocos2d::Vec2& velocity);
 		void setPosition(cocos2d::Vec2& position);
+		void setZIndex(const int zIndex);
 
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 		void update(const float dt);

@@ -26,6 +26,7 @@ bool g3nts::Item::operator!=(const Item& item) { return _id != item._id; }
 
 Sprite* g3nts::Item::getSprite() const { return _sprite; }
 g3nts::PrimitiveRect g3nts::Item::getHitbox() const { return _hitbox; }
+const int g3nts::Item::getZIndex() const { return _sprite->getLocalZOrder(); }
 
 Vec2 g3nts::Item::getAcceleration() const { return _acceleration; }
 Vec2 g3nts::Item::getVelocity() const { return _velocity; }
@@ -37,6 +38,11 @@ void g3nts::Item::setBreakable(const bool isBreakable) { _isBreakable = isBreaka
 void g3nts::Item::addForce(cocos2d::Vec2& force) { _acceleration = force; }
 void g3nts::Item::setVelocity(cocos2d::Vec2& velocity) { _velocity = velocity; }
 void g3nts::Item::setPosition(Vec2& position) { _position = position; }
+
+void g3nts::Item::setZIndex(const int zIndex) {
+	_sprite->setLocalZOrder(zIndex);
+	_hitbox.getNode()->setLocalZOrder(zIndex);
+}
 
 void g3nts::Item::addToScene(Scene* scene, const int zIndex) {
 	scene->addChild(_sprite, zIndex);
