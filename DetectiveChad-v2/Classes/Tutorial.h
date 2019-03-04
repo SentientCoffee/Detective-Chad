@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "InputDevices.h"
 #include "Item.h"
+#include "Mirror.h"
 #include "Primitives.h"
 
 class Tutorial : public cocos2d::Scene {
@@ -57,6 +58,9 @@ private:
 	std::vector<g3nts::Item*> items;       // Container to hold all the items in the level
 	g3nts::Item* shirt_1;
 	g3nts::Item* shirt_2;
+	g3nts::Item* magGlass_1;
+
+	g3nts::Mirror* bathroomMirror;         // Bathroom mirror for Chad to flex in front of
 
 	cocos2d::Menu* pauseMenu;              // Pause Menu object when the game is paused
 	bool gamePaused = false;               // Bool to check if the game is paused

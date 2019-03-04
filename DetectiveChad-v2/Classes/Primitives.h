@@ -11,10 +11,8 @@ namespace g3nts {
 		// CONSTRUCTORS/DECONSTRUCTORS
 		PrimitiveRect();
 		PrimitiveRect(const cocos2d::Vec2& startPos,
-					  const cocos2d::Vec2& endPos);
-		PrimitiveRect(const cocos2d::Vec2& startPos,
 					  const cocos2d::Vec2& endPos,
-					  const cocos2d::Color4F& colour);
+					  const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
 
 		// MEMBER FUNCTIONS
 		cocos2d::DrawNode* getNode() const;
@@ -50,16 +48,11 @@ namespace g3nts {
 		// CONSTRUCTORS/DECONSTRUCTORS
 		PrimitiveCircle();
 		PrimitiveCircle(const cocos2d::Vec2& centrePos,
-						const float radius);
-		PrimitiveCircle(const cocos2d::Vec2& centrePos,
-						const float radius,
-						const cocos2d::Color4F& colour);
-		PrimitiveCircle(const cocos2d::Vec2& centrePos,
 					    const float radius,
-					    const float angle,
-					    const unsigned int segments,
-					    const bool drawRadius,
-					    const cocos2d::Color4F& colour);
+					    const float angle = 1.0f,
+					    const unsigned int segments = 20,
+					    const bool drawRadius = false,
+					    const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
 
 		// MEMBER FUNCTIONS
 		cocos2d::DrawNode* getNode() const;
@@ -95,10 +88,8 @@ namespace g3nts {
 		// CONSTRUCTORS/DECONSTRUCTORS
 		PrimitiveLine();
 		PrimitiveLine(const cocos2d::Vec2& startPos,
-					  const cocos2d::Vec2& endPos);
-		PrimitiveLine(const cocos2d::Vec2& startPos,
 					  const cocos2d::Vec2& endPos,
-					  const cocos2d::Color4F& colour);
+					  const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
 
 		// MEMBER FUNCTIONS
 		cocos2d::DrawNode* getNode() const;
@@ -126,11 +117,8 @@ namespace g3nts {
 		PrimitiveCapsule();
 		PrimitiveCapsule(const cocos2d::Vec2& startPos,
 						 const cocos2d::Vec2& endPos,
-						 const float radius);
-		PrimitiveCapsule(const cocos2d::Vec2& startPos,
-						 const cocos2d::Vec2& endPos,
 						 const float radius, 
-						 const cocos2d::Color4F& colour);
+						 const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
 
 		// MEMBER FUNCTIONS
 		cocos2d::DrawNode* getNode() const;
@@ -150,11 +138,6 @@ namespace g3nts {
 		void redraw();
 
 	};
-
-	bool isColliding(g3nts::PrimitiveCircle& c1, g3nts::PrimitiveCircle& c2);
-	bool isColliding(g3nts::PrimitiveRect& r1, g3nts::PrimitiveRect& r2);
-	bool isColliding(g3nts::PrimitiveRect& r1, g3nts::PrimitiveCircle& c2);
-	bool isColliding(g3nts::PrimitiveCircle& c1, g3nts::PrimitiveRect& r2);
 }
 
 #endif

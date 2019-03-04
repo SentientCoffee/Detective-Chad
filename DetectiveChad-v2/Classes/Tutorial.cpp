@@ -22,7 +22,7 @@ bool Tutorial::init() {
 	initMouseListener();
 	initKeyboardListener();
 
-	//showHitboxes();
+	showHitboxes();
 
 	this->scheduleUpdate();
 	return true;
@@ -41,6 +41,7 @@ void Tutorial::initDirector() {
 void Tutorial::initSpriteCache() {
 	spriteCache = SpriteFrameCache::getInstance();
 	spriteCache->addSpriteFramesWithFile("characters/characters.plist");
+	spriteCache->addSpriteFramesWithFile("items/items.plist");
 }
 
 void Tutorial::initPlayer() {
@@ -106,16 +107,21 @@ void Tutorial::initLevel() {
 }
 
 void Tutorial::initItems() {
-	shirt_1 = new g3nts::Item(Vec2(900 , 720) * levelScale, "items/shirt.png");
-	shirt_2 = new g3nts::Item(Vec2(1050, 680) * levelScale, "items/shirt.png");
+	shirt_1 = new g3nts::Item(Vec2(900 , 720) * levelScale, spriteCache->getSpriteFrameByName("items/shirt.png"));
+	shirt_2 = new g3nts::Item(Vec2(1050, 680) * levelScale, spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
+	magGlass_1 = new g3nts::Item(Vec2(900, 720) * levelScale, spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
+	
+	bathroomMirror = new g3nts::Mirror(Vec2(170, 890) * levelScale, spriteCache->getSpriteFrameByName("items/mirror.png"));
 	
 	items.push_back(shirt_1);
 	items.push_back(shirt_2);
+	items.push_back(magGlass_1);
 
 	for (g3nts::Item* item : items) {
 		item->addToScene(this);
 	}
 
+	bathroomMirror->addToScene(this, 3);
 }
 
 void Tutorial::initWalls() {
@@ -177,6 +183,7 @@ void Tutorial::initPauseMenu() {
 		togglePause();
 	});
 	MenuItemLabel* exitButton = MenuItemLabel::create(exitLabel, [&](Ref* sender) {
+		togglePause();
 		Scene* mainMenuScene = MainMenu::createScene();
 		director->replaceScene(TransitionFade::create(2, mainMenuScene));
 	});
@@ -210,14 +217,26 @@ void Tutorial::initKeyboardListener() {
 
 			for (g3nts::Item* item : items) {
 				if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
+					if (item->isBreakable()) {
+						item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + item->getTag() + ".png"));
+						item->setBreakable(false);
+					}
+
 					Vec2 direction = item->getPosition() - player->getPosition();
 					item->setVelocity(direction.getNormalized() * 1000.0f);
+				}
+			}
+
+			if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
+				if (!bathroomMirror->isBroken()) {
+					bathroomMirror->setBroken(true);
+					bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-mirror.png"));
 				}
 			}
 		}
 	};
 
-	for (unsigned int i = 0; i < 256; i++) {
+	for (unsigned int i = 0; i < 256; ++i) {
 		keyboard.keyDown[i] = false;
 	}
 
@@ -249,23 +268,23 @@ void Tutorial::update(float dt) {
 	player->update(dt);
 
 	// Update player sprite to be on top or behind walls
-	player->setZIndex(22);
-	if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 10) player->setZIndex(12);
-	if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 10)      player->setZIndex(2);
+	player->setZIndex(25);
+	if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 10) player->setZIndex(15);
+	if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 10)      player->setZIndex(5);
 	
 
 	for (g3nts::Item* item : items) {
 		// Update all items in the scene
 		item->update(dt);
 
-		item->setZIndex(21);
-		if (item->getPosition().y > livingRoomDoorway_1.getEndPosition().y) item->setZIndex(11);
-		if (item->getPosition().y > bedroomDoorway.getEndPosition().y)      item->setZIndex(1);
+		item->setZIndex(24);
+		if (item->getPosition().y > livingRoomDoorway_1.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10) item->setZIndex(14);
+		if (item->getPosition().y > bedroomDoorway.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10)      item->setZIndex(4);
 
 		// Check item collision with player
-		if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
+		if (g3nts::isColliding(player->getHitbox(), item->getHitbox()) && player->getZIndex() == item->getZIndex() + 1) {
 
-			Vec2 direction = item->getPosition() - player->getPosition();
+			Vec2 direction = player->getDirection() + item->getPosition() - player->getPosition();
 
 			if (item->getVelocity().getLengthSq() <= 50 * 50)
 				item->setVelocity(direction.getNormalized() * 500.0f);
@@ -327,6 +346,7 @@ void Tutorial::togglePause() {
 
 void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
+	bathroomMirror->getHitbox().getNode()->setVisible(true);
 	for(g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
 	for(g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
 }

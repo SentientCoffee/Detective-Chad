@@ -5,7 +5,8 @@ USING_NS_CC;
 int g3nts::Item::idCount = 0;
 
 g3nts::Item::Item() {}
-g3nts::Item::Item(Vec2& position, string spritePath, const bool isBreakable) : _id(idCount++), _isBreakable(isBreakable), _position(position), _sprite(Sprite::create(spritePath)) {
+g3nts::Item::Item(Vec2& position, Sprite* sprite, const bool isBreakable, const string tag)
+: _id(idCount++), _isBreakable(isBreakable), _position(position), _sprite(sprite), _tag(tag) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 
@@ -17,12 +18,19 @@ g3nts::Item::Item(Vec2& position, string spritePath, const bool isBreakable) : _
 	);
 }
 
+g3nts::Item::Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable, const string tag)
+	: Item(position, Sprite::create(spritePath), isBreakable, tag) {}
+g3nts::Item::Item(cocos2d::Vec2& position, cocos2d::SpriteFrame* spriteFrame, const bool isBreakable, const string tag)
+	: Item(position, Sprite::createWithSpriteFrame(spriteFrame), isBreakable, tag) {}
 g3nts::Item::~Item() { _sprite = nullptr; }
 
 bool g3nts::Item::operator<(const Item& item)  { return _id < item._id; }
 bool g3nts::Item::operator>(const Item& item)  { return _id > item._id; }
 bool g3nts::Item::operator==(const Item& item) { return _id == item._id; }
 bool g3nts::Item::operator!=(const Item& item) { return _id != item._id; }
+
+string g3nts::Item::getTag() const { return _tag; }
+void g3nts::Item::setTag(const string tag) { _tag = tag; }
 
 Sprite* g3nts::Item::getSprite() const { return _sprite; }
 g3nts::PrimitiveRect g3nts::Item::getHitbox() const { return _hitbox; }

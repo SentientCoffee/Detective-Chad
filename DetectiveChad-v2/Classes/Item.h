@@ -13,13 +13,18 @@ namespace g3nts {
 	public:
 
 		Item();
-		Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable = false);
+		Item(cocos2d::Vec2& position, cocos2d::Sprite* sprite, const bool isBreakable = false, const string tag = "");
+		Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable = false, const string tag = "");
+		Item(cocos2d::Vec2& position, cocos2d::SpriteFrame* spritePath, const bool isBreakable = false, const string tag = "");
 		~Item();
 
 		bool operator<(const Item& item);
 		bool operator>(const Item& item);
 		bool operator==(const Item& item);
 		bool operator!=(const Item& item);
+
+		string getTag() const;
+		void setTag(const string tag);
 
 		cocos2d::Sprite* getSprite() const;
 		PrimitiveRect getHitbox() const;
@@ -51,6 +56,7 @@ namespace g3nts {
 
 		float _maxVelocity = 500.0f, _maxAccel = 1000.0f;
 		bool _isBreakable;
+		string _tag;
 
 		int _id;
 		static int idCount;

@@ -38,8 +38,6 @@ namespace g3nts {
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 		void update(const float dt);
 
-		//void addAnimationFrames(SpriteFrames spriteFrames, string tag);
-
 	private:
 		float _characterSpeed = 400.0f;
 		
@@ -57,7 +55,6 @@ namespace g3nts {
 		
 
 		void initKeyboardListener();
-		//SpriteFrames getAnimSpriteFrames(string file, const unsigned int numFrames);
 	};
 }
 

@@ -15,15 +15,25 @@ namespace g3nts {
 		Mirror();
 		Mirror(cocos2d::Vec2& position, cocos2d::Sprite* sprite);
 		Mirror(cocos2d::Vec2& position, cocos2d::SpriteFrame* spriteFrame);
+		Mirror(cocos2d::Vec2& position, string spritePath);
 		~Mirror();
 
+		cocos2d::Sprite* getSprite() const;
+		PrimitiveRect getHitbox() const;
+		cocos2d::Vec2 getPosition() const;
+		bool isBroken() const;
 
+		void setBroken(const bool isBroken);
+		
+		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 
 	private:
-		cocos2d::Sprite* _sprite;
-		const cocos2d::Vec2 _position;
-		PrimitiveRect _hitbox;
 
+		cocos2d::Sprite* _sprite;
+		PrimitiveRect _hitbox;
+		const cocos2d::Vec2 _position;
+
+		bool _isBroken = false;
 	};
 }
 

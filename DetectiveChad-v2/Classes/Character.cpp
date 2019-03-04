@@ -6,7 +6,7 @@ g3nts::Character::Character() {}
 g3nts::Character::Character(cocos2d::Vec2& position, Sprite* sprite) : _position(position), _sprite(sprite) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
-	_playerDirection = Vec2(0, 0);
+	_playerDirection = { 0, 0 };
 
 	_hitbox = g3nts::PrimitiveRect(
 		Vec2(_sprite->getPosition().x - (_sprite->getContentSize().width  / 2.0f),
@@ -22,9 +22,9 @@ g3nts::Character::Character(cocos2d::Vec2& position, string spritePath) : Charac
 
 g3nts::Character::~Character() {
 	_sprite = nullptr;
-	/*for (auto& it : _animations) {
+	for (auto& it : _animations) {
 		it.second->release();
-	}*/
+	}
 }
 
 const int g3nts::Character::getZIndex() const { return _sprite->getLocalZOrder(); }
@@ -70,7 +70,7 @@ void g3nts::Character::addAnimation(string tag, string file, const unsigned int 
 	SpriteFrames frames;
 	char name[100];
 
-	for (unsigned int i = 1; i <= numFrames; i++) {
+	for (unsigned int i = 1; i <= numFrames; ++i) {
 		sprintf(name, file.c_str(), i);
 		frames.pushBack(spriteCache->getSpriteFrameByName(name));
 	}
@@ -99,45 +99,45 @@ void g3nts::Character::update(const float dt) {
 	typedef EventKeyboard::KeyCode KB;
 
 	// PLAYER MOVEMENT
-	_playerDirection = Vec2(0, 0);
+	_playerDirection = { 0, 0 };
 	// Up and right (W + D)
 	if (_keyboard.keyDown[(int)KB::KEY_W] && _keyboard.keyDown[(int)KB::KEY_D]) {
-		_playerDirection = Vec2(1, 1);
+		_playerDirection = { 1, 1 };
 		_lastDirection = "upRight";
 	}
 	// Up and left (W + A)
 	else if (_keyboard.keyDown[(int)KB::KEY_W] && _keyboard.keyDown[(int)KB::KEY_A]) {
-		_playerDirection = Vec2(-1, 1);
+		_playerDirection = { -1, 1 };
 		_lastDirection = "upLeft";
 	}
 	// Down and right (S + D)
 	else if (_keyboard.keyDown[(int)KB::KEY_S] && _keyboard.keyDown[(int)KB::KEY_D]) {
-		_playerDirection = Vec2(1, -1);
+		_playerDirection = { 1, -1 };
 		_lastDirection = "downRight";
 	}
 	// Down and left (S + A)
 	else if (_keyboard.keyDown[(int)KB::KEY_S] && _keyboard.keyDown[(int)KB::KEY_A]) {
-		_playerDirection = Vec2(-1, -1);
+		_playerDirection = { -1, -1 };
 		_lastDirection = "downLeft";
 	}
 	// Up (W)
 	else if (_keyboard.keyDown[(int)KB::KEY_W]) {
-		_playerDirection = Vec2(0, 1);
+		_playerDirection = { 0, 1 };
 		_lastDirection = "up";
 	}
 	// Down (S)
 	else if (_keyboard.keyDown[(int)KB::KEY_S]) {
-		_playerDirection = Vec2(0, -1);
+		_playerDirection = { 0, -1 };
 		_lastDirection = "down";
 	}
 	// Right (D)
 	else if (_keyboard.keyDown[(int)KB::KEY_D]) {
-		_playerDirection = Vec2(1, 0);
+		_playerDirection = { 1, 0 };
 		_lastDirection = "right";
 	}
 	// Left (A)
 	else if (_keyboard.keyDown[(int)KB::KEY_A]) {
-		_playerDirection = Vec2(-1, 0);
+		_playerDirection = { -1, 0 };
 		_lastDirection = "left";
 	}
 

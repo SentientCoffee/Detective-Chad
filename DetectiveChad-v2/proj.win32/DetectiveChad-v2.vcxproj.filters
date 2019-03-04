@@ -10,16 +10,58 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\AppDelegate">
+      <UniqueIdentifier>{c672d34e-6f17-437d-ba97-d5fbc61d86a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes">
+      <UniqueIdentifier>{6d5284cf-09d7-45a1-b81b-830a25275fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Header Files">
+      <UniqueIdentifier>{3881d9cf-9aa7-4164-b924-2a9111f26ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Source Files">
+      <UniqueIdentifier>{0f4c694a-3547-48cd-917b-32712f69a539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Framework">
+      <UniqueIdentifier>{4d4d7993-a23a-465d-8ccd-b276505854db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Framework\Header Files">
+      <UniqueIdentifier>{f19594f9-eaf6-4fd1-becd-fb125e7be43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Framework\Source Files">
+      <UniqueIdentifier>{565de276-0a5e-4723-95ed-af2f0f6d8def}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src</Filter>
+      <Filter>src\AppDelegate</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Scenes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MainMenu.cpp">
+      <Filter>src\Scenes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tutorial.cpp">
+      <Filter>src\Scenes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Character.cpp">
+      <Filter>src\Framework\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Collision.cpp">
+      <Filter>src\Framework\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Item.cpp">
+      <Filter>src\Framework\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Mirror.cpp">
+      <Filter>src\Framework\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Primitives.cpp">
+      <Filter>src\Framework\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -27,10 +69,34 @@
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src</Filter>
+      <Filter>src\AppDelegate</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
+      <Filter>src\Scenes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainMenu.h">
+      <Filter>src\Scenes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tutorial.h">
+      <Filter>src\Scenes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Character.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Collision.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputDevices.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Item.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Mirror.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Primitives.h">
+      <Filter>src\Framework\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

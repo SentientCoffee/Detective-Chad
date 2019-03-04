@@ -14,9 +14,6 @@ g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, co
 : _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour) 
 { _node->drawRect(startPos, endPos, colour); }
 
-g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos)
-: PrimitiveRect(startPos, endPos, Color4F(1, 0, 0, 1)) {}
-
 Vec2 g3nts::PrimitiveRect::getStartPosition() const  { return _startPos; }
 Vec2 g3nts::PrimitiveRect::getEndPosition() const    { return _endPos; }
 Vec2 g3nts::PrimitiveRect::getCentrePosition() const { return _startPos + (_endPos - _startPos) / 2.0f; }
@@ -70,12 +67,6 @@ g3nts::PrimitiveCircle::PrimitiveCircle(const Vec2& centrePos, const float radiu
 : _node(DrawNode::create()), _position(centrePos), _radius(radius), _angle(angle), _segments(segments), _drawRadius(drawRadius), _colour(colour)
 { _node->drawCircle(centrePos, radius, angle, segments, drawRadius, colour); }
 
-g3nts::PrimitiveCircle::PrimitiveCircle(const Vec2& centrePos, const float radius, const Color4F& colour)
-: PrimitiveCircle(centrePos, radius, 1.0f, 20, false, colour) {}
-
-g3nts::PrimitiveCircle::PrimitiveCircle(const Vec2& centrePos, const float radius)
-: PrimitiveCircle(centrePos, radius, 1.0f, 20, false, Color4F(1.0f, 0.0f, 0.0f, 1.0f)) {}
-
 Vec2 g3nts::PrimitiveCircle::getPosition() const { return _position; }
 float g3nts::PrimitiveCircle::getRadius() const			  { return _radius; }
 
@@ -121,9 +112,6 @@ g3nts::PrimitiveLine::PrimitiveLine(const Vec2& startPos, const Vec2& endPos, co
 : _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour)
 { _node->drawLine(startPos, endPos, colour); }
 
-g3nts::PrimitiveLine::PrimitiveLine(const Vec2& startPos, const Vec2& endPos)
-: PrimitiveLine(startPos, endPos, Color4F(1, 0, 0, 1)) {}
-
 Vec2 g3nts::PrimitiveLine::getStartPosition() const { return _startPos; }
 Vec2 g3nts::PrimitiveLine::getEndPosition() const   { return _endPos; }
 
@@ -159,9 +147,6 @@ g3nts::PrimitiveCapsule::PrimitiveCapsule(const Vec2& startPos, const Vec2& endP
 	_node->drawLine(startPos + (normal.getNormalized() * radius), endPos + (normal.getNormalized() * radius), colour);
 	_node->drawLine(startPos - (normal.getNormalized() * radius), endPos - (normal.getNormalized() * radius), colour);
 }
-
-g3nts::PrimitiveCapsule::PrimitiveCapsule(const Vec2& startPos, const Vec2& endPos, const float radius)
-: PrimitiveCapsule(startPos, endPos, radius, Color4F(1, 0, 0, 1)) {}
 
 Vec2 g3nts::PrimitiveCapsule::getStartPosition() const { return _startPos; }
 Vec2 g3nts::PrimitiveCapsule::getEndPosition() const   { return _endPos; }
