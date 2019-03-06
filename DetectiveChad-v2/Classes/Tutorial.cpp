@@ -260,56 +260,56 @@ void Tutorial::initUI() {
 	//evidence_num = tutorial.getEvidence();
 
 	//placeholder values
-	flex_state = false;
+	flex_state = true;
 	evidence_num = 2;
-	UI_Scale = .2;
+	//UI Scaling might have to be done individually as the assets' sizes are not normalized.
+	UI_Scale = .3;
 	//setting UI sprites
 	flexing_meter = Sprite::create("ui/flexing.png");
 	flex_meter = Sprite::create("ui/unflex.png");
+	inventory = Sprite::create("ui/inventory.png");
 
 	for (int i = 0;i < evidence_num;i++)
 	{
 		evidence.push_back(Sprite::create("ui/evidence.png"));
 		broken_evidence.push_back(Sprite::create("ui/broken.png"));
-		evidence_state.push_back(true);
+		evidence_state.push_back(false);
 	}
 
 	//setting UI size scaling
 	flexing_meter->setScale(UI_Scale);
 	flex_meter->setScale(UI_Scale);
+	inventory->setScale(UI_Scale);
+
 	for (int i = 0;i < evidence_num;i++)
 	{
 		evidence[i]->setScale(UI_Scale);
+		broken_evidence[i]->setScale(UI_Scale);
 	}
 
 	//setting UI position
 	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
-	if (flex_state)
-		flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
-	else
-		flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
-
+	flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
+	flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
+	inventory->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - 500 / 2 * UI_Scale, 500 * UI_Scale / 2));
+	flexing_meter->setVisible(false);
 
 	for (int i = 0;i < evidence_num;i++)
 	{
-		if (evidence_state[i])
-			evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
-		else
-			broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+		evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
+		broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+		broken_evidence[i]->setVisible(false);
 	}
 
 	//adding UI to scene
-	if (flex_state)
-		this->addChild(flexing_meter, 1000);
-	else
-		this->addChild(flex_meter, 1000);
+	this->addChild(flexing_meter, 1000);
+	this->addChild(flex_meter, 1000);
+	this->addChild(inventory, 1000);
 
 	for (int i = 0;i < evidence_num;i++)
 	{
-		if (evidence_state[i])
-			this->addChild(evidence[i], 1000);
-		else
-			this->addChild(broken_evidence[i], 1000);
+		this->addChild(evidence[i], 1000);
+		this->addChild(broken_evidence[i], 1000);
 	}
 }
 
@@ -326,17 +326,34 @@ void Tutorial::update(float dt) {
 	// UI MOVEMENT (UI follows camera)
 	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
 	if (flex_state)
-		flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
+	{
+		flexing_meter->setVisible(true);
+		flex_meter->setVisible(false);
+	}
 	else
-		flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
+	{
+		flexing_meter->setVisible(false);
+		flex_meter->setVisible(true);
+	}
+	flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
+	flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
+	inventory->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - 500 / 2 * UI_Scale, 500 * UI_Scale / 2));
 
 
 	for (int i = 0;i < evidence_num;i++)
 	{
+		evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
+		broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
 		if (evidence_state[i])
-			evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
+		{
+			evidence[i]->setVisible(true);
+			broken_evidence[i]->setVisible(false);
+		}
 		else
-			broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+		{
+			evidence[i]->setVisible(false);
+			broken_evidence[i]->setVisible(true);
+		}
 	}
 
 	// Update the player

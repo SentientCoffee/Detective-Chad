@@ -65,6 +65,7 @@ private:
 
 	cocos2d::Sprite* flex_meter;           // Flex meter UI (500x220 px)
 	cocos2d::Sprite* flexing_meter;        // flexing meter UI (500x551 px)
+	cocos2d::Sprite* inventory;            // inventory UI (500x500 px)
 	std::vector<cocos2d::Sprite*> evidence; // Evidence UI (500x668 px)
 	std::vector<cocos2d::Sprite*> broken_evidence; //Broken Evidence UI (500x375 px)
 	int evidence_num;                      // Number of evidence in level (taken from player)
