@@ -29,6 +29,7 @@ public:
 	void initItems();
 	void initWalls();
 	void initPauseMenu();
+	void initUI();
 
 	void initKeyboardListener();
 	void initMouseListener();
@@ -61,6 +62,16 @@ private:
 	g3nts::Item* magGlass_1;
 
 	g3nts::Mirror* bathroomMirror;         // Bathroom mirror for Chad to flex in front of
+
+	cocos2d::Sprite* flex_meter;           // Flex meter UI (500x220 px)
+	cocos2d::Sprite* flexing_meter;        // flexing meter UI (500x551 px)
+	cocos2d::Sprite* inventory;            // inventory UI (500x500 px)
+	std::vector<cocos2d::Sprite*> evidence; // Evidence UI (500x668 px)
+	std::vector<cocos2d::Sprite*> broken_evidence; //Broken Evidence UI (500x375 px)
+	int evidence_num;                      // Number of evidence in level (taken from player)
+	std::vector<bool> evidence_state;      // State of the evidence
+	bool flex_state;                       // Flex state of player (taken from player)
+	float UI_Scale;
 
 	cocos2d::Menu* pauseMenu;              // Pause Menu object when the game is paused
 	bool gamePaused = false;               // Bool to check if the game is paused
