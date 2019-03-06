@@ -22,7 +22,7 @@ bool Tutorial::init() {
 	initMouseListener();
 	initKeyboardListener();
 
-	showHitboxes();
+	//showHitboxes();
 
 	this->scheduleUpdate();
 	return true;
@@ -195,6 +195,10 @@ void Tutorial::initPauseMenu() {
 	pauseMenu = Menu::create(titleItem, resumeButton, exitButton, NULL);
 	this->addChild(pauseMenu, 1000);
 	pauseMenu->setVisible(false);
+}
+
+void Tutorial::initTextboxes() {
+
 }
 
 void Tutorial::initKeyboardListener() {

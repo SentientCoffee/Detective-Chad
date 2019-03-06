@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "Mirror.h"
 #include "Primitives.h"
+#include "Textbox.h"
 
 class Tutorial : public cocos2d::Scene {
 public:
@@ -29,6 +30,7 @@ public:
 	void initItems();
 	void initWalls();
 	void initPauseMenu();
+	void initTextboxes();
 
 	void initKeyboardListener();
 	void initMouseListener();
@@ -64,6 +66,8 @@ private:
 
 	cocos2d::Menu* pauseMenu;              // Pause Menu object when the game is paused
 	bool gamePaused = false;               // Bool to check if the game is paused
+
+	g3nts::Textbox* textbox;
 
 	// Mouse and keyboard structs, along with their listeners
 	Input::Mouse mouse;
