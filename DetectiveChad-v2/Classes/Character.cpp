@@ -28,6 +28,7 @@ g3nts::Character::~Character() {
 }
 
 const int g3nts::Character::getZIndex() const { return _sprite->getLocalZOrder(); }
+const bool g3nts::Character::isFlexing() const { return _flexState; }
 Sprite* g3nts::Character::getSprite() const { return _sprite; }
 Vec2 g3nts::Character::getPosition() const  { return _position; }
 Vec2 g3nts::Character::getDirection() const { return _playerDirection; }
@@ -40,10 +41,9 @@ void g3nts::Character::setPosition(Vec2& position){
 	_hitbox.setPosition(position);
 }
 void g3nts::Character::setPosition(const float x, const float y) { setPosition(Vec2(x, y)); }
-
 void g3nts::Character::setDirection(cocos2d::Vec2& direction) { _playerDirection = direction; }
 void g3nts::Character::setDirection(const float x, const float y) { setDirection(Vec2(x, y)); }
-
+void g3nts::Character::setFlexing(const bool flexState) { _flexState = flexState; }
 void g3nts::Character::setZIndex(const int zIndex) {
 	_sprite->setLocalZOrder(zIndex);
 	_hitbox.getNode()->setLocalZOrder(zIndex);
@@ -141,19 +141,25 @@ void g3nts::Character::update(const float dt) {
 		_lastDirection = "left";
 	}
 
-	_nextAnimation = _lastDirection;
-	if (_playerDirection.getLengthSq() != 0) _nextAnimation += "Walk";
-	else _nextAnimation += "Idle";
+	if (_flexState) {
+		if (_sprite->getNumberOfRunningActionsByTag('anim') == 0) _flexState = false;
+		else _nextAnimation = "flex";
+	}
+	else {
+		_position += _playerDirection.getNormalized() * _characterSpeed * dt;
+		_sprite->setPosition(_position);
+		_hitbox.setPosition(_position);
+
+		_nextAnimation = _lastDirection;
+		if (_playerDirection.getLengthSq() != 0) _nextAnimation += "Walk";
+		else _nextAnimation += "Idle";
+	}
 	
 	if (_currentAnimation != _nextAnimation || _sprite->getNumberOfRunningActionsByTag('anim') == 0) {
 		_currentAnimation = _nextAnimation;
 		_sprite->stopAllActionsByTag('anim');
 		runAnimation(_nextAnimation);
 	}
-
-	_position += _playerDirection.getNormalized() * _characterSpeed * dt;
-	_sprite->setPosition(_position);
-	_hitbox.setPosition(_position);
 
 }
 
