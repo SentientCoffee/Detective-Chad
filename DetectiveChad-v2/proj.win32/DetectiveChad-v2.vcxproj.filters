@@ -63,6 +63,9 @@
     <ClCompile Include="..\Classes\Primitives.cpp">
       <Filter>src\Framework\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Textbox.cpp">
+      <Filter>src\Framework\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -96,6 +99,9 @@
       <Filter>src\Framework\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Primitives.h">
+      <Filter>src\Framework\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Textbox.h">
       <Filter>src\Framework\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
