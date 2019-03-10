@@ -141,6 +141,7 @@ void g3nts::Character::update(const float dt) {
 		_lastDirection = "left";
 	}
 
+	// Check if Chad is flexing
 	if (_flexState) {
 		if (_sprite->getNumberOfRunningActionsByTag('anim') == 0) _flexState = false;
 		else _nextAnimation = "flex";
@@ -155,6 +156,7 @@ void g3nts::Character::update(const float dt) {
 		else _nextAnimation += "Idle";
 	}
 	
+	// Check for animations that are running and run the proper one
 	if (_currentAnimation != _nextAnimation || _sprite->getNumberOfRunningActionsByTag('anim') == 0) {
 		_currentAnimation = _nextAnimation;
 		_sprite->stopAllActionsByTag('anim');
