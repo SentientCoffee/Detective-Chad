@@ -10,6 +10,13 @@ void Tutorial::onEnter() { Scene::onEnter(); }
 bool Tutorial::init() {
 	if (!Scene::init()) return false;
 
+	camera = this->getDefaultCamera();
+	gamePaused = false;
+	
+	levelScale = 1.35f;
+	UI_Scale = 0.5f;
+	flexDepleteTimer = 1800.0f;
+
 	initDirector();
 	initSpriteCache();
 
@@ -17,8 +24,10 @@ bool Tutorial::init() {
 	initItems();
 	initLevel();
 	initWalls();
-	initPauseMenu();
+	
 	initUI();
+	initTextboxes();
+	initPauseMenu();
 
 	initMouseListener();
 	initKeyboardListener();
@@ -47,7 +56,7 @@ void Tutorial::initSpriteCache() {
 
 void Tutorial::initPlayer() {
 	playerPosition = Vec2(1080, 760) * levelScale;
-	this->getDefaultCamera()->setPosition(playerPosition);
+	camera->setPosition(playerPosition);
 
 	// Playable character with animations
 	player = new g3nts::Character(playerPosition, spriteCache->getSpriteFrameByName("chad/idle/left/01.png"));
@@ -199,7 +208,10 @@ void Tutorial::initPauseMenu() {
 }
 
 void Tutorial::initTextboxes() {
-
+	Vec2 cameraPos = camera->getPosition();
+	textbox = new g3nts::Textbox(cameraPos, "This is\na test", "fonts/Marker Felt.ttf", 24, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
+	textbox->addToScene(this, 100);
+	//textbox->setVisible(false);
 }
 
 void Tutorial::initKeyboardListener() {
@@ -216,15 +228,29 @@ void Tutorial::initKeyboardListener() {
 			togglePause();
 		}
 		else if (key == EventKeyboard::KeyCode::KEY_SPACE) {
-			DelayTime* delay = DelayTime::create(2.0f);
-			player->runAnimation("flex");
-			player->getSprite()->runAction(delay);
+
+			if (!player->isFlexing()) {
+				player->setFlexing(true);
+
+				DelayTime* delay = DelayTime::create(10.0f);
+				delay->setTag('anim');
+				player->getSprite()->runAction(delay);
+				player->runAnimation("flex");
+			}
 
 			for (g3nts::Item* item : items) {
 				if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
 					if (item->isBreakable()) {
 						item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + item->getTag() + ".png"));
 						item->setBreakable(false);
+						
+						for (unsigned int i = 0; i < evidence_state.size(); ++i) {
+							if (evidence_state[i]) {
+								evidence_state[i] = false;
+								break;
+							}
+						}
+
 					}
 
 					Vec2 direction = item->getPosition() - player->getPosition();
@@ -238,6 +264,9 @@ void Tutorial::initKeyboardListener() {
 					bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-mirror.png"));
 				}
 			}
+		}
+		else if (key == EventKeyboard::KeyCode::KEY_E) {
+			
 		}
 	};
 
@@ -260,94 +289,120 @@ void Tutorial::initMouseListener() {
 }
 
 void Tutorial::initUI() {
-	//flex_state = player.getFlexState();
-	//evidence_num = tutorial.getEvidence();
-
-	//placeholder values
-	flex_state = true;
-	evidence_num = 2;
-	//UI Scaling might have to be done individually as the assets' sizes are not normalized.
-	UI_Scale = .3;
-	//setting UI sprites
-	flexing_meter = Sprite::create("ui/flexing.png");
-	flex_meter = Sprite::create("ui/unflex.png");
-	inventory = Sprite::create("ui/inventory.png");
-
-	for (int i = 0;i < evidence_num;i++)
-	{
-		evidence.push_back(Sprite::create("ui/evidence.png"));
-		broken_evidence.push_back(Sprite::create("ui/broken.png"));
-		evidence_state.push_back(false);
-	}
-
-	//setting UI size scaling
-	flexing_meter->setScale(UI_Scale);
+	// UI flexing meter
+	flex_meter = ProgressTimer::create(Sprite::create("ui/flexing.png"));
 	flex_meter->setScale(UI_Scale);
+	flex_meter->setType(ProgressTimer::Type::BAR);
+	flex_meter->setMidpoint(Vec2(0, 0.5f));
+	flex_meter->setBarChangeRate(Vec2(1, 0));
+	flex_meter->setPercentage(100);
+
+	flex_bg = Sprite::create("ui/flexing-transparent.png");
+	flex_bg->setScale(UI_Scale);
+
+	// UI unflexed meter
+	unflex_meter = ProgressTimer::create(Sprite::create("ui/unflex.png"));
+	unflex_meter->setScale(UI_Scale);
+	unflex_meter->setType(ProgressTimer::Type::BAR);
+	unflex_meter->setMidpoint(Vec2(0, 0.5f));
+	unflex_meter->setBarChangeRate(Vec2(1, 0));
+	unflex_meter->setPercentage(100);
+	
+	unflex_bg = Sprite::create("ui/unflex-transparent.png");
+	unflex_bg->setScale(UI_Scale);
+
+	// UI inventory
+	inventory = Sprite::create("ui/inventory.png");
+	inventory->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - 500 / 2 * UI_Scale, 500 * UI_Scale / 2));
 	inventory->setScale(UI_Scale);
 
-	for (int i = 0;i < evidence_num;i++)
+	for (int i = 0; i < items.size(); ++i)
 	{
+		evidence.push_back(Sprite::create("ui/evidence.png"));
 		evidence[i]->setScale(UI_Scale);
+
+		broken_evidence.push_back(Sprite::create("ui/broken.png"));
 		broken_evidence[i]->setScale(UI_Scale);
-	}
-
-	//setting UI position
-	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
-	flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
-	flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
-	inventory->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - 500 / 2 * UI_Scale, 500 * UI_Scale / 2));
-	flexing_meter->setVisible(false);
-
-	for (int i = 0;i < evidence_num;i++)
-	{
-		evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
-		broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
 		broken_evidence[i]->setVisible(false);
+		
+		evidence_state.push_back(true);
 	}
 
-	//adding UI to scene
-	this->addChild(flexing_meter, 1000);
-	this->addChild(flex_meter, 1000);
+	// Adding UI to scene
+	this->addChild(flex_bg, 1000);
+	this->addChild(flex_meter, 1001);
+	this->addChild(unflex_bg, 1000);
+	this->addChild(unflex_meter, 1001);
 	this->addChild(inventory, 1000);
 
-	for (int i = 0;i < evidence_num;i++)
+	for (int i = 0; i < items.size(); ++i)
 	{
 		this->addChild(evidence[i], 1000);
 		this->addChild(broken_evidence[i], 1000);
 	}
+
+	flex_bg->setVisible(false);
 }
 
-void Tutorial::update(float dt) {
-
+void Tutorial::update(const float dt) {
+	
 	// CAMERA MOVEMENT (Camera follows the player)
 	if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
-		this->getDefaultCamera()->setPositionX(player->getPosition().x);
+		camera->setPositionX(player->getPosition().x);
 	}
 	if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
-		this->getDefaultCamera()->setPositionY(player->getPosition().y);
+		camera->setPositionY(player->getPosition().y);
 	}
 
 	// UI MOVEMENT (UI follows camera)
-	cocos2d::Vec2 cameraPosition = this->getDefaultCamera()->getPosition();
-	if (flex_state)
+	flexRefillTimer -= dt;
+	if (player->isFlexing()) flexRefillTimer = 0.4f;
+
+	if(flexRefillTimer > 0)
 	{
-		flexing_meter->setVisible(true);
-		flex_meter->setVisible(false);
+		flex_meter->setVisible(true);
+		flex_bg->setVisible(true);
+		
+		if (flex_meter->getNumberOfRunningActionsByTag('UI') == 0) {
+			ProgressFromTo* flexProgress = ProgressFromTo::create(0.4f, unflex_meter->getPercentage(), 100);
+			DelayTime* UIdelay = DelayTime::create(1.0f);
+
+			Sequence* UIseq = Sequence::create(flexProgress, UIdelay, NULL);
+			UIseq->setTag('UI');
+			flex_meter->runAction(UIseq);
+		}
+
+		unflex_meter->stopAllActionsByTag('UI');
+		unflex_meter->setPercentage(100);
+		unflex_meter->setVisible(false);
+		unflex_bg->setVisible(false);
 	}
 	else
 	{
-		flexing_meter->setVisible(false);
-		flex_meter->setVisible(true);
+		unflex_meter->setVisible(true);
+		unflex_bg->setVisible(true);
+
+		if (unflex_meter->getNumberOfRunningActionsByTag('UI') == 0) {
+			ProgressTo* unflexProgress = ProgressTo::create(30.0f, 0);
+			unflexProgress->setTag('UI');
+			unflex_meter->runAction(unflexProgress);
+		}
+		
+		flex_meter->setVisible(false);
+		flex_bg->setVisible(false);
 	}
-	flexing_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 551 * UI_Scale / 2));
-	flex_meter->setPosition(cameraPosition + cocos2d::Vec2(-windowSize.x / 2 + 500 / 2 * UI_Scale, windowSize.y / 2 - 220 * UI_Scale / 2));
-	inventory->setPosition(cameraPosition + cocos2d::Vec2(windowSize.x / 2 - 500 / 2 * UI_Scale, 500 * UI_Scale / 2));
 
+	flex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+	flex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+	unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+	unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+	
+	inventory->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory->getContentSize().width / 2 * UI_Scale, inventory->getContentSize().height * UI_Scale / 2));
 
-	for (int i = 0;i < evidence_num;i++)
+	for (int i = 0; i < items.size(); ++i)
 	{
-		evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1)*(500 * UI_Scale), windowSize.y / 2 - 668 * UI_Scale / 2));
-		broken_evidence[i]->setPosition(cameraPosition + cocos2d::Vec2(50 + windowSize.x / 2 - (i + 1) * (500 * UI_Scale), windowSize.y / 2 - 375 * UI_Scale / 2));
+		evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - evidence[i]->getContentSize().height * UI_Scale / 2));
+		broken_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - evidence[i]->getContentSize().height * UI_Scale / 2));
 		if (evidence_state[i])
 		{
 			evidence[i]->setVisible(true);
@@ -377,8 +432,9 @@ void Tutorial::update(float dt) {
 		if (item->getPosition().y > livingRoomDoorway_1.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10) item->setZIndex(14);
 		if (item->getPosition().y > bedroomDoorway.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10)      item->setZIndex(4);
 
+
 		// Check item collision with player
-		if (g3nts::isColliding(player->getHitbox(), item->getHitbox()) && player->getZIndex() == item->getZIndex() + 1) {
+		/*if (g3nts::isColliding(player->getHitbox(), item->getHitbox()) && player->getZIndex() == item->getZIndex() + 1) {
 
 			Vec2 direction = player->getDirection() + item->getPosition() - player->getPosition();
 
@@ -387,15 +443,15 @@ void Tutorial::update(float dt) {
 			else {
 
 				if (player->getDirection().getLengthSq() == 0) {
-					item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.2f);
+					item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.4f);
 				}
 				else {
-					item->setVelocity(direction.getNormalized() * 500.0f);
+					item->setVelocity(direction.getNormalized() * 200.0f);
 				}
 
 			}
 
-		}
+		}*/
 
 	}
 
@@ -426,7 +482,7 @@ void Tutorial::update(float dt) {
 
 void Tutorial::togglePause() {
 	gamePaused = !gamePaused;
-	pauseMenu->setPosition(this->getDefaultCamera()->getPosition());
+	pauseMenu->setPosition(camera->getPosition());
 
 	if (gamePaused) {
 		player->getKeyboardListener()->setEnabled(false);

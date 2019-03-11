@@ -21,6 +21,7 @@ namespace g3nts {
 		~Character();
 
 		const int getZIndex() const;
+		const bool isFlexing() const;
 		cocos2d::Sprite* getSprite() const;
 		cocos2d::Vec2 getPosition() const;
 		cocos2d::Vec2 getDirection() const;
@@ -31,6 +32,7 @@ namespace g3nts {
 		void setPosition(const float x, const float y);
 		void setDirection(cocos2d::Vec2& direction);
 		void setDirection(const float x, const float y);
+		void setFlexing(const bool flexing);
 		void setZIndex(const int zIndex);
 
 		void addAnimation(string tag, string file, const unsigned int numFrames);
@@ -40,6 +42,7 @@ namespace g3nts {
 
 	private:
 		float _characterSpeed = 400.0f;
+		bool _flexState = false;
 		
 		cocos2d::Sprite* _sprite;		
 		std::unordered_map<string, cocos2d::Animation*> _animations;
