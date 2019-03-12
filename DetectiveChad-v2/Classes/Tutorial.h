@@ -29,55 +29,74 @@ public:
 	void initLevel();
 	void initItems();
 	void initWalls();
-	void initPauseMenu();
+	
 	void initUI();
 	void initTextboxes();
+	void initPauseMenu();
 
 	void initKeyboardListener();
 	void initMouseListener();
 
-	void update(float dt);
+	void update(const float dt) override;
+
+	void screenshake();
 	void togglePause();
-	
 	void showHitboxes();
 
 private:
+	// Cocos bulit-in classes
+	cocos2d::Director* director;             // Director to change and transition scenes and get info about the window
+	cocos2d::SpriteFrameCache* spriteCache;  // Sprite cache for all the different sprites
+	cocos2d::Camera* camera;
 
-	cocos2d::Director* director;            // Director to change and transition scenes and get info about the window
-	cocos2d::SpriteFrameCache* spriteCache; // Sprite cache for all the different sprites
-
-	cocos2d::Vec2 windowSize, origin;      // Window size and origin (point (0, 0))
-	cocos2d::Size visibleSize;             // Visible size of the window
-
-	cocos2d::Sprite* floorplan;            // Background sprite
-	cocos2d::Sprite* upperWalls;           // Sprites for just the upper walls
-	cocos2d::Sprite* middleWalls;          // Sprites for just the middle walls
-	cocos2d::Sprite* lowerWalls;           // Sprites for just the lower walls
+	cocos2d::Vec2 windowSize, origin;        // Window size and origin (point (0, 0))
+	cocos2d::Size visibleSize;               // Visible size of the window
 	
-	g3nts::Character* player;              // Player character (object controlled by user)
-	cocos2d::Vec2 playerPosition;          // Player's starting position
-	                                       // Will be used in pause menu function to ensure player stays in the same position
+	// Level sprites
+	cocos2d::Sprite* floorplan;              // Background sprite
+	cocos2d::Sprite* upperWalls;             // Sprites for just the upper walls
+	cocos2d::Sprite* middleWalls;            // Sprites for just the middle walls
+	cocos2d::Sprite* lowerWalls;             // Sprites for just the lower walls
+	
+	// Player
+	g3nts::Character* player;                // Player character (object controlled by user)
+	cocos2d::Vec2 playerPosition;            // Player's starting position
+	                                         // Will be used in pause menu function to ensure player stays in the same position
 
-	std::vector<g3nts::Item*> items;       // Container to hold all the items in the level
-	g3nts::Item* shirt_1;
-	g3nts::Item* shirt_2;
-	g3nts::Item* magGlass_1;
+	// Items in the scene
+	std::vector<g3nts::Item*> items;         // Container to hold all the items in the level
+	std::vector<g3nts::Item*> itemTemps;
+	unsigned int totalItems;
 
-	g3nts::Mirror* bathroomMirror;         // Bathroom mirror for Chad to flex in front of
+	g3nts::Mirror* bathroomMirror;           // Bathroom mirror for Chad to flex in front of
+	g3nts::Item* flexMobile;
 
-	cocos2d::Sprite* flex_meter;           // Flex meter UI (500x220 px)
-	cocos2d::Sprite* flexing_meter;        // flexing meter UI (500x551 px)
-	cocos2d::Sprite* inventory;            // inventory UI (500x500 px)
-	std::vector<cocos2d::Sprite*> evidence; // Evidence UI (500x668 px)
-	std::vector<cocos2d::Sprite*> broken_evidence; //Broken Evidence UI (500x375 px)
-	int evidence_num;                      // Number of evidence in level (taken from player)
-	std::vector<bool> evidence_state;      // State of the evidence
-	bool flex_state;                       // Flex state of player (taken from player)
-	float UI_Scale;
+	// UI
+	float UI_Scale;                          // Scaling of UI
+	float flexRefillTimer;
+	cocos2d::Sprite* unflex_bg;              // Unflexed meter UI
+	cocos2d::ProgressTimer* unflex_meter;
 
-	cocos2d::Menu* pauseMenu;              // Pause Menu object when the game is paused
-	bool gamePaused = false;               // Bool to check if the game is paused
+	cocos2d::Sprite* flex_bg;                // Flexing meter UI
+	cocos2d::ProgressTimer* flex_meter;
+	
+	std::vector<cocos2d::Sprite*> evidence;        // Evidence UI
+	std::vector<cocos2d::Sprite*> broken_evidence; // Broken Evidence UI
+	std::vector<bool> evidence_state;              // State of the evidence
+	unsigned int broken;
 
+	cocos2d::Sprite* inventory_bg;                    // inventory UI
+	std::vector<g3nts::Item*> inventory;
+	std::unordered_map<string, bool> inventory_state;
+	unsigned int pickedUp;
+	
+	// Pause menu
+	cocos2d::Menu* pauseMenu;                 // Pause Menu object when the game is paused
+	bool gamePaused;                          // Bool to check if the game is paused
+	bool gameOver;
+
+	// Textboxes
+	bool showPickupCommand;
 	g3nts::Textbox* textbox;
 
 	// Mouse and keyboard structs, along with their listeners
@@ -89,6 +108,7 @@ private:
 	
 	// ALL THE BOUNDARIES IN THE TUTORIAL LEVEL
 	// -----------------------------------------------
+	float levelScale;                          // Scaling of the level
 	std::vector<g3nts::PrimitiveRect> walls;   // Container to hold all the boundaries
 	
 	// Level boundaries to make sure the player does not leave the level
@@ -117,7 +137,7 @@ private:
 	g3nts::PrimitiveRect vecticalLivingRoomWall_2;
 	// -----------------------------------------------		   
 
-	float levelScale = 1.35f;      // Scaling of the level
+	
 };
 
 #endif

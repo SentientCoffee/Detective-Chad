@@ -1,6 +1,8 @@
 #include "AppDelegate.h"
 //#include "HelloWorldScene.h"
 #include "MainMenu.h"
+#include "Tutorial.h"
+#include "GameOver.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -62,6 +64,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);
 
+#ifdef _DEBUG
+	director->setDisplayStats(true);
+#endif
+
     //// Set the design resolution
     //glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
     //auto frameSize = glview->getFrameSize();
@@ -85,6 +91,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // Create and run the main menu scene
 	cocos2d::Scene* mainMenuScene = MainMenu::createScene();
     director->runWithScene(mainMenuScene);
+
+	/*cocos2d::Scene* tutorialScene = Tutorial::createScene();
+	director->runWithScene(tutorialScene);*/
+
+	/*cocos2d::Scene* gameOverScene = GameOver::createScene();
+    director->runWithScene(gameOverScene);*/
 
     return true;
 }

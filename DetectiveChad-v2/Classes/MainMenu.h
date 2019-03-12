@@ -14,6 +14,7 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 
+	void initDirector();
 	void initMenu();
 
 	CREATE_FUNC(MainMenu);
@@ -27,7 +28,6 @@ private:
 	cocos2d::Size visibleSize;
 
 	cocos2d::Sprite* background;
-	//cocos2d::Label* title;
 	cocos2d::Menu* menu;
 
 	cocos2d::EventListenerMouse* mouseListener;

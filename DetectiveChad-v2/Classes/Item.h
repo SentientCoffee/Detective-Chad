@@ -13,9 +13,10 @@ namespace g3nts {
 	public:
 
 		Item();
-		Item(cocos2d::Vec2& position, cocos2d::Sprite* sprite, const bool isBreakable = false, const string tag = "");
-		Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable = false, const string tag = "");
-		Item(cocos2d::Vec2& position, cocos2d::SpriteFrame* spritePath, const bool isBreakable = false, const string tag = "");
+		Item(cocos2d::Vec2 position, cocos2d::Sprite* sprite, const bool isBreakable = false, const string tag = "");
+		Item(cocos2d::Vec2 position, string spritePath, const bool isBreakable = false, const string tag = "");
+		Item(cocos2d::Vec2 position, cocos2d::SpriteFrame* spritePath, const bool isBreakable = false, const string tag = "");
+		Item(const Item& item);
 		~Item();
 
 		bool operator<(const Item& item);
@@ -35,11 +36,13 @@ namespace g3nts {
 		cocos2d::Vec2 getPosition() const;
 
 		bool isBreakable() const;
+		bool isVisible() const;
 		void setBreakable(const bool isBreakable);
+		void setVisible(const bool isVisible);
 
-		void addForce(cocos2d::Vec2& force);
-		void setVelocity(cocos2d::Vec2& velocity);
-		void setPosition(cocos2d::Vec2& position);
+		void addForce(cocos2d::Vec2 force);
+		void setVelocity(cocos2d::Vec2 velocity);
+		void setPosition(cocos2d::Vec2 position);
 		void setZIndex(const int zIndex);
 
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
@@ -55,6 +58,7 @@ namespace g3nts {
 		cocos2d::Vec2 _position;
 
 		float _maxVelocity = 500.0f, _maxAccel = 1000.0f;
+		bool _isVisible;
 		bool _isBreakable;
 		string _tag;
 
