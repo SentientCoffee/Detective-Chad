@@ -396,15 +396,16 @@ void Tutorial::initMouseListener() {
 
 void Tutorial::screenshake() {
 	//change values for varying jitter
-	for (float radius = 1.0f;radius > 0.0f; radius -= 0.1f)
+	Vec2 currentPos = camera->getPosition();
+	for (float radius = 1.0f; radius > 0.0f; radius -= 0.1f)
 	{
-		this->getDefaultCamera()->setRotation(0);
-		this->getDefaultCamera()->setPosition(player->getPosition());
-		float angle = radius * 2 * cocos2d::rand_minus1_1();
-		float offsetX = radius * 15 * cocos2d::rand_minus1_1();
-		float offsetY = radius * 15 * cocos2d::rand_minus1_1();
-		this->getDefaultCamera()->setRotation(angle + this->getDefaultCamera()->getRotation());
-		this->getDefaultCamera()->setPosition(this->getDefaultCamera()->getPosition() + cocos2d::Vec2(offsetX, offsetY));
+		camera->setRotation(0);
+		camera->setPosition(currentPos);
+		float angle = radius * 2 * rand_minus1_1();
+		float offsetX = radius * 15 * rand_minus1_1();
+		float offsetY = radius * 15 * rand_minus1_1();
+		camera->setRotation(angle + camera->getRotation());
+		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
 	}
 }
 
@@ -412,11 +413,19 @@ void Tutorial::screenshake() {
 void Tutorial::update(const float dt) {
 
 	// CAMERA MOVEMENT (Camera follows the player)
-	if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
-		camera->setPositionX(player->getPosition().x);
+	if (player->isFlexing())
+	{
+		screenshake();
 	}
-	if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
-		camera->setPositionY(player->getPosition().y);
+	else
+	{
+		this->getDefaultCamera()->setRotation(0);
+		if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
+			camera->setPositionX(player->getPosition().x);
+		}
+		if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
+			camera->setPositionY(player->getPosition().y);
+		}
 	}
 
 	// UI MOVEMENT (UI follows camera)
@@ -482,15 +491,6 @@ void Tutorial::update(const float dt) {
 	broken = 0;
 	for (bool state : evidence_state) {
 		if (!state) broken++;
-	}
-	if (player->isFlexing())
-	{
-		screenshake();
-	}
-	else
-	{
-		this->getDefaultCamera()->setPosition(player->getPosition());
-		this->getDefaultCamera()->setRotation(0);
 	}
 
 	if (broken >= 3 || unflex_meter->getPercentage() == 0) {
