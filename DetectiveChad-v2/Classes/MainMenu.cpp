@@ -3,24 +3,28 @@
 
 USING_NS_CC;
 
-cocos2d::Scene* MainMenu::createScene() { return MainMenu::create(); }
+Scene* MainMenu::createScene() { return MainMenu::create(); }
 
 void MainMenu::onEnter() { Scene::onEnter(); }
 
 bool MainMenu::init() {
 	if (!Scene::init()) return false;
 
-	director = Director::getInstance();
-	windowSize = director->getWinSizeInPixels();
-	visibleSize = director->getVisibleSize();
-	origin = director->getVisibleOrigin();
-
+	initDirector();
 	initMenu();
 
 	return true;
 }
 
 void MainMenu::onExit() { Scene::onExit(); }
+
+void MainMenu::initDirector() {
+	director = Director::getInstance();
+
+	windowSize = director->getWinSizeInPixels();
+	origin = director->getVisibleOrigin();
+	visibleSize = director->getVisibleSize();
+}
 
 void MainMenu::initMenu() {
 	background = Sprite::create("ui/mainmenuscreen.png");

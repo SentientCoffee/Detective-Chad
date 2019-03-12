@@ -12,14 +12,19 @@ namespace g3nts {
 	public:
 
 		Textbox();
-		Textbox(cocos2d::Vec2& position, string text, string font = "fonts/Marker Felt.ttf", unsigned int fontSize = 36, cocos2d::Color4F& bgColour = cocos2d::Color4F(1, 0, 0, 1));
+		Textbox(cocos2d::Vec2 position,
+				string text,
+				string font = "fonts/Marker Felt.ttf",
+				unsigned int fontSize = 36,
+				cocos2d::Color4F& textColour = cocos2d::Color4F(1, 1, 1, 1),
+				cocos2d::Color4F& bgColour = cocos2d::Color4F(0, 0, 0, 1));
 		~Textbox();
 
 		cocos2d::Vec2 getPosition() const;
 		string getText() const;
 		bool isVisible() const;
 
-		void setPosition(cocos2d::Vec2& position);
+		void setPosition(cocos2d::Vec2 position);
 		void setBackgroundColour(cocos2d::Color4F& colour);
 		void setText(const string text);
 		void setVisible(const bool isVisible);
