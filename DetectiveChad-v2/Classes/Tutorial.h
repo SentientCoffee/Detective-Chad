@@ -64,29 +64,38 @@ private:
 
 	// Items in the scene
 	std::vector<g3nts::Item*> items;         // Container to hold all the items in the level
-	g3nts::Item* shirt_1;
-	g3nts::Item* shirt_2;
-	g3nts::Item* magGlass_1;
+	std::vector<g3nts::Item*> itemTemps;
+	unsigned int totalItems;
 
 	g3nts::Mirror* bathroomMirror;           // Bathroom mirror for Chad to flex in front of
+	g3nts::Item* flexMobile;
 
 	// UI
-	cocos2d::Sprite* unflex_bg;                    // Unflexed meter UI (500x220 px)
+	float UI_Scale;                          // Scaling of UI
+	float flexRefillTimer;
+	cocos2d::Sprite* unflex_bg;              // Unflexed meter UI
 	cocos2d::ProgressTimer* unflex_meter;
 
-	cocos2d::Sprite* flex_bg;                // Flexing meter UI (500x551 px)
+	cocos2d::Sprite* flex_bg;                // Flexing meter UI
 	cocos2d::ProgressTimer* flex_meter;
 	
-	cocos2d::Sprite* inventory;                    // inventory UI (500x500 px)
-	
-	std::vector<cocos2d::Sprite*> evidence;        // Evidence UI (500x668 px)
-	std::vector<cocos2d::Sprite*> broken_evidence; // Broken Evidence UI (500x375 px)
+	std::vector<cocos2d::Sprite*> evidence;        // Evidence UI
+	std::vector<cocos2d::Sprite*> broken_evidence; // Broken Evidence UI
 	std::vector<bool> evidence_state;              // State of the evidence
+	unsigned int broken;
 
+	cocos2d::Sprite* inventory_bg;                    // inventory UI
+	std::vector<g3nts::Item*> inventory;
+	std::unordered_map<string, bool> inventory_state;
+	unsigned int pickedUp;
+	
 	// Pause menu
 	cocos2d::Menu* pauseMenu;                 // Pause Menu object when the game is paused
 	bool gamePaused;                          // Bool to check if the game is paused
+	bool gameOver;
 
+	// Textboxes
+	bool showPickupCommand;
 	g3nts::Textbox* textbox;
 
 	// Mouse and keyboard structs, along with their listeners
@@ -98,6 +107,7 @@ private:
 	
 	// ALL THE BOUNDARIES IN THE TUTORIAL LEVEL
 	// -----------------------------------------------
+	float levelScale;                          // Scaling of the level
 	std::vector<g3nts::PrimitiveRect> walls;   // Container to hold all the boundaries
 	
 	// Level boundaries to make sure the player does not leave the level
@@ -126,12 +136,7 @@ private:
 	g3nts::PrimitiveRect vecticalLivingRoomWall_2;
 	// -----------------------------------------------		   
 
-	// Scaling
-	float levelScale;      // Scaling of the level
-	float UI_Scale;        // Scaling of UI
-
-	float flexRefillTimer;
-	float flexDepleteTimer;
+	
 };
 
 #endif

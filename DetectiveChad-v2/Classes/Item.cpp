@@ -5,7 +5,7 @@ USING_NS_CC;
 int g3nts::Item::idCount = 0;
 
 g3nts::Item::Item() {}
-g3nts::Item::Item(Vec2& position, Sprite* sprite, const bool isBreakable, const string tag)
+g3nts::Item::Item(Vec2 position, Sprite* sprite, const bool isBreakable, const string tag)
 : _id(idCount++), _isBreakable(isBreakable), _position(position), _sprite(sprite), _tag(tag) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
@@ -18,10 +18,12 @@ g3nts::Item::Item(Vec2& position, Sprite* sprite, const bool isBreakable, const 
 	);
 }
 
-g3nts::Item::Item(cocos2d::Vec2& position, string spritePath, const bool isBreakable, const string tag)
+g3nts::Item::Item(cocos2d::Vec2 position, string spritePath, const bool isBreakable, const string tag)
 	: Item(position, Sprite::create(spritePath), isBreakable, tag) {}
-g3nts::Item::Item(cocos2d::Vec2& position, cocos2d::SpriteFrame* spriteFrame, const bool isBreakable, const string tag)
+g3nts::Item::Item(cocos2d::Vec2 position, cocos2d::SpriteFrame* spriteFrame, const bool isBreakable, const string tag)
 	: Item(position, Sprite::createWithSpriteFrame(spriteFrame), isBreakable, tag) {}
+g3nts::Item::Item(const Item& item)
+	: Item(item._position, Sprite::createWithSpriteFrame(item._sprite->getSpriteFrame()), item._isBreakable, item._tag) {}
 g3nts::Item::~Item() { _sprite = nullptr; }
 
 bool g3nts::Item::operator<(const Item& item)  { return _id < item._id; }
@@ -41,11 +43,20 @@ Vec2 g3nts::Item::getVelocity() const { return _velocity; }
 Vec2 g3nts::Item::getPosition() const { return _position; }
 
 bool g3nts::Item::isBreakable() const { return _isBreakable; }
+bool g3nts::Item::isVisible() const { return _isVisible; }
 void g3nts::Item::setBreakable(const bool isBreakable) { _isBreakable = isBreakable; }
+void g3nts::Item::setVisible(const bool isVisible) {
+	_isVisible = isVisible;
+	_sprite->setVisible(isVisible);
+}
 
-void g3nts::Item::addForce(cocos2d::Vec2& force) { _acceleration = force; }
-void g3nts::Item::setVelocity(cocos2d::Vec2& velocity) { _velocity = velocity; }
-void g3nts::Item::setPosition(Vec2& position) { _position = position; }
+void g3nts::Item::addForce(cocos2d::Vec2 force) { _acceleration = force; }
+void g3nts::Item::setVelocity(cocos2d::Vec2 velocity) { _velocity = velocity; }
+void g3nts::Item::setPosition(Vec2 position) {
+	_position = position;
+	_sprite->setPosition(position);
+	_hitbox.setPosition(position);
+}
 
 void g3nts::Item::setZIndex(const int zIndex) {
 	_sprite->setLocalZOrder(zIndex);
@@ -64,8 +75,8 @@ void g3nts::Item::update(const float dt) {
 		_acceleration = -(_velocity.getNormalized() * 1000.0f);
 	}
 	else {
-		_acceleration = Vec2(0, 0);
-		_velocity = Vec2(0, 0);
+		_acceleration = { 0, 0 };
+		_velocity = { 0, 0 };
 	}
 	
 	// Clamp acceleration
@@ -88,5 +99,5 @@ void g3nts::Item::update(const float dt) {
 	_hitbox.setPosition(_position);
 	
 	// Reset acceleration
-	_acceleration = Vec2(0, 0);
+	_acceleration = { 0, 0 };
 }

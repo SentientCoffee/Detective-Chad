@@ -3,7 +3,7 @@
 USING_NS_CC;
 
 g3nts::Character::Character() {}
-g3nts::Character::Character(cocos2d::Vec2& position, Sprite* sprite) : _position(position), _sprite(sprite) {
+g3nts::Character::Character(cocos2d::Vec2 position, Sprite* sprite) : _position(position), _sprite(sprite) {
 	_sprite->setPosition(position);
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 	_playerDirection = { 0, 0 };
@@ -17,8 +17,8 @@ g3nts::Character::Character(cocos2d::Vec2& position, Sprite* sprite) : _position
 
 	initKeyboardListener();
 }
-g3nts::Character::Character(cocos2d::Vec2& position, SpriteFrame* spriteFrame) : Character(position, Sprite::createWithSpriteFrame(spriteFrame)) {}
-g3nts::Character::Character(cocos2d::Vec2& position, string spritePath) : Character(position, Sprite::create(spritePath)) {}
+g3nts::Character::Character(cocos2d::Vec2 position, SpriteFrame* spriteFrame) : Character(position, Sprite::createWithSpriteFrame(spriteFrame)) {}
+g3nts::Character::Character(cocos2d::Vec2 position, string spritePath) : Character(position, Sprite::create(spritePath)) {}
 
 g3nts::Character::~Character() {
 	_sprite = nullptr;
@@ -35,13 +35,13 @@ Vec2 g3nts::Character::getDirection() const { return _playerDirection; }
 g3nts::PrimitiveRect g3nts::Character::getHitbox() const { return _hitbox; }
 EventListenerKeyboard* g3nts::Character::getKeyboardListener() const { return _keyboardListener; }
 
-void g3nts::Character::setPosition(Vec2& position){
+void g3nts::Character::setPosition(Vec2 position){
 	_position = position;
 	_sprite->setPosition(position);
 	_hitbox.setPosition(position);
 }
 void g3nts::Character::setPosition(const float x, const float y) { setPosition(Vec2(x, y)); }
-void g3nts::Character::setDirection(cocos2d::Vec2& direction) { _playerDirection = direction; }
+void g3nts::Character::setDirection(cocos2d::Vec2 direction) { _playerDirection = direction; }
 void g3nts::Character::setDirection(const float x, const float y) { setDirection(Vec2(x, y)); }
 void g3nts::Character::setFlexing(const bool flexState) { _flexState = flexState; }
 void g3nts::Character::setZIndex(const int zIndex) {
@@ -67,7 +67,7 @@ void g3nts::Character::initKeyboardListener() {
 
 void g3nts::Character::addAnimation(string tag, string file, const unsigned int numFrames) {
 	SpriteFrameCache* spriteCache = SpriteFrameCache::getInstance();
-	SpriteFrames frames;
+	Vector<SpriteFrame*> frames;
 	char name[100];
 
 	for (unsigned int i = 1; i <= numFrames; ++i) {
@@ -83,9 +83,14 @@ void g3nts::Character::addAnimation(string tag, string file, const unsigned int 
 }
 
 void g3nts::Character::runAnimation(string tag) {
+	Animate* animate = createAnimate(tag);
+	_sprite->runAction(animate);
+}
+
+cocos2d::Animate* g3nts::Character::createAnimate(string tag) {
 	Animate* animate = Animate::create(_animations[tag]->clone());
 	animate->setTag('anim');
-	_sprite->runAction(animate);
+	return animate;
 }
 
 void g3nts::Character::addToScene(Scene* scene, const int zIndex) {
@@ -158,9 +163,10 @@ void g3nts::Character::update(const float dt) {
 	
 	// Check for animations that are running and run the proper one
 	if (_currentAnimation != _nextAnimation || _sprite->getNumberOfRunningActionsByTag('anim') == 0) {
+		
 		_currentAnimation = _nextAnimation;
 		_sprite->stopAllActionsByTag('anim');
-		runAnimation(_nextAnimation);
+		runAnimation(_currentAnimation);
 	}
 
 }

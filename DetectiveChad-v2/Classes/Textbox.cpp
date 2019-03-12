@@ -3,9 +3,10 @@
 USING_NS_CC;
 
 g3nts::Textbox::Textbox() {}
-g3nts::Textbox::Textbox(Vec2& position, string text, string font, unsigned int fontSize, Color4F& bgColour)
+g3nts::Textbox::Textbox(Vec2 position, string text, string font, unsigned int fontSize, Color4F& textColour, Color4F& bgColour)
 : _position(position), _text(text), _bgColour(bgColour), _node(DrawNode::create()) {
-	_label = Label::create(text, font, fontSize);
+	_label = Label::createWithTTF(text, font, fontSize);
+	_label->setTextColor(Color4B(textColour));
 	_label->setPosition(position);
 
 	_labelWidth = _label->getContentSize().width;
@@ -26,7 +27,7 @@ Vec2 g3nts::Textbox::getPosition() const { return _position; }
 string g3nts::Textbox::getText() const { return _text; }
 bool g3nts::Textbox::isVisible() const { return _isVisible; }
 
-void g3nts::Textbox::setPosition(Vec2& position) {
+void g3nts::Textbox::setPosition(Vec2 position) {
 	_position = position;
 	_label->setPosition(position);
 	_node->setPosition(position);
