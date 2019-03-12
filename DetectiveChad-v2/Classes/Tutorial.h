@@ -39,6 +39,7 @@ public:
 
 	void update(const float dt) override;
 
+	void screenshake();
 	void togglePause();
 	void showHitboxes();
 

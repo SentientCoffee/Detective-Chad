@@ -26,7 +26,7 @@ bool Tutorial::init() {
 	initItems();
 	initLevel();
 	initWalls();
-	
+
 	initUI();
 	initTextboxes();
 	initPauseMenu();
@@ -394,9 +394,23 @@ void Tutorial::initMouseListener() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 }
 
+void Tutorial::screenshake() {
+	//change values for varying jitter
+	for (float radius = 1.0f;radius > 0.0f; radius -= 0.1f)
+	{
+		this->getDefaultCamera()->setRotation(0);
+		this->getDefaultCamera()->setPosition(player->getPosition());
+		float angle = radius * 2 * cocos2d::rand_minus1_1();
+		float offsetX = radius * 15 * cocos2d::rand_minus1_1();
+		float offsetY = radius * 15 * cocos2d::rand_minus1_1();
+		this->getDefaultCamera()->setRotation(angle + this->getDefaultCamera()->getRotation());
+		this->getDefaultCamera()->setPosition(this->getDefaultCamera()->getPosition() + cocos2d::Vec2(offsetX, offsetY));
+	}
+}
+
 
 void Tutorial::update(const float dt) {
-	
+
 	// CAMERA MOVEMENT (Camera follows the player)
 	if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
 		camera->setPositionX(player->getPosition().x);
@@ -409,11 +423,11 @@ void Tutorial::update(const float dt) {
 	flexRefillTimer -= dt;
 	if (player->isFlexing()) flexRefillTimer = 0.4f;
 
-	if(flexRefillTimer > 0)
+	if (flexRefillTimer > 0)
 	{
 		flex_meter->setVisible(true);
 		flex_bg->setVisible(true);
-		
+
 		if (flex_meter->getNumberOfRunningActionsByTag('UI') == 0) {
 			flex_meter->stopAllActionsByTag('UI');
 			ProgressFromTo* flexProgress = ProgressFromTo::create(0.4f, unflex_meter->getPercentage(), 100);
@@ -439,7 +453,7 @@ void Tutorial::update(const float dt) {
 			unflexProgress->setTag('UI');
 			unflex_meter->runAction(unflexProgress);
 		}
-		
+
 		flex_meter->setVisible(false);
 		flex_bg->setVisible(false);
 	}
@@ -468,6 +482,15 @@ void Tutorial::update(const float dt) {
 	broken = 0;
 	for (bool state : evidence_state) {
 		if (!state) broken++;
+	}
+	if (player->isFlexing())
+	{
+		screenshake();
+	}
+	else
+	{
+		this->getDefaultCamera()->setPosition(player->getPosition());
+		this->getDefaultCamera()->setRotation(0);
 	}
 
 	if (broken >= 3 || unflex_meter->getPercentage() == 0) {
