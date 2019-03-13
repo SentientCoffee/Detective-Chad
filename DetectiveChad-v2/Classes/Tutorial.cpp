@@ -159,21 +159,23 @@ void Tutorial::initItems() {
 		item->addToScene(this);
 	}
 
-	bathroomMirror = new g3nts::Mirror(Vec2(170, 890) * levelScale, spriteCache->getSpriteFrameByName("items/mirror.png"));
+	bathroomMirror = new g3nts::Mirror(Vec2(170, 800) * levelScale, spriteCache->getSpriteFrameByName("items/mirror.png"));
 	bathroomMirror->addToScene(this, 3);
 
-	flexMobile = new g3nts::Item(Vec2(1950, 460) * levelScale, "items/flexmobile.png");
+	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, "items/flexmobile.png");
 	//flexMobile->addAnimation();
 	flexMobile->getSprite()->setScale(2.0f);
 	flexMobile->addToScene(this, 3);
 }
 
 void Tutorial::initWalls() {
+	Vec2 bottomLeft = { -300, -300 }, topRight = { 1550, 1280 };
+
 	// Level boundaries to make sure the player does not leave the level
-	upperBoundary = g3nts::PrimitiveRect(Vec2(-180, 1300) * levelScale, Vec2(2000, 1300) * levelScale);
-	lowerBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(2000, -300) * levelScale);
-	leftBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(-180, 1300) * levelScale);
-	rightBoundary = g3nts::PrimitiveRect(Vec2(2000, -300) * levelScale, Vec2(2000, 1300) * levelScale);
+	upperBoundary = g3nts::PrimitiveRect(Vec2(bottomLeft.x, topRight.y) * levelScale, Vec2(topRight.x, topRight.y) * levelScale);
+	lowerBoundary = g3nts::PrimitiveRect(Vec2(bottomLeft.x, bottomLeft.y) * levelScale, Vec2(topRight.x, bottomLeft.y) * levelScale);
+	leftBoundary = g3nts::PrimitiveRect(Vec2(bottomLeft.x, bottomLeft.y) * levelScale, Vec2(bottomLeft.x, topRight.y) * levelScale);
+	rightBoundary = g3nts::PrimitiveRect(Vec2(topRight.x, bottomLeft.y) * levelScale, Vec2(topRight.x, topRight.y) * levelScale);
 
 	// Outer house walls
 	upperHouseWall = g3nts::PrimitiveRect(Vec2(0, 850) * levelScale, Vec2(1250, 766) * levelScale);
@@ -405,13 +407,13 @@ void Tutorial::update(const float dt) {
 	else
 	{
 		this->getDefaultCamera()->setRotation(0);
-		camera->setPosition(player->getPosition());
-		/*if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
+		//camera->setPosition(player->getPosition());
+		if (player->getPosition().x >= 145 * levelScale && player->getPosition().x <= 1200 * levelScale) {
 			camera->setPositionX(player->getPosition().x);
 		}
-		if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
+		if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 950 * levelScale) {
 			camera->setPositionY(player->getPosition().y);
-		}*/
+		}
 	}
 
 	// UI MOVEMENT (UI follows camera)
@@ -517,12 +519,12 @@ void Tutorial::update(const float dt) {
 		upperWalls->setOpacity(255);
 
 
-		if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 20) {
+		if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 35) {
 			player->setZIndex(15);
 			lowerWalls->setOpacity(255);
 			middleWalls->setOpacity(255 * 0.25);
 		}
-		if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 20) {
+		if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 35) {
 			player->setZIndex(5);
 			middleWalls->setOpacity(255);
 			upperWalls->setOpacity(255 * 0.25);
