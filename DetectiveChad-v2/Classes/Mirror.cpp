@@ -5,6 +5,7 @@ USING_NS_CC;
 g3nts::Mirror::Mirror() {}
 g3nts::Mirror::Mirror(Vec2& position, Sprite* sprite) : _position(position), _sprite(sprite) {
 	_sprite->setPosition(_position);
+	_sprite->getTexture()->setAliasTexParameters();
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 
 	_hitbox = g3nts::PrimitiveRect(

@@ -5,6 +5,7 @@ USING_NS_CC;
 g3nts::Character::Character() {}
 g3nts::Character::Character(cocos2d::Vec2 position, Sprite* sprite) : _position(position), _sprite(sprite) {
 	_sprite->setPosition(position);
+	_sprite->getTexture()->setAliasTexParameters();
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 	_playerDirection = { 0, 0 };
 
