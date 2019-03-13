@@ -92,8 +92,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	cocos2d::Scene* mainMenuScene = MainMenu::createScene();
     director->runWithScene(mainMenuScene);
 
-	/*cocos2d::Scene* tutorialScene = Tutorial::createScene();
-	director->runWithScene(tutorialScene);*/
+	//cocos2d::Scene* tutorialScene = Tutorial::createScene();
+	//director->runWithScene(tutorialScene);
 
 	/*cocos2d::Scene* gameOverScene = GameOver::createScene();
     director->runWithScene(gameOverScene);*/

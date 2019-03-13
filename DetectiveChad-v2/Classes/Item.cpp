@@ -8,6 +8,7 @@ g3nts::Item::Item() {}
 g3nts::Item::Item(Vec2 position, Sprite* sprite, const bool isBreakable, const string tag)
 : _id(idCount++), _isBreakable(isBreakable), _position(position), _sprite(sprite), _tag(tag) {
 	_sprite->setPosition(position);
+	_sprite->getTexture()->setAliasTexParameters();
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 
 	_hitbox = g3nts::PrimitiveRect(
@@ -63,6 +64,34 @@ void g3nts::Item::setZIndex(const int zIndex) {
 	_hitbox.getNode()->setLocalZOrder(zIndex);
 }
 
+void g3nts::Item::addAnimation(string tag, string file, const unsigned int numFrames) {
+	SpriteFrameCache* spriteCache = SpriteFrameCache::getInstance();
+	Vector<SpriteFrame*> frames;
+	char name[100];
+
+	for (unsigned int i = 1; i <= numFrames; ++i) {
+		sprintf(name, file.c_str(), i);
+		frames.pushBack(spriteCache->getSpriteFrameByName(name));
+	}
+
+	Animation* anim = Animation::createWithSpriteFrames(frames, 1.0f / numFrames * 0.5);
+	anim->setLoops(1);
+
+	_animations[tag] = anim;
+	_animations[tag]->retain();
+}
+
+void g3nts::Item::runAnimation(string tag) {
+	Animate* animate = createAnimate(tag);
+	_sprite->runAction(animate);
+}
+
+cocos2d::Animate * g3nts::Item::createAnimate(string tag) {
+	Animate* animate = Animate::create(_animations[tag]->clone());
+	animate->setTag('anim');
+	return animate;
+}
+
 void g3nts::Item::addToScene(Scene* scene, const int zIndex) {
 	scene->addChild(_sprite, zIndex);
 	scene->addChild(_hitbox.getNode(), zIndex);
@@ -100,4 +129,5 @@ void g3nts::Item::update(const float dt) {
 	
 	// Reset acceleration
 	_acceleration = { 0, 0 };
+
 }
