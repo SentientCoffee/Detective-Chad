@@ -34,7 +34,7 @@ bool Tutorial::init() {
 
 	initKeyboardListener();
 
-	//showHitboxes();
+	showHitboxes();
 
 	this->scheduleUpdate();
 	return true;
