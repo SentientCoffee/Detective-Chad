@@ -45,14 +45,19 @@ namespace g3nts {
 		void setPosition(cocos2d::Vec2 position);
 		void setZIndex(const int zIndex);
 
+		void addAnimation(string tag, string file, const unsigned int numFrames);
+		void runAnimation(string tag);
+		cocos2d::Animate* createAnimate(string tag);
+
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 		void update(const float dt);
 
 	private:
 
 		cocos2d::Sprite* _sprite;
-		PrimitiveRect _hitbox;
+		std::unordered_map<string, cocos2d::Animation*> _animations;
 
+		PrimitiveRect _hitbox;
 		cocos2d::Vec2 _acceleration;
 		cocos2d::Vec2 _velocity;
 		cocos2d::Vec2 _position;

@@ -15,7 +15,8 @@ bool Tutorial::init() {
 	gamePaused = false;
 	gameOver = false;
 	
-	totalItems = 0;
+	totalItems = 0u;
+	itemsCollected = 0u;
 	levelScale = 1.35f;
 	UI_Scale = 0.5f;
 
@@ -31,7 +32,6 @@ bool Tutorial::init() {
 	initTextboxes();
 	initPauseMenu();
 
-	initMouseListener();
 	initKeyboardListener();
 
 	//showHitboxes();
@@ -89,34 +89,36 @@ void Tutorial::initPlayer() {
 }
 
 void Tutorial::initLevel() {
+	Vec2 offset = { -527, -513 };
+
 	// Floor plan sprite
-	floorplan = Sprite::create("backgrounds/apartment-floorplan.png");
-	floorplan->setScale(levelScale);
-	floorplan->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	floorplan->setPosition(Vec2(-800, -1050) * levelScale);
+	houseBase = Sprite::create("backgrounds/chad-house-base.png");
+	houseBase->setScale(levelScale);
+	houseBase->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
+	houseBase->setPosition(Vec2(offset.x, offset.y) * levelScale);
 
 	// Upper walls sprite
-	upperWalls = Sprite::create("backgrounds/apartment-walls-upper.png");
+	upperWalls = Sprite::create("backgrounds/chad-house-walls-upper.png");
 	upperWalls->setScale(levelScale);
 	upperWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	upperWalls->setPosition(Vec2(-800, -1050) * levelScale);
+	upperWalls->setPosition(Vec2(offset.x, offset.y) * levelScale);
 
 	// Middle walls sprite
-	middleWalls = Sprite::create("backgrounds/apartment-walls-middle.png");
+	middleWalls = Sprite::create("backgrounds/chad-house-walls-middle.png");
 	middleWalls->setScale(levelScale);
 	middleWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	middleWalls->setPosition(Vec2(-800, -1050) * levelScale);
+	middleWalls->setPosition(Vec2(offset.x, offset.y) * levelScale);
 
 	// Lower walls sprite
-	lowerWalls = Sprite::create("backgrounds/apartment-walls-lower.png");
+	lowerWalls = Sprite::create("backgrounds/chad-house-walls-lower.png");
 	lowerWalls->setScale(levelScale);
 	lowerWalls->setAnchorPoint(Vec2(0, 0));   // THIS IS IMPORTANT TO MAKE SURE THE WALL HITBOXES SCALE WITH THE LEVEL BACKGROUND!!!
-	lowerWalls->setPosition(Vec2(-800, -1050) * levelScale);
+	lowerWalls->setPosition(Vec2(offset.x, offset.y) * levelScale);
 
-	this->addChild(floorplan, -1000);
-	this->addChild(upperWalls, 0);
-	this->addChild(middleWalls, 10);
-	this->addChild(lowerWalls, 20);
+	this->addChild(houseBase, -1000);
+	this->addChild(upperWalls, 10);
+	this->addChild(middleWalls, 20);
+	this->addChild(lowerWalls, 30);
 }
 
 void Tutorial::initItems() {
@@ -161,35 +163,36 @@ void Tutorial::initItems() {
 	bathroomMirror->addToScene(this, 3);
 
 	flexMobile = new g3nts::Item(Vec2(1950, 460) * levelScale, "items/flexmobile.png");
+	//flexMobile->addAnimation();
 	flexMobile->getSprite()->setScale(2.0f);
 	flexMobile->addToScene(this, 3);
 }
 
 void Tutorial::initWalls() {
-	//Level boundaries
+	// Level boundaries to make sure the player does not leave the level
 	upperBoundary = g3nts::PrimitiveRect(Vec2(-180, 1300) * levelScale, Vec2(2000, 1300) * levelScale);
 	lowerBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(2000, -300) * levelScale);
 	leftBoundary = g3nts::PrimitiveRect(Vec2(-180, -300) * levelScale, Vec2(-180, 1300) * levelScale);
 	rightBoundary = g3nts::PrimitiveRect(Vec2(2000, -300) * levelScale, Vec2(2000, 1300) * levelScale);
 
-	// Outer walls
-	upperHouseWall = g3nts::PrimitiveRect(Vec2(0, 950) * levelScale, Vec2(1600, 900) * levelScale);
-	lowerHouseWall = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1600, 0) * levelScale);
-	leftHouseWall = g3nts::PrimitiveRect(Vec2(0, 2) * levelScale, Vec2(0, 900) * levelScale);
-	rightHouseWall_1 = g3nts::PrimitiveRect(Vec2(1600, 0) * levelScale, Vec2(1600, 400) * levelScale);
-	rightHouseWall_2 = g3nts::PrimitiveRect(Vec2(1600, 600) * levelScale, Vec2(1600, 900) * levelScale);
+	// Outer house walls
+	upperHouseWall = g3nts::PrimitiveRect(Vec2(0, 850) * levelScale, Vec2(1250, 766) * levelScale);
+	lowerHouseWall = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1250, 0) * levelScale);
+	leftHouseWall = g3nts::PrimitiveRect(Vec2(-30, 0) * levelScale, Vec2(0, 850) * levelScale);
+	rightHouseWall_1 = g3nts::PrimitiveRect(Vec2(1250, 0) * levelScale, Vec2(1280, 382) * levelScale);
+	rightHouseWall_2 = g3nts::PrimitiveRect(Vec2(1250, 524) * levelScale, Vec2(1280, 850) * levelScale);
 
-	// Inner horizontal walls
-	bathroomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 650) * levelScale, Vec2(100, 600) * levelScale);
-	bathroomDoorway_2 = g3nts::PrimitiveRect(Vec2(300, 650) * levelScale, Vec2(1000, 600) * levelScale);
-	bedroomDoorway = g3nts::PrimitiveRect(Vec2(1200, 650) * levelScale, Vec2(1600, 600) * levelScale);
-	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 400) * levelScale, Vec2(150, 350) * levelScale);
-	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(350, 400) * levelScale, Vec2(1400, 350) * levelScale);
+	// Inner horizontal house walls
+	bathroomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 594) * levelScale, Vec2(48, 524) * levelScale);
+	bathroomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 594) * levelScale, Vec2(817, 524) * levelScale);
+	bedroomDoorway = g3nts::PrimitiveRect(Vec2(947, 594) * levelScale, Vec2(1250, 524) * levelScale);
+	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 340) * levelScale, Vec2(48, 270) * levelScale);
+	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 340) * levelScale, Vec2(994, 270) * levelScale);
 
-	// Inner vertical walls
-	verticalBathroomWall = g3nts::PrimitiveRect(Vec2(400, 650) * levelScale, Vec2(400, 900) * levelScale);
-	vecticalLivingRoomWall_1 = g3nts::PrimitiveRect(Vec2(1200, 250) * levelScale, Vec2(1200, 600) * levelScale);
-	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(Vec2(1200, 0) * levelScale, Vec2(1200, 50) * levelScale);
+	// Inner vertical house walls
+	verticalBathroomWall = g3nts::PrimitiveRect(Vec2(354, 594) * levelScale, Vec2(384, 850) * levelScale);
+	vecticalLivingRoomWall_1 = g3nts::PrimitiveRect(Vec2(994, 270) * levelScale, Vec2(1024, 524) * levelScale);
+	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(Vec2(994, 0) * levelScale, Vec2(1024, 128) * levelScale);
 
 	// Add all the walls to the walls vector
 	walls.push_back(upperBoundary); walls.push_back(lowerBoundary);
@@ -205,7 +208,7 @@ void Tutorial::initWalls() {
 
 	// Add all the walls to the scene
 	for (g3nts::PrimitiveRect wall : walls) {
-		this->addChild(wall.getNode(), 20);
+		this->addChild(wall.getNode(), 100);
 		wall.getNode()->setVisible(false);
 	}
 }
@@ -239,9 +242,14 @@ void Tutorial::initPauseMenu() {
 }
 
 void Tutorial::initTextboxes() {
-	textbox = new g3nts::Textbox(Vec2::ZERO, "Text", "fonts/Marker Felt.ttf", 24, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
-	textbox->addToScene(this, 100);
-	textbox->setVisible(false);
+	pickupCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Pick up: L", "fonts/Marker Felt.ttf", 24, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
+	flexCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Flex: Space", "fonts/Marker Felt.ttf", 24, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
+
+	pickupCommandTextbox->addToScene(this, 100);
+	flexCommandTextbox->addToScene(this, 100);
+
+	pickupCommandTextbox->setVisible(false);
+	flexCommandTextbox->setVisible(false);
 }
 
 void Tutorial::initUI() {
@@ -275,16 +283,19 @@ void Tutorial::initUI() {
 	for (g3nts::Item* temp : itemTemps) {
 		inventory_state[temp->getTag()] = false;
 	}
-	//pickedUp = 0;
 
 	for (unsigned int i = 0; i < totalItems; ++i)
 	{
-		evidence.push_back(Sprite::create("ui/evidence.png"));
+		evidence.push_back(Sprite::create("ui/evidence-default.png"));
 		evidence[i]->setScale(UI_Scale);
 
-		broken_evidence.push_back(Sprite::create("ui/broken.png"));
+		broken_evidence.push_back(Sprite::create("ui/evidence-broken.png"));
 		broken_evidence[i]->setScale(UI_Scale);
 		broken_evidence[i]->setVisible(false);
+
+		collected_evidence.push_back(Sprite::create("ui/evidence-collected.png"));
+		collected_evidence[i]->setScale(UI_Scale);
+		collected_evidence[i]->setVisible(false);
 
 		evidence_state.push_back(true);
 	}
@@ -299,6 +310,7 @@ void Tutorial::initUI() {
 	{
 		this->addChild(evidence[i], 1000);
 		this->addChild(broken_evidence[i], 1000);
+		this->addChild(collected_evidence[i], 1000);
 	}
 
 	this->addChild(inventory_bg, 1000);
@@ -383,33 +395,6 @@ void Tutorial::initKeyboardListener() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 }
 
-void Tutorial::initMouseListener() {
-	mouseListener = EventListenerMouse::create();
-
-	mouseListener->onMouseDown = [&](Event* mEvent) {};
-	mouseListener->onMouseUp = [&](Event* mEvent) {};
-	mouseListener->onMouseMove = [&](Event* mEvent) {};
-	mouseListener->onMouseScroll = [&](Event* mEvent) {};
-
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
-}
-
-void Tutorial::screenshake() {
-	//change values for varying jitter
-	Vec2 currentPos = camera->getPosition();
-	for (float radius = 1.0f; radius > 0.0f; radius -= 0.1f)
-	{
-		camera->setRotation(0);
-		camera->setPosition(currentPos);
-		float angle = radius * 2 * rand_minus1_1();
-		float offsetX = radius * 15 * rand_minus1_1();
-		float offsetY = radius * 15 * rand_minus1_1();
-		camera->setRotation(angle + camera->getRotation());
-		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
-	}
-}
-
-
 void Tutorial::update(const float dt) {
 
 	// CAMERA MOVEMENT (Camera follows the player)
@@ -420,12 +405,13 @@ void Tutorial::update(const float dt) {
 	else
 	{
 		this->getDefaultCamera()->setRotation(0);
-		if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
+		camera->setPosition(player->getPosition());
+		/*if (player->getPosition().x >= 415 * levelScale && player->getPosition().x <= 1400 * levelScale) {
 			camera->setPositionX(player->getPosition().x);
 		}
 		if (player->getPosition().y >= 35 * levelScale && player->getPosition().y <= 965 * levelScale) {
 			camera->setPositionY(player->getPosition().y);
-		}
+		}*/
 	}
 
 	// UI MOVEMENT (UI follows camera)
@@ -472,7 +458,12 @@ void Tutorial::update(const float dt) {
 	unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
 	unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
 
-	for (unsigned int i = 0; i < totalItems; ++i)
+	for (unsigned int i = 0; i < itemsCollected; ++i) {
+		collected_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (totalItems - i) * (collected_evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
+		collected_evidence[i]->setVisible(true);
+	}
+
+	for (unsigned int i = 0; i < evidence.size(); ++i)
 	{
 		evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
 		broken_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
@@ -488,6 +479,13 @@ void Tutorial::update(const float dt) {
 		}
 	}
 
+	if (totalItems - itemsCollected < totalItems && totalItems - itemsCollected > 0) {
+		for (int i = totalItems - 1; i >= totalItems - itemsCollected; --i) {
+			evidence[i]->setVisible(false);
+			broken_evidence[i]->setVisible(false);
+		}
+	}
+
 	broken = 0;
 	for (bool state : evidence_state) {
 		if (!state) broken++;
@@ -499,10 +497,8 @@ void Tutorial::update(const float dt) {
 	
 	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
 	for (g3nts::Item* inv : inventory) {
-
 		inv->setPosition(inventory_bg->getPosition());
 		inv->setVisible(inventory_state[inv->getTag()]);
-
 	}
 
 	if (gameOver) {
@@ -516,8 +512,21 @@ void Tutorial::update(const float dt) {
 
 		// Update player sprite to be on top or behind walls
 		player->setZIndex(25);
-		if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 10) player->setZIndex(15);
-		if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 10)      player->setZIndex(5);
+		lowerWalls->setOpacity(255 * 0.25);
+		middleWalls->setOpacity(255);
+		upperWalls->setOpacity(255);
+
+
+		if (player->getPosition().y > livingRoomDoorway_1.getEndPosition().y + 20) {
+			player->setZIndex(15);
+			lowerWalls->setOpacity(255);
+			middleWalls->setOpacity(255 * 0.25);
+		}
+		if (player->getPosition().y > bedroomDoorway.getEndPosition().y + 20) {
+			player->setZIndex(5);
+			middleWalls->setOpacity(255);
+			upperWalls->setOpacity(255 * 0.25);
+		}
 
 		showPickupCommand = false;
 		for (g3nts::Item* item : items) {
@@ -526,7 +535,7 @@ void Tutorial::update(const float dt) {
 
 			item->setZIndex(24);
 			if (item->getPosition().y > livingRoomDoorway_1.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10) item->setZIndex(14);
-			if (item->getPosition().y > bedroomDoorway.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10)      item->setZIndex(4);
+			if (item->getPosition().y > bedroomDoorway.getEndPosition().y + item->getHitbox().getHeight() / 2.0f - 10)  item->setZIndex(4);
 
 			// Check item collision with player
 			if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
@@ -548,7 +557,9 @@ void Tutorial::update(const float dt) {
 			}
 
 			if (g3nts::isColliding(item->getHitbox(), flexMobile->getHitbox())) {
-
+				itemsCollected++;
+				item->setVisible(false);
+				items.erase(std::find(items.begin(), items.end(), item));
 			}
 		}
 
@@ -556,32 +567,46 @@ void Tutorial::update(const float dt) {
 
 			// Check player collision with walls
 			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
-				player->update(-dt);
+				if (wall.getWidth() <= 50) {
+					player->setDirection(Vec2(-player->getDirection().x, player->getDirection().y));
+				}
+				else if (wall.getHeight() <= 50) {
+					player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
+				}
 			}
 
 			// Check item collision with walls
 			for (g3nts::Item* item : items) {
-
 				if (g3nts::isColliding(item->getHitbox(), wall)) {
-
-					if (wall.getWidth() <= 50)
+					if (wall.getWidth() <= 50) {
 						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
-					else if (wall.getHeight() <= 50)
+					}
+					else if (wall.getHeight() <= 50) {
 						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
-
+					}
 				}
-
 			}
-
+		}
+		
+		showFlexCommand = false;
+		if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
+			showFlexCommand = true;
 		}
 
 		if (showPickupCommand) {
-			textbox->setText("Pick up: L");
-			textbox->setPosition(Vec2(player->getPosition().x, player->getPosition().y + 120));
-			textbox->setVisible(true);
+			pickupCommandTextbox->setPosition(Vec2(player->getPosition().x - 60, player->getPosition().y + 120));
+			pickupCommandTextbox->setVisible(true);
 		}
 		else {
-			textbox->setVisible(false);
+			pickupCommandTextbox->setVisible(false);
+		}
+
+		if (showFlexCommand) {
+			flexCommandTextbox->setPosition(Vec2(player->getPosition().x + 60, player->getPosition().y + 120));
+			flexCommandTextbox->setVisible(true);
+		}
+		else {
+			flexCommandTextbox->setVisible(false);
 		}
 	}
 }
@@ -608,4 +633,21 @@ void Tutorial::showHitboxes() {
 	flexMobile->getHitbox().getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
 	for (g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
+}
+
+void Tutorial::screenshake() {
+	Vec2 cameraPos = camera->getPosition();
+	for (float radius = 1.0f; radius > 0.0f; radius -= 0.1f)
+	{
+		camera->setRotation(0);
+		camera->setPosition(cameraPos);
+
+		//change values for varying jitter
+		float angle = radius * 25 * rand_minus1_1();
+		float offsetX = radius * 30 * rand_minus1_1();
+		float offsetY = radius * 30 * rand_minus1_1();
+
+		camera->setRotation(angle + camera->getRotation());
+		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
+	}
 }
