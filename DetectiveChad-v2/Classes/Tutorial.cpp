@@ -566,15 +566,15 @@ void Tutorial::update(const float dt) {
 		for (g3nts::PrimitiveRect wall : walls) {
 
 			// Check player collision with walls
-			player->update(-dt);
-			//if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
+			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
+				player->update(-dt);
 			//	if (wall.getWidth() <= 50) {
 			//		player->setDirection(Vec2(-player->getDirection().x, player->getDirection().y));
 			//	}
 			//	else if (wall.getHeight() <= 50) {
 			//		player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
 			//	}
-			//}
+			}
 
 			// Check item collision with walls
 			for (g3nts::Item* item : items) {
