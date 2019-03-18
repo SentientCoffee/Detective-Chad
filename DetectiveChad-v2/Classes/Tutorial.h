@@ -29,6 +29,7 @@ public:
 	void initLevel();
 	void initItems();
 	void initWalls();
+	void initFoW();
 	
 	void initUI();
 	void initTextboxes();
@@ -136,7 +137,33 @@ private:
 	g3nts::PrimitiveRect verticalBathroomWall;
 	g3nts::PrimitiveRect vecticalLivingRoomWall_1;
 	g3nts::PrimitiveRect vecticalLivingRoomWall_2;
-	
+
+	// Fogs of War
+	std::vector<g3nts::PrimitiveRect> FoW; //container to hold solid fogs of war
+	std::vector<g3nts::PrimitiveRect> sFoW; //container to hold opaque fogs of war
+	std::vector<bool> revealed; //container to hold the flags for whether the player has entered the room before
+	int rooms; //number of rooms in Tutorial
+
+	// -----------------------------------------------
+	// Tutorial level rooms
+
+	// State One (100% Opacity)
+	g3nts::PrimitiveRect roomOne;
+	g3nts::PrimitiveRect roomTwo;
+	g3nts::PrimitiveRect roomThree;
+	g3nts::PrimitiveRect roomFour;
+	g3nts::PrimitiveRect roomFive;
+	g3nts::PrimitiveRect roomSix;
+
+	// State Two (40% Opacity)
+	g3nts::PrimitiveRect sroomOne;
+	g3nts::PrimitiveRect sroomTwo;
+	g3nts::PrimitiveRect sroomThree;
+	g3nts::PrimitiveRect sroomFour;
+	g3nts::PrimitiveRect sroomFive;
+	g3nts::PrimitiveRect sroomSix;
+
+	// -----------------------------------------------
 };
 
 #endif

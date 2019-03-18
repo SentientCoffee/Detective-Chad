@@ -14,7 +14,7 @@ bool Tutorial::init() {
 	camera = this->getDefaultCamera();
 	gamePaused = false;
 	gameOver = false;
-	
+
 	totalItems = 0u;
 	itemsCollected = 0u;
 	levelScale = 1.35f;
@@ -27,6 +27,7 @@ bool Tutorial::init() {
 	initItems();
 	initLevel();
 	initWalls();
+	initFoW();
 
 	initUI();
 	initTextboxes();
@@ -128,20 +129,20 @@ void Tutorial::initItems() {
 
 	shirtTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
 	magGlassTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
-	
+
 	itemTemps.push_back(shirtTemplate);
 	itemTemps.push_back(magGlassTemplate);
 
 	g3nts::Item* shirt_1 = new g3nts::Item(*shirtTemplate);
 	g3nts::Item* shirt_2 = new g3nts::Item(*shirtTemplate);
 	g3nts::Item* shirt_3 = new g3nts::Item(*shirtTemplate);
-	
+
 	g3nts::Item* magGlass_1 = new g3nts::Item(*magGlassTemplate);
 	g3nts::Item* magGlass_2 = new g3nts::Item(*magGlassTemplate);
-	
+
 	shirt_1->setPosition(Vec2(120, 720) * levelScale);
 	shirt_2->setPosition(Vec2(1050, 680) * levelScale);
-	shirt_3->setPosition(Vec2(620 , 290) * levelScale);
+	shirt_3->setPosition(Vec2(620, 290) * levelScale);
 
 	magGlass_1->setPosition(Vec2(690, 420) * levelScale);
 	magGlass_2->setPosition(Vec2(720, 180) * levelScale);
@@ -214,7 +215,51 @@ void Tutorial::initWalls() {
 		wall.getNode()->setVisible(false);
 	}
 }
+void Tutorial::initFoW() {
+	for (int i = 0;i < rooms;i++)
+	{
+		revealed[i] = false;
+	}
+	roomOne = g3nts::PrimitiveRect(0, Vec2(0, 594)*levelScale, Vec2(354, 766)*levelScale, Color4F(0, 0, 0, 1));
+	roomTwo = g3nts::PrimitiveRect(0, Vec2(384, 594)*levelScale, Vec2(1250, 766)*levelScale, Color4F(0, 0, 0, 1));
+	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 340)*levelScale, Vec2(947, 524)*levelScale, Color4F(0, 0, 0, 1));
+	roomFour = g3nts::PrimitiveRect(0, Vec2(1024, 340)*levelScale, Vec2(1250, 524)*levelScale, Color4F(0, 0, 0, 1));
+	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(994, 270)*levelScale, Color4F(0, 0, 0, 1));
+	roomSix = g3nts::PrimitiveRect(0, Vec2(1024, 0)*levelScale, Vec2(1250, 270)*levelScale, Color4F(0, 0, 0, 1));
 
+	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 594)*levelScale, Vec2(354, 766)*levelScale, Color4F(0, 0, 0, .6));
+	sroomTwo = g3nts::PrimitiveRect(0, Vec2(384, 594)*levelScale, Vec2(1250, 766)*levelScale, Color4F(0, 0, 0, .6));
+	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 340)*levelScale, Vec2(947, 524)*levelScale, Color4F(0, 0, 0, .6));
+	sroomFour = g3nts::PrimitiveRect(0, Vec2(1024, 340)*levelScale, Vec2(1250, 524)*levelScale, Color4F(0, 0, 0, .6));
+	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(994, 270)*levelScale, Color4F(0, 0, 0, .6));
+	sroomSix = g3nts::PrimitiveRect(0, Vec2(1024, 0)*levelScale, Vec2(1250, 270)*levelScale, Color4F(0, 0, 0, .6));
+
+	FoW.push_back(roomOne);
+	FoW.push_back(roomTwo);
+	FoW.push_back(roomThree);
+	FoW.push_back(roomFour);
+	FoW.push_back(roomFive);
+	FoW.push_back(roomSix);
+
+	sFoW.push_back(sroomOne);
+	sFoW.push_back(sroomTwo);
+	sFoW.push_back(sroomThree);
+	sFoW.push_back(sroomFour);
+	sFoW.push_back(sroomFive);
+	sFoW.push_back(sroomSix);
+
+
+	for (int i = 0;i < FoW.size();i++)
+	{
+		this->addChild(FoW[i].getNode(), 99);
+	}
+	for (int i = 0;i < sFoW.size();i++)
+	{
+		this->addChild(sFoW[i].getNode(), 98);
+	}
+
+
+}
 void Tutorial::initPauseMenu() {
 
 	Label* pausedLabel = Label::createWithTTF("PAUSED", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
@@ -233,11 +278,11 @@ void Tutorial::initPauseMenu() {
 		Scene* mainMenuScene = MainMenu::createScene();
 		director->replaceScene(TransitionFade::create(2, mainMenuScene));
 	});
-	
+
 	pausedItem->setPosition(0, windowSize.y * 0.35);
 	resumeButton->setPosition(0, -(windowSize.y * 0.25));
 	exitButton->setPosition(0, -(windowSize.y * 0.35));
-	
+
 	pauseMenu = Menu::create(pausedItem, resumeButton, exitButton, NULL);
 	this->addChild(pauseMenu, 1000);
 	pauseMenu->setVisible(false);
@@ -416,6 +461,33 @@ void Tutorial::update(const float dt) {
 		}
 	}
 
+	// Fog of War Revealing
+	for (int i = 0;i < FoW.size();i++)
+	{
+		if (player->getPosition().x >= FoW[i].getStartPosition().x &&
+			player->getPosition().x <= FoW[i].getEndPosition().x &&
+			player->getPosition().y >= FoW[i].getStartPosition().y &&
+			player->getPosition().y <= FoW[i].getEndPosition().y)
+		{
+			FoW[i].getNode()->setVisible(false);
+		}
+	}
+
+	for (int i = 0;i < sFoW.size();i++)
+	{
+		if (player->getPosition().x >= sFoW[i].getStartPosition().x &&
+			player->getPosition().x <= sFoW[i].getEndPosition().x &&
+			player->getPosition().y >= sFoW[i].getStartPosition().y &&
+			player->getPosition().y <= sFoW[i].getEndPosition().y)
+		{
+			sFoW[i].getNode()->setVisible(false);
+		}
+		else
+		{
+			sFoW[i].getNode()->setVisible(true);
+		}
+	}
+
 	// UI MOVEMENT (UI follows camera)
 	flexRefillTimer -= dt;
 	if (player->isFlexing()) flexRefillTimer = 0.4f;
@@ -455,10 +527,13 @@ void Tutorial::update(const float dt) {
 		flex_bg->setVisible(false);
 	}
 
-	flex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-	flex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-	unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
-	unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+	if (!player->isFlexing())
+	{
+		flex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+		flex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+		unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+		unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+	}
 
 	for (unsigned int i = 0; i < itemsCollected; ++i) {
 		collected_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (totalItems - i) * (collected_evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
@@ -469,6 +544,7 @@ void Tutorial::update(const float dt) {
 	{
 		evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
 		broken_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (i + 1) * (evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
+
 		if (evidence_state[i])
 		{
 			evidence[i]->setVisible(true);
@@ -496,7 +572,7 @@ void Tutorial::update(const float dt) {
 	if (broken >= 3 || unflex_meter->getPercentage() == 0) {
 		gameOver = true;
 	}
-	
+
 	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
 	for (g3nts::Item* inv : inventory) {
 		inv->setPosition(inventory_bg->getPosition());
@@ -570,12 +646,12 @@ void Tutorial::update(const float dt) {
 			// Check player collision with walls
 			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
 				player->update(-dt);
-			//	if (wall.getWidth() <= 50) {
-			//		player->setDirection(Vec2(-player->getDirection().x, player->getDirection().y));
-			//	}
-			//	else if (wall.getHeight() <= 50) {
-			//		player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
-			//	}
+				//	if (wall.getWidth() <= 50) {
+				//		player->setDirection(Vec2(-player->getDirection().x, player->getDirection().y));
+				//	}
+				//	else if (wall.getHeight() <= 50) {
+				//		player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
+				//	}
 			}
 
 			// Check item collision with walls
@@ -590,7 +666,7 @@ void Tutorial::update(const float dt) {
 				}
 			}
 		}
-		
+
 		showFlexCommand = false;
 		if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
 			showFlexCommand = true;
@@ -649,6 +725,16 @@ void Tutorial::screenshake() {
 		float angle = radius * 25 * rand_minus1_1();
 		float offsetX = radius * 30 * rand_minus1_1();
 		float offsetY = radius * 30 * rand_minus1_1();
+
+		flex_meter->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+		flex_bg->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+		unflex_meter->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+		unflex_bg->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+
+		flex_meter->setRotation(-angle);
+		flex_bg->setRotation(-angle);
+		unflex_meter->setRotation(-angle);
+		unflex_bg->setRotation(-angle);
 
 		camera->setRotation(angle + camera->getRotation());
 		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
