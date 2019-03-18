@@ -26,8 +26,8 @@ bool Tutorial::init() {
 	initPlayer();
 	initItems();
 	initLevel();
-	initWalls();
 	initFoW();
+	initWalls();
 
 	initUI();
 	initTextboxes();
@@ -214,25 +214,26 @@ void Tutorial::initWalls() {
 		this->addChild(wall.getNode(), 100);
 		wall.getNode()->setVisible(false);
 	}
+
 }
 void Tutorial::initFoW() {
 	for (int i = 0;i < rooms;i++)
 	{
 		revealed[i] = false;
 	}
-	roomOne = g3nts::PrimitiveRect(0, Vec2(0, 594)*levelScale, Vec2(354, 766)*levelScale, Color4F(0, 0, 0, 1));
-	roomTwo = g3nts::PrimitiveRect(0, Vec2(384, 594)*levelScale, Vec2(1250, 766)*levelScale, Color4F(0, 0, 0, 1));
-	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 340)*levelScale, Vec2(947, 524)*levelScale, Color4F(0, 0, 0, 1));
-	roomFour = g3nts::PrimitiveRect(0, Vec2(1024, 340)*levelScale, Vec2(1250, 524)*levelScale, Color4F(0, 0, 0, 1));
-	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(994, 270)*levelScale, Color4F(0, 0, 0, 1));
-	roomSix = g3nts::PrimitiveRect(0, Vec2(1024, 0)*levelScale, Vec2(1250, 270)*levelScale, Color4F(0, 0, 0, 1));
+	roomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, 1));
+	roomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, 1));
+	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, 1));
+	roomFour = g3nts::PrimitiveRect(0, Vec2(1010, 290)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, 1));
+	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, 1));
+	roomSix = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 290)*levelScale, Color4F(0, 0, 0, 1));
 
-	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 594)*levelScale, Vec2(354, 766)*levelScale, Color4F(0, 0, 0, .6));
-	sroomTwo = g3nts::PrimitiveRect(0, Vec2(384, 594)*levelScale, Vec2(1250, 766)*levelScale, Color4F(0, 0, 0, .6));
-	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 340)*levelScale, Vec2(947, 524)*levelScale, Color4F(0, 0, 0, .6));
-	sroomFour = g3nts::PrimitiveRect(0, Vec2(1024, 340)*levelScale, Vec2(1250, 524)*levelScale, Color4F(0, 0, 0, .6));
-	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(994, 270)*levelScale, Color4F(0, 0, 0, .6));
-	sroomSix = g3nts::PrimitiveRect(0, Vec2(1024, 0)*levelScale, Vec2(1250, 270)*levelScale, Color4F(0, 0, 0, .6));
+	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, .6));
+	sroomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, .6));
+	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, .6));
+	sroomFour = g3nts::PrimitiveRect(0, Vec2(1010, 290)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, .6));
+	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, .6));
+	sroomSix = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 290)*levelScale, Color4F(0, 0, 0, .6));
 
 	FoW.push_back(roomOne);
 	FoW.push_back(roomTwo);
@@ -251,11 +252,21 @@ void Tutorial::initFoW() {
 
 	for (int i = 0;i < FoW.size();i++)
 	{
-		this->addChild(FoW[i].getNode(), 99);
+		if (i <= 2)
+			this->addChild(FoW[i].getNode(), 5);
+		else if (i<=4)
+			this->addChild(FoW[i].getNode(), 15);
+		else
+			this->addChild(FoW[i].getNode(), 25);
 	}
 	for (int i = 0;i < sFoW.size();i++)
 	{
-		this->addChild(sFoW[i].getNode(), 98);
+		if (i <= 2)
+			this->addChild(sFoW[i].getNode(), 5);
+		else if (i <= 4)
+			this->addChild(sFoW[i].getNode(), 15);
+		else
+			this->addChild(sFoW[i].getNode(), 25);
 	}
 
 
@@ -527,13 +538,10 @@ void Tutorial::update(const float dt) {
 		flex_bg->setVisible(false);
 	}
 
-	if (!player->isFlexing())
-	{
-		flex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-		flex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-		unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
-		unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
-	}
+	flex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+	flex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
+	unflex_meter->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
+	unflex_bg->setPosition(camera->getPosition() + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
 
 	for (unsigned int i = 0; i < itemsCollected; ++i) {
 		collected_evidence[i]->setPosition(camera->getPosition() + Vec2(20 + visibleSize.width / 2 - (totalItems - i) * (collected_evidence[i]->getContentSize().width * UI_Scale), visibleSize.height / 2 - (evidence[i]->getContentSize().height * UI_Scale / 2) - 20));
@@ -725,16 +733,6 @@ void Tutorial::screenshake() {
 		float angle = radius * 25 * rand_minus1_1();
 		float offsetX = radius * 30 * rand_minus1_1();
 		float offsetY = radius * 30 * rand_minus1_1();
-
-		flex_meter->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-		flex_bg->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale - 40, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2 - 5));
-		unflex_meter->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
-		unflex_bg->setPosition(camera->getPosition() - Vec2(offsetX, offsetY) + Vec2(-visibleSize.width / 2 + unflex_bg->getContentSize().width / 2 * UI_Scale + 5, visibleSize.height / 2 - flex_bg->getContentSize().height * UI_Scale / 2));
-
-		flex_meter->setRotation(-angle);
-		flex_bg->setRotation(-angle);
-		unflex_meter->setRotation(-angle);
-		unflex_bg->setRotation(-angle);
 
 		camera->setRotation(angle + camera->getRotation());
 		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
