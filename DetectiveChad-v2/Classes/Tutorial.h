@@ -141,8 +141,6 @@ private:
 	// Fogs of War
 	std::vector<g3nts::PrimitiveRect> FoW; //container to hold solid fogs of war
 	std::vector<g3nts::PrimitiveRect> sFoW; //container to hold opaque fogs of war
-	std::vector<bool> revealed; //container to hold the flags for whether the player has entered the room before
-	int rooms; //number of rooms in Tutorial
 
 	// -----------------------------------------------
 	// Tutorial level rooms

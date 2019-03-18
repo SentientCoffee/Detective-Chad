@@ -217,23 +217,20 @@ void Tutorial::initWalls() {
 
 }
 void Tutorial::initFoW() {
-	for (int i = 0;i < rooms;i++)
-	{
-		revealed[i] = false;
-	}
+
 	roomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, 1));
 	roomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, 1));
 	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, 1));
-	roomFour = g3nts::PrimitiveRect(0, Vec2(1010, 290)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, 1));
+	roomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, 1));
 	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, 1));
-	roomSix = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 290)*levelScale, Color4F(0, 0, 0, 1));
+	roomSix = g3nts::PrimitiveRect(0, Vec2(1270, 0)*levelScale, Vec2(2000, 898)*levelScale, Color4F(0, 0, 0, 1));
 
 	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, .6));
 	sroomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, .6));
 	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, .6));
-	sroomFour = g3nts::PrimitiveRect(0, Vec2(1010, 290)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, .6));
+	sroomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, .6));
 	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, .6));
-	sroomSix = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 290)*levelScale, Color4F(0, 0, 0, .6));
+	sroomSix = g3nts::PrimitiveRect(0, Vec2(1270, 0)*levelScale, Vec2(2000, 898)*levelScale, Color4F(0, 0, 0, .6));
 
 	FoW.push_back(roomOne);
 	FoW.push_back(roomTwo);
@@ -254,7 +251,7 @@ void Tutorial::initFoW() {
 	{
 		if (i <= 2)
 			this->addChild(FoW[i].getNode(), 5);
-		else if (i<=4)
+		else if (i < 4)
 			this->addChild(FoW[i].getNode(), 15);
 		else
 			this->addChild(FoW[i].getNode(), 25);
@@ -263,7 +260,7 @@ void Tutorial::initFoW() {
 	{
 		if (i <= 2)
 			this->addChild(sFoW[i].getNode(), 5);
-		else if (i <= 4)
+		else if (i < 4)
 			this->addChild(sFoW[i].getNode(), 15);
 		else
 			this->addChild(sFoW[i].getNode(), 25);
@@ -706,6 +703,7 @@ void Tutorial::togglePause() {
 		player->getKeyboardListener()->setEnabled(false);
 		this->unscheduleUpdate();
 		pauseMenu->setVisible(true);
+		unflex_meter->stopAllActionsByTag('UI');
 	}
 	else {
 		pauseMenu->setVisible(false);
