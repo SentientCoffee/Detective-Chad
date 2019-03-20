@@ -93,7 +93,6 @@ private:
 
 	cocos2d::Sprite* inventory_bg;                    // inventory UI
 	std::vector<g3nts::Item*> inventory;
-	std::unordered_map<string, bool> inventory_state;
 	unsigned int pickedUp;
 	
 	// Pause menu
