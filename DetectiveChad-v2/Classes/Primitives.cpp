@@ -21,6 +21,10 @@ g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, co
 	_node->drawLine(endPos, Vec2(endPos.x, endPos.y - 10), Color4F(0, 0, 1, 1));
 }
 
+g3nts::PrimitiveRect::PrimitiveRect(const int& garbage, const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
+: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour)
+{_node->drawSolidRect(startPos, endPos, colour); }
+
 Vec2 g3nts::PrimitiveRect::getStartPosition() const  { return _startPos; }
 Vec2 g3nts::PrimitiveRect::getEndPosition() const    { return _endPos; }
 Vec2 g3nts::PrimitiveRect::getCentrePosition() const { return _startPos + (_endPos - _startPos) / 2.0f; }

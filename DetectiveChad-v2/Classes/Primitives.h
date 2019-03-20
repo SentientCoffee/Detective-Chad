@@ -11,8 +11,13 @@ namespace g3nts {
 		// CONSTRUCTORS/DECONSTRUCTORS
 		PrimitiveRect();
 		PrimitiveRect(const cocos2d::Vec2& startPos,
-					  const cocos2d::Vec2& endPos,
-					  const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
+			const cocos2d::Vec2& endPos,
+			const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
+
+		PrimitiveRect(const int& garbage, 
+			const cocos2d::Vec2& startPos,
+			const cocos2d::Vec2& endPos,
+			const cocos2d::Color4F& colour = cocos2d::Color4F(1, 0, 0, 1));
 
 		// MEMBER FUNCTIONS
 		cocos2d::DrawNode* getNode() const;
