@@ -223,14 +223,14 @@ void Tutorial::initFoW() {
 	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, 1));
 	roomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, 1));
 	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, 1));
-	roomSix = g3nts::PrimitiveRect(0, Vec2(1270, 0)*levelScale, Vec2(2000, 898)*levelScale, Color4F(0, 0, 0, 1));
+	roomSix = g3nts::PrimitiveRect(0, Vec2(1270, -2500)*levelScale, Vec2(2000, 2500)*levelScale, Color4F(0, 0, 0, 1));
 
 	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, .6));
 	sroomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, .6));
 	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, .6));
 	sroomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, .6));
 	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, .6));
-	sroomSix = g3nts::PrimitiveRect(0, Vec2(1270, 0)*levelScale, Vec2(2000, 898)*levelScale, Color4F(0, 0, 0, .6));
+	sroomSix = g3nts::PrimitiveRect(0, Vec2(1270, -2500)*levelScale, Vec2(2000, 2500)*levelScale, Color4F(0, 0, 0, .6));
 
 	FoW.push_back(roomOne);
 	FoW.push_back(roomTwo);
@@ -250,9 +250,9 @@ void Tutorial::initFoW() {
 	for (int i = 0;i < FoW.size();i++)
 	{
 		if (i <= 2)
-			this->addChild(FoW[i].getNode(), 5);
-		else if (i < 4)
 			this->addChild(FoW[i].getNode(), 15);
+		else if (i < 4)
+			this->addChild(FoW[i].getNode(), 25);
 		else
 			this->addChild(FoW[i].getNode(), 25);
 	}
@@ -264,6 +264,7 @@ void Tutorial::initFoW() {
 			this->addChild(sFoW[i].getNode(), 15);
 		else
 			this->addChild(sFoW[i].getNode(), 25);
+		sFoW[i].getNode()->setVisible(false);
 	}
 
 
@@ -477,7 +478,13 @@ void Tutorial::update(const float dt) {
 			player->getPosition().y >= FoW[i].getStartPosition().y &&
 			player->getPosition().y <= FoW[i].getEndPosition().y)
 		{
-			FoW[i].getNode()->setVisible(false);
+			if (sFoW[i].getNode()->getOpacity() > 0)
+				FoW[i].getNode()->setOpacity(FoW[i].getNode()->getOpacity() - 5);
+			else
+			{
+				FoW[i].getNode()->setVisible(false);
+				sFoW[i].getNode()->setVisible(true);
+			}
 		}
 	}
 
@@ -488,11 +495,17 @@ void Tutorial::update(const float dt) {
 			player->getPosition().y >= sFoW[i].getStartPosition().y &&
 			player->getPosition().y <= sFoW[i].getEndPosition().y)
 		{
-			sFoW[i].getNode()->setVisible(false);
+			if (sFoW[i].getNode()->getOpacity() > 0)
+				sFoW[i].getNode()->setOpacity(sFoW[i].getNode()->getOpacity() - 5);
+			else
+				sFoW[i].getNode()->setOpacity(0);
 		}
 		else
 		{
-			sFoW[i].getNode()->setVisible(true);
+			if (sFoW[i].getNode()->getOpacity() < 255)
+				sFoW[i].getNode()->setOpacity(sFoW[i].getNode()->getOpacity() + 5);
+			else
+				sFoW[i].getNode()->setOpacity(255);
 		}
 	}
 
