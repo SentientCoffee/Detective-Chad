@@ -76,7 +76,7 @@ void g3nts::Character::addAnimation(string tag, string file, const unsigned int 
 		frames.pushBack(spriteCache->getSpriteFrameByName(name));
 	}
 	
-	Animation* anim = Animation::createWithSpriteFrames(frames, 1.0f/numFrames * 0.5);
+	Animation* anim = Animation::createWithSpriteFrames(frames, 1.0f / numFrames * 0.5);
 	anim->setLoops(1);
 	
 	_animations[tag] = anim;

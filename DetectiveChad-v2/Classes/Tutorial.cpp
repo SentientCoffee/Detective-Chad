@@ -16,6 +16,7 @@ bool Tutorial::init() {
 	gameOver = false;
 
 	totalItems = 0u;
+	requiredItems = 1u;
 	itemsCollected = 0u;
 	levelScale = 1.35f;
 	UI_Scale = 0.5f;
@@ -185,6 +186,8 @@ void Tutorial::initWalls() {
 	rightHouseWall_1 = g3nts::PrimitiveRect(Vec2(1250, 0) * levelScale, Vec2(1280, 382) * levelScale);
 	rightHouseWall_2 = g3nts::PrimitiveRect(Vec2(1250, 524) * levelScale, Vec2(1280, 850) * levelScale);
 
+	iUpperHouseWall = g3nts::PrimitiveRect(Vec2(0, 770) * levelScale, Vec2(1250, 770) * levelScale);
+	
 	// Inner horizontal house walls
 	bathroomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 594) * levelScale, Vec2(48, 524) * levelScale);
 	bathroomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 594) * levelScale, Vec2(817, 524) * levelScale);
@@ -192,45 +195,60 @@ void Tutorial::initWalls() {
 	livingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 340) * levelScale, Vec2(48, 270) * levelScale);
 	livingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 340) * levelScale, Vec2(994, 270) * levelScale);
 
+	iBathroomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 524) * levelScale, Vec2(48, 554) * levelScale);
+	iBathroomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 524) * levelScale, Vec2(817, 554) * levelScale);
+	iBedroomDoorway = g3nts::PrimitiveRect(Vec2(947, 524) * levelScale, Vec2(1250, 554) * levelScale);
+	iLivingRoomDoorway_1 = g3nts::PrimitiveRect(Vec2(0, 270) * levelScale, Vec2(48, 300) * levelScale);
+	iLivingRoomDoorway_2 = g3nts::PrimitiveRect(Vec2(179, 270) * levelScale, Vec2(994, 300) * levelScale);
+
 	// Inner vertical house walls
 	verticalBathroomWall = g3nts::PrimitiveRect(Vec2(354, 594) * levelScale, Vec2(384, 850) * levelScale);
 	vecticalLivingRoomWall_1 = g3nts::PrimitiveRect(Vec2(994, 270) * levelScale, Vec2(1024, 524) * levelScale);
 	vecticalLivingRoomWall_2 = g3nts::PrimitiveRect(Vec2(994, 0) * levelScale, Vec2(1024, 128) * levelScale);
 
 	// Add all the walls to the walls vector
-	walls.push_back(upperBoundary); walls.push_back(lowerBoundary);
-	walls.push_back(leftBoundary);  walls.push_back(rightBoundary);
+	playerWalls.push_back(upperBoundary); playerWalls.push_back(lowerBoundary);
+	playerWalls.push_back(leftBoundary);  playerWalls.push_back(rightBoundary);
 
-	walls.push_back(upperHouseWall); walls.push_back(lowerHouseWall);
-	walls.push_back(leftHouseWall); walls.push_back(rightHouseWall_1); walls.push_back(rightHouseWall_2);
+	playerWalls.push_back(upperHouseWall); playerWalls.push_back(lowerHouseWall);
+	playerWalls.push_back(leftHouseWall); playerWalls.push_back(rightHouseWall_1); playerWalls.push_back(rightHouseWall_2);
 
-	walls.push_back(bathroomDoorway_1); walls.push_back(bathroomDoorway_2); walls.push_back(bedroomDoorway);
-	walls.push_back(livingRoomDoorway_1); walls.push_back(livingRoomDoorway_2);
+	playerWalls.push_back(bathroomDoorway_1); playerWalls.push_back(bathroomDoorway_2); playerWalls.push_back(bedroomDoorway);
+	playerWalls.push_back(livingRoomDoorway_1); playerWalls.push_back(livingRoomDoorway_2);
 
-	walls.push_back(verticalBathroomWall); walls.push_back(vecticalLivingRoomWall_1); walls.push_back(vecticalLivingRoomWall_2);
+	playerWalls.push_back(verticalBathroomWall); playerWalls.push_back(vecticalLivingRoomWall_1); playerWalls.push_back(vecticalLivingRoomWall_2);
+
+	itemWalls.push_back(iUpperHouseWall);
+	itemWalls.push_back(iBathroomDoorway_1); itemWalls.push_back(iBathroomDoorway_2); itemWalls.push_back(iBedroomDoorway);
+	itemWalls.push_back(iLivingRoomDoorway_1); itemWalls.push_back(iLivingRoomDoorway_2);
 
 	// Add all the walls to the scene
-	for (g3nts::PrimitiveRect wall : walls) {
+	for (g3nts::PrimitiveRect wall : playerWalls) {
 		this->addChild(wall.getNode(), 100);
 		wall.getNode()->setVisible(false);
 	}
 
+	for (g3nts::PrimitiveRect wall : itemWalls) {
+		this->addChild(wall.getNode(), 100);
+		wall.getNode()->setVisible(false);
+	}
 }
+
 void Tutorial::initFoW() {
 
-	roomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, 1));
-	roomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, 1));
-	roomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, 1));
-	roomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, 1));
-	roomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, 1));
-	roomSix = g3nts::PrimitiveRect(0, Vec2(1270, -2500)*levelScale, Vec2(2000, 2500)*levelScale, Color4F(0, 0, 0, 1));
+	roomOne = g3nts::PrimitiveRect(Vec2(0, 510) * levelScale, Vec2(369, 898) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomTwo = g3nts::PrimitiveRect(Vec2(369, 510) * levelScale, Vec2(1270, 898) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomThree = g3nts::PrimitiveRect(Vec2(0, 254) * levelScale, Vec2(1010, 510) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomFour = g3nts::PrimitiveRect(Vec2(1010, 0) * levelScale, Vec2(1270, 510) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomFive = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1010, 254) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomSix = g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 1), true);
 
-	sroomOne = g3nts::PrimitiveRect(0, Vec2(0, 550)*levelScale, Vec2(369, 898)*levelScale, Color4F(0, 0, 0, .6));
-	sroomTwo = g3nts::PrimitiveRect(0, Vec2(369, 550)*levelScale, Vec2(1270, 898)*levelScale, Color4F(0, 0, 0, .6));
-	sroomThree = g3nts::PrimitiveRect(0, Vec2(0, 290)*levelScale, Vec2(1010, 550)*levelScale, Color4F(0, 0, 0, .6));
-	sroomFour = g3nts::PrimitiveRect(0, Vec2(1010, 0)*levelScale, Vec2(1270, 550)*levelScale, Color4F(0, 0, 0, .6));
-	sroomFive = g3nts::PrimitiveRect(0, Vec2(0, 0)*levelScale, Vec2(1010, 290)*levelScale, Color4F(0, 0, 0, .6));
-	sroomSix = g3nts::PrimitiveRect(0, Vec2(1270, -2500)*levelScale, Vec2(2000, 2500)*levelScale, Color4F(0, 0, 0, .6));
+	sroomOne = g3nts::PrimitiveRect(Vec2(0, 510) * levelScale, Vec2(369, 898) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomTwo = g3nts::PrimitiveRect(Vec2(369, 510) * levelScale, Vec2(1270, 898) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomThree = g3nts::PrimitiveRect(Vec2(0, 254) * levelScale, Vec2(1010, 510) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomFour = g3nts::PrimitiveRect(Vec2(1010, 0) * levelScale, Vec2(1270, 510) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomFive = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1010, 254) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomSix = g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 0.6f), true);
 
 	FoW.push_back(roomOne);
 	FoW.push_back(roomTwo);
@@ -247,7 +265,7 @@ void Tutorial::initFoW() {
 	sFoW.push_back(sroomSix);
 
 
-	for (int i = 0;i < FoW.size();i++)
+	for (unsigned int i = 0; i < FoW.size(); ++i)
 	{
 		if (i <= 2)
 			this->addChild(FoW[i].getNode(), 15);
@@ -256,7 +274,7 @@ void Tutorial::initFoW() {
 		else
 			this->addChild(FoW[i].getNode(), 25);
 	}
-	for (int i = 0;i < sFoW.size();i++)
+	for (unsigned int i = 0; i < sFoW.size(); ++i)
 	{
 		if (i <= 2)
 			this->addChild(sFoW[i].getNode(), 5);
@@ -269,11 +287,12 @@ void Tutorial::initFoW() {
 
 
 }
+
 void Tutorial::initPauseMenu() {
 
-	Label* pausedLabel = Label::createWithTTF("PAUSED", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* resumeLabel = Label::createWithTTF("Resume", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* exitLabel = Label::createWithTTF("Back to Main Menu", "fonts/Marker Felt.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* pausedLabel = Label::createWithTTF("PAUSED", "fonts/GillSansUltraBold.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* resumeLabel = Label::createWithTTF("Resume", "fonts/GillSansUltraBold.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* exitLabel = Label::createWithTTF("Back to Main Menu", "fonts/GillSansUltraBold.ttf", 36, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	pausedLabel->enableShadow();
 	resumeLabel->enableShadow();
 	exitLabel->enableShadow();
@@ -298,8 +317,8 @@ void Tutorial::initPauseMenu() {
 }
 
 void Tutorial::initTextboxes() {
-	pickupCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Pick up: L", "fonts/Marker Felt.ttf", 24, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
-	flexCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Flex: Space", "fonts/Marker Felt.ttf", 24, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
+	pickupCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Pick up: L", "fonts/GillSansUltraBold.ttf", 16, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
+	flexCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Flex: Space", "fonts/GillSansUltraBold.ttf", 16, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
 
 	pickupCommandTextbox->addToScene(this, 100);
 	flexCommandTextbox->addToScene(this, 100);
@@ -326,7 +345,7 @@ void Tutorial::initUI() {
 	unflex_meter->setType(ProgressTimer::Type::BAR);
 	unflex_meter->setMidpoint(Vec2(0, 0.5f));
 	unflex_meter->setBarChangeRate(Vec2(1, 0));
-	unflex_meter->setPercentage(100);
+	unflex_meter->setPercentage(50);
 
 	unflex_bg = Sprite::create("ui/unflex-transparent.png");
 	unflex_bg->setScale(UI_Scale);
@@ -338,18 +357,30 @@ void Tutorial::initUI() {
 
 	for (unsigned int i = 0; i < totalItems; ++i)
 	{
-		evidence.push_back(Sprite::create("ui/evidence-default.png"));
-		evidence[i]->setScale(UI_Scale);
+		if (i >= totalItems - requiredItems) {
+			evidence.push_back(Sprite::create("ui/evidence-default.png"));
+		}
+		else {
+			evidence.push_back(Sprite::create("ui/evidence-extra.png"));
+		}
 
+		evidence[i]->setScale(UI_Scale);
 		broken_evidence.push_back(Sprite::create("ui/evidence-broken.png"));
 		broken_evidence[i]->setScale(UI_Scale);
 		broken_evidence[i]->setVisible(false);
 
-		collected_evidence.push_back(Sprite::create("ui/evidence-collected.png"));
+		evidence_state.push_back(true);
+	}
+
+	for (unsigned int i = 0; i < totalItems; ++i) {
+		if (i < requiredItems) {
+			collected_evidence.push_back(Sprite::create("ui/evidence-default-collected.png"));
+		}
+		else {
+			collected_evidence.push_back(Sprite::create("ui/evidence-extra-collected.png"));
+		}
 		collected_evidence[i]->setScale(UI_Scale);
 		collected_evidence[i]->setVisible(false);
-
-		evidence_state.push_back(true);
 	}
 
 	// Adding UI to scene
@@ -368,6 +399,10 @@ void Tutorial::initUI() {
 	this->addChild(inventory_bg, 1000);
 
 	flex_bg->setVisible(false);
+	
+	ProgressTo* unflexProgress = ProgressTo::create(60.0f, 0);
+	unflexProgress->setTag('UI');
+	unflex_meter->runAction(unflexProgress);
 }
 
 void Tutorial::initKeyboardListener() {
@@ -486,11 +521,11 @@ void Tutorial::update(const float dt) {
 	}
 
 	// Fog of War Revealing
-	for (int i = 0;i < FoW.size();i++)
+	for (unsigned int i = 0; i < FoW.size(); ++i)
 	{
 		if (player->getPosition().x >= FoW[i].getStartPosition().x &&
+			player->getPosition().y >= FoW[i].getStartPosition().y + 35 &&
 			player->getPosition().x <= FoW[i].getEndPosition().x &&
-			player->getPosition().y >= FoW[i].getStartPosition().y &&
 			player->getPosition().y <= FoW[i].getEndPosition().y)
 		{
 			if (sFoW[i].getNode()->getOpacity() > 0)
@@ -503,11 +538,11 @@ void Tutorial::update(const float dt) {
 		}
 	}
 
-	for (int i = 0;i < sFoW.size();i++)
+	for (unsigned int i = 0; i < sFoW.size(); ++i)
 	{
 		if (player->getPosition().x >= sFoW[i].getStartPosition().x &&
+			player->getPosition().y >= sFoW[i].getStartPosition().y + 35 &&
 			player->getPosition().x <= sFoW[i].getEndPosition().x &&
-			player->getPosition().y >= sFoW[i].getStartPosition().y &&
 			player->getPosition().y <= sFoW[i].getEndPosition().y)
 		{
 			if (sFoW[i].getNode()->getOpacity() > 0)
@@ -526,7 +561,7 @@ void Tutorial::update(const float dt) {
 
 	// UI MOVEMENT (UI follows camera)
 	flexRefillTimer -= dt;
-	if (player->isFlexing()) flexRefillTimer = 0.4f;
+	if (player->isFlexing()) flexRefillTimer = 0.5f;
 
 	if (flexRefillTimer > 0)
 	{
@@ -535,7 +570,7 @@ void Tutorial::update(const float dt) {
 
 		if (flex_meter->getNumberOfRunningActionsByTag('UI') == 0) {
 			flex_meter->stopAllActionsByTag('UI');
-			ProgressFromTo* flexProgress = ProgressFromTo::create(0.4f, unflex_meter->getPercentage(), 100);
+			ProgressFromTo* flexProgress = ProgressFromTo::create(0.5f, unflex_meter->getPercentage(), 100);
 			DelayTime* UIdelay = DelayTime::create(1.5f);
 
 			Sequence* UIseq = Sequence::create(flexProgress, UIdelay, NULL);
@@ -554,7 +589,7 @@ void Tutorial::update(const float dt) {
 		unflex_bg->setVisible(true);
 
 		if (unflex_meter->getNumberOfRunningActionsByTag('UI') == 0) {
-			ProgressTo* unflexProgress = ProgressTo::create(45.0f, 0);
+			ProgressTo* unflexProgress = ProgressTo::create(120.0f * unflex_meter->getPercentage() / 100, 0);
 			unflexProgress->setTag('UI');
 			unflex_meter->runAction(unflexProgress);
 		}
@@ -602,11 +637,11 @@ void Tutorial::update(const float dt) {
 		if (!state) broken++;
 	}
 
-	if (broken >= 3 || unflex_meter->getPercentage() == 0) {
+	if (broken > totalItems - requiredItems || unflex_meter->getPercentage() == 0) {
 		gameOver = true;
 	}
 
-	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
+	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale - 30, inventory_bg->getContentSize().height * UI_Scale / 2 + 10));
 	for (g3nts::Item* inv : inventory) {
 		inv->setPosition(inventory_bg->getPosition());
 	}
@@ -675,8 +710,7 @@ void Tutorial::update(const float dt) {
 			}
 		}
 
-		for (g3nts::PrimitiveRect wall : walls) {
-
+		for (g3nts::PrimitiveRect wall : playerWalls) {
 			// Check player collision with walls
 			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
 				player->update(-dt);
@@ -687,9 +721,22 @@ void Tutorial::update(const float dt) {
 				//		player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
 				//	}
 			}
+		}
 
-			// Check item collision with walls
-			for (g3nts::Item* item : items) {
+		// Check item collision with walls
+		for (g3nts::Item* item : items) {
+			for (g3nts::PrimitiveRect wall : playerWalls) {
+				if (g3nts::isColliding(item->getHitbox(), wall)) {
+					if (wall.getWidth() < wall.getHeight()) {
+						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
+					}
+					else if (wall.getWidth() > wall.getHeight()) {
+						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
+					}
+				}
+			}
+
+			for (g3nts::PrimitiveRect wall : itemWalls) {
 				if (g3nts::isColliding(item->getHitbox(), wall)) {
 					if (wall.getWidth() < wall.getHeight()) {
 						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
@@ -703,7 +750,7 @@ void Tutorial::update(const float dt) {
 
 		showFlexCommand = false;
 		if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
-			showFlexCommand = true;
+			if(!bathroomMirror->isBroken()) showFlexCommand = true;
 		}
 
 		if (showPickupCommand) {
@@ -745,7 +792,8 @@ void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
 	bathroomMirror->getHitbox().getNode()->setVisible(true);
 	flexMobile->getHitbox().getNode()->setVisible(true);
-	for (g3nts::PrimitiveRect wall : walls) wall.getNode()->setVisible(true);
+	for (g3nts::PrimitiveRect wall : playerWalls) wall.getNode()->setVisible(true);
+	for (g3nts::PrimitiveRect wall : itemWalls) wall.getNode()->setVisible(true);
 	for (g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
 }
 

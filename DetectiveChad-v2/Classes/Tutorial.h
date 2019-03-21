@@ -58,8 +58,6 @@ private:
 	cocos2d::Sprite* middleWalls;             // Sprites for just the middle walls
 	cocos2d::Sprite* lowerWalls;              // Sprites for just the lower walls
 											  
-	float levelScale;                         // Scaling of the level
-	std::vector<g3nts::PrimitiveRect> walls;  // Container to hold all the boundaries
 											  
 	// Player								  
 	g3nts::Character* player;                 // Player character (object controlled by user)
@@ -69,7 +67,8 @@ private:
 	// Items in the scene					  
 	std::vector<g3nts::Item*> items;          // Container to hold all the items in the level
 	std::vector<g3nts::Item*> itemTemps;	  
-	unsigned int totalItems;				  
+	unsigned int totalItems;
+	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
 	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
@@ -110,6 +109,10 @@ private:
 	Input::Keyboard keyboard;
 	cocos2d::EventListenerKeyboard* keyboardListener;
 
+	float levelScale;                         // Scaling of the level
+	std::vector<g3nts::PrimitiveRect> playerWalls;  // Container to hold all the boundaries
+	std::vector<g3nts::PrimitiveRect> itemWalls;
+
 	// ALL THE BOUNDARIES IN THE LEVEL
 	// ---------------------------------------------------
 	// Level boundaries to make sure the player does not leave the level
@@ -125,12 +128,21 @@ private:
 	g3nts::PrimitiveRect rightHouseWall_1;
 	g3nts::PrimitiveRect rightHouseWall_2;
 
-	// Inner horizontal house walls
+	g3nts::PrimitiveRect iUpperHouseWall;
+
+	// Inner horizontal house walls (for Chad)
 	g3nts::PrimitiveRect bathroomDoorway_1;
 	g3nts::PrimitiveRect bathroomDoorway_2;
 	g3nts::PrimitiveRect bedroomDoorway;
 	g3nts::PrimitiveRect livingRoomDoorway_1;
 	g3nts::PrimitiveRect livingRoomDoorway_2;
+
+	// Inner horizontal house walls (for items)
+	g3nts::PrimitiveRect iBathroomDoorway_1;
+	g3nts::PrimitiveRect iBathroomDoorway_2;
+	g3nts::PrimitiveRect iBedroomDoorway;
+	g3nts::PrimitiveRect iLivingRoomDoorway_1;
+	g3nts::PrimitiveRect iLivingRoomDoorway_2;
 
 	// Inner vertical house walls
 	g3nts::PrimitiveRect verticalBathroomWall;

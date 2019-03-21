@@ -30,8 +30,8 @@ void MainMenu::initMenu() {
 	background = Sprite::create("ui/mainmenuscreen.png");
 	background->setPosition(windowSize.x / 2, windowSize.y / 2);
 
-	Label* startLabel = Label::createWithTTF("Start", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* exitLabel = Label::createWithTTF("Exit", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* startLabel = Label::createWithTTF("Start", "fonts/GillSansUltraBold.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* exitLabel = Label::createWithTTF("Exit", "fonts/GillSansUltraBold.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	startLabel->enableShadow();
 	exitLabel->enableShadow();
 
@@ -43,8 +43,8 @@ void MainMenu::initMenu() {
 		director->end();
 	});
 
-	startButton->setPosition(20, -(windowSize.y * 0.18));
-	exitButton->setPosition(20, -(windowSize.y * 0.35));
+	startButton->setPosition(20, -(windowSize.y * 0.15));
+	exitButton->setPosition(20, -(windowSize.y * 0.32));
 
 
 	menu = Menu::create(startButton, exitButton, NULL);
