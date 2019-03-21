@@ -336,10 +336,6 @@ void Tutorial::initUI() {
 	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
 	inventory_bg->setScale(UI_Scale);
 
-	for (g3nts::Item* temp : itemTemps) {
-		inventory_state[temp->getTag()] = false;
-	}
-
 	for (unsigned int i = 0; i < totalItems; ++i)
 	{
 		evidence.push_back(Sprite::create("ui/evidence-default.png"));
@@ -409,8 +405,28 @@ void Tutorial::initKeyboardListener() {
 							}
 
 							Vec2 direction = item->getPosition() - player->getPosition();
-							item->setVelocity(direction.getNormalized() * 1000.0f);
+							item->setVelocity(direction.getNormalized() * 2500.0f);
 						}
+					}
+
+					for (g3nts::Item* inv : inventory) {
+						if (inv->isBreakable()) {
+							inv->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + inv->getTag() + ".png"));
+							inv->setBreakable(false);
+
+							for (unsigned int i = 0; i < evidence_state.size(); ++i) {
+								if (evidence_state[i]) {
+									evidence_state[i] = false;
+									break;
+								}
+							}
+
+						}
+						
+						inv->setPosition(player->getPosition());
+						inv->setVelocity(player->getDirection().getNormalized() * 2000.0f);
+						items.push_back(inv);
+						inventory.erase(std::find(inventory.begin(), inventory.end(), inv));
 					}
 
 					if (!bathroomMirror->isBroken()) {
@@ -424,19 +440,19 @@ void Tutorial::initKeyboardListener() {
 			if (!gameOver) {
 				if (inventory.size() < 1) {
 					for (g3nts::Item* item : items) {
-						if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
-							inventory.push_back(item);
-							item->setZIndex(1001);
-							inventory_state[item->getTag()] = true;
-							items.erase(std::find(items.begin(), items.end(), item));
-							break;
+						if (item->isBreakable()) {
+							if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
+								inventory.push_back(item);
+								item->setZIndex(1001);
+								items.erase(std::find(items.begin(), items.end(), item));
+								break;
+							}
 						}
 					}
 				}
 				else if (inventory.size() > 0) {
 					inventory[0]->setPosition(player->getPosition());
 					inventory[0]->setVelocity(player->getDirection().getNormalized() * 2000.0f);
-					inventory_state[inventory[0]->getTag()] = false;
 					items.push_back(inventory[0]);
 					inventory.erase(inventory.begin());
 				}
@@ -461,7 +477,6 @@ void Tutorial::update(const float dt) {
 	else
 	{
 		this->getDefaultCamera()->setRotation(0);
-		//camera->setPosition(player->getPosition());
 		if (player->getPosition().x >= 145 * levelScale && player->getPosition().x <= 1200 * levelScale) {
 			camera->setPositionX(player->getPosition().x);
 		}
@@ -594,7 +609,6 @@ void Tutorial::update(const float dt) {
 	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
 	for (g3nts::Item* inv : inventory) {
 		inv->setPosition(inventory_bg->getPosition());
-		inv->setVisible(inventory_state[inv->getTag()]);
 	}
 
 	if (gameOver) {
@@ -635,20 +649,22 @@ void Tutorial::update(const float dt) {
 
 			// Check item collision with player
 			if (g3nts::isColliding(player->getHitbox(), item->getHitbox())) {
-				if (player->getZIndex() == item->getZIndex() + 1) {
-					showPickupCommand = true;
+				if (item->isBreakable()){
+					if (player->getZIndex() == item->getZIndex() + 1) {
+						showPickupCommand = true;
 
-					//Vec2 direction = player->getDirection() + item->getPosition() - player->getPosition();
-					//if (item->getVelocity().getLengthSq() <= 50 * 50)
-					//	item->setVelocity(direction.getNormalized() * 500.0f);
-					//else {
-					//	if (player->getDirection().getLengthSq() == 0) {
-					//		item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.4f);
-					//	}
-					//	else {
-					//		item->setVelocity(direction.getNormalized() * 200.0f);
-					//	}
-					//}
+						//Vec2 direction = player->getDirection() + item->getPosition() - player->getPosition();
+						//if (item->getVelocity().getLengthSq() <= 50 * 50)
+						//	item->setVelocity(direction.getNormalized() * 500.0f);
+						//else {
+						//	if (player->getDirection().getLengthSq() == 0) {
+						//		item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.4f);
+						//	}
+						//	else {
+						//		item->setVelocity(direction.getNormalized() * 200.0f);
+						//	}
+						//}
+					}
 				}
 			}
 
@@ -675,10 +691,10 @@ void Tutorial::update(const float dt) {
 			// Check item collision with walls
 			for (g3nts::Item* item : items) {
 				if (g3nts::isColliding(item->getHitbox(), wall)) {
-					if (wall.getWidth() <= 50) {
+					if (wall.getWidth() < wall.getHeight()) {
 						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
 					}
-					else if (wall.getHeight() <= 50) {
+					else if (wall.getWidth() > wall.getHeight()) {
 						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
 					}
 				}

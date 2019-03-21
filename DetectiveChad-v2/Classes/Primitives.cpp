@@ -12,7 +12,14 @@ g3nts::PrimitiveCapsule::PrimitiveCapsule() {}
 // CONSTRUCTORS WITH PARAMETERS
 g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
 : _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour) 
-{ _node->drawRect(startPos, endPos, colour); }
+{
+	_node->drawRect(startPos, endPos, colour);
+	
+	_node->drawLine(startPos, Vec2(startPos.x + 10, startPos.y), Color4F(0, 1, 0, 1));
+	_node->drawLine(startPos, Vec2(startPos.x, startPos.y + 10), Color4F(0, 1, 0, 1));
+	_node->drawLine(endPos, Vec2(endPos.x - 10, endPos.y), Color4F(0, 0, 1, 1));
+	_node->drawLine(endPos, Vec2(endPos.x, endPos.y - 10), Color4F(0, 0, 1, 1));
+}
 
 g3nts::PrimitiveRect::PrimitiveRect(const int& garbage, const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
 : _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour)
@@ -22,8 +29,14 @@ Vec2 g3nts::PrimitiveRect::getStartPosition() const  { return _startPos; }
 Vec2 g3nts::PrimitiveRect::getEndPosition() const    { return _endPos; }
 Vec2 g3nts::PrimitiveRect::getCentrePosition() const { return _startPos + (_endPos - _startPos) / 2.0f; }
 
-float g3nts::PrimitiveRect::getWidth() const  { return _endPos.x - _startPos.x; }
-float g3nts::PrimitiveRect::getHeight() const { return _endPos.y - _startPos.y; }
+float g3nts::PrimitiveRect::getWidth() const  {
+	float width = _endPos.x - _startPos.x;
+	return width > 0.0f ? width : -width;
+}
+float g3nts::PrimitiveRect::getHeight() const {
+	float height = _endPos.y - _startPos.y;
+	return height > 0.0f ? height : -height;
+}
 
 void g3nts::PrimitiveRect::setStartPosition(Vec2& startPos) {
 	_startPos = startPos;
@@ -61,6 +74,10 @@ void g3nts::PrimitiveRect::setColour(Color4F& colour) {
 void g3nts::PrimitiveRect::redraw() {
 	_node->clear();
 	_node->drawRect(_startPos, _endPos, _colour);
+	_node->drawLine(_startPos, Vec2(_startPos.x + 10, _startPos.y), Color4F(0, 1, 0, 1));
+	_node->drawLine(_startPos, Vec2(_startPos.x, _startPos.y + 10), Color4F(0, 1, 0, 1));
+	_node->drawLine(_endPos, Vec2(_endPos.x - 10, _endPos.y), Color4F(0, 0, 1, 1));
+	_node->drawLine(_endPos, Vec2(_endPos.x, _endPos.y - 10), Color4F(0, 0, 1, 1));
 }
 
 
