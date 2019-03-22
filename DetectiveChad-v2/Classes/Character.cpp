@@ -30,6 +30,7 @@ g3nts::Character::~Character() {
 
 const int g3nts::Character::getZIndex() const { return _sprite->getLocalZOrder(); }
 const bool g3nts::Character::isFlexing() const { return _flexState; }
+const float g3nts::Character::getSpeed() const { return _characterSpeed; }
 Sprite* g3nts::Character::getSprite() const { return _sprite; }
 Vec2 g3nts::Character::getPosition() const  { return _position; }
 Vec2 g3nts::Character::getDirection() const { return _playerDirection; }
@@ -164,7 +165,6 @@ void g3nts::Character::update(const float dt) {
 	
 	// Check for animations that are running and run the proper one
 	if (_currentAnimation != _nextAnimation || _sprite->getNumberOfRunningActionsByTag('anim') == 0) {
-		
 		_currentAnimation = _nextAnimation;
 		_sprite->stopAllActionsByTag('anim');
 		runAnimation(_currentAnimation);

@@ -66,13 +66,13 @@ private:
 											  
 	// Items in the scene					  
 	std::vector<g3nts::Item*> items;          // Container to hold all the items in the level
-	std::vector<g3nts::Item*> itemTemps;	  
 	unsigned int totalItems;
 	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
 	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
-	g3nts::Item* flexMobile;				  
+	g3nts::Item* flexMobile;
+	g3nts::PrimitiveRect flexMobileDrop;
 											  
 	// UI									  
 	float UI_Scale;                           // Scaling of UI
@@ -100,8 +100,10 @@ private:
 	bool gamePaused;                           // Bool to check if the game is paused
 
 	// Textboxes
+	bool showDropCommand;
 	bool showPickupCommand;
 	bool showFlexCommand;
+	g3nts::Textbox* dropCommandTextbox;
 	g3nts::Textbox* pickupCommandTextbox;
 	g3nts::Textbox* flexCommandTextbox;
 
@@ -120,6 +122,9 @@ private:
 	g3nts::PrimitiveRect lowerBoundary;
 	g3nts::PrimitiveRect leftBoundary;
 	g3nts::PrimitiveRect rightBoundary;
+
+	g3nts::PrimitiveRect topHedge;
+	g3nts::PrimitiveRect bottomHedge;
 
 	// Outer house walls
 	g3nts::PrimitiveRect upperHouseWall;

@@ -125,14 +125,8 @@ void Tutorial::initLevel() {
 
 void Tutorial::initItems() {
 
-	g3nts::Item* shirtTemplate;
-	g3nts::Item* magGlassTemplate;
-
-	shirtTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
-	magGlassTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
-
-	itemTemps.push_back(shirtTemplate);
-	itemTemps.push_back(magGlassTemplate);
+	g3nts::Item* shirtTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
+	g3nts::Item* magGlassTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
 
 	g3nts::Item* shirt_1 = new g3nts::Item(*shirtTemplate);
 	g3nts::Item* shirt_2 = new g3nts::Item(*shirtTemplate);
@@ -143,7 +137,7 @@ void Tutorial::initItems() {
 
 	shirt_1->setPosition(Vec2(120, 720) * levelScale);
 	shirt_2->setPosition(Vec2(1050, 680) * levelScale);
-	shirt_3->setPosition(Vec2(620, 290) * levelScale);
+	shirt_3->setPosition(Vec2(620, 150) * levelScale);
 
 	magGlass_1->setPosition(Vec2(690, 420) * levelScale);
 	magGlass_2->setPosition(Vec2(720, 180) * levelScale);
@@ -161,13 +155,20 @@ void Tutorial::initItems() {
 		item->addToScene(this);
 	}
 
-	bathroomMirror = new g3nts::Mirror(Vec2(170, 800) * levelScale, spriteCache->getSpriteFrameByName("items/mirror.png"));
+	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirror.png"));
+
+	bathroomMirror = new g3nts::Mirror(*mirrorTemplate1);
+	bathroomMirror->setPosition(Vec2(170, 800) * levelScale);
 	bathroomMirror->addToScene(this, 3);
 
 	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, "items/flexmobile.png");
 	//flexMobile->addAnimation();
 	flexMobile->getSprite()->setScale(2.0f);
 	flexMobile->addToScene(this, 3);
+
+	flexMobileDrop = g3nts::PrimitiveRect(Vec2(1375, 410) * levelScale, Vec2(1475, 510) * levelScale);
+	this->addChild(flexMobileDrop.getNode(), 100);
+	flexMobileDrop.getNode()->setVisible(false);
 }
 
 void Tutorial::initWalls() {
@@ -178,6 +179,9 @@ void Tutorial::initWalls() {
 	lowerBoundary = g3nts::PrimitiveRect(Vec2(bottomLeft.x, bottomLeft.y) * levelScale, Vec2(topRight.x, bottomLeft.y) * levelScale);
 	leftBoundary = g3nts::PrimitiveRect(Vec2(bottomLeft.x, bottomLeft.y) * levelScale, Vec2(bottomLeft.x, topRight.y) * levelScale);
 	rightBoundary = g3nts::PrimitiveRect(Vec2(topRight.x, bottomLeft.y) * levelScale, Vec2(topRight.x, topRight.y) * levelScale);
+
+	topHedge = g3nts::PrimitiveRect(Vec2(1220, 850) * levelScale, Vec2(1250, topRight.y) * levelScale);
+	bottomHedge = g3nts::PrimitiveRect(Vec2(1220, bottomLeft.y) * levelScale, Vec2(1250, 0) * levelScale);
 
 	// Outer house walls
 	upperHouseWall = g3nts::PrimitiveRect(Vec2(0, 850) * levelScale, Vec2(1250, 766) * levelScale);
@@ -209,6 +213,8 @@ void Tutorial::initWalls() {
 	// Add all the walls to the walls vector
 	playerWalls.push_back(upperBoundary); playerWalls.push_back(lowerBoundary);
 	playerWalls.push_back(leftBoundary);  playerWalls.push_back(rightBoundary);
+
+	playerWalls.push_back(topHedge); playerWalls.push_back(bottomHedge);
 
 	playerWalls.push_back(upperHouseWall); playerWalls.push_back(lowerHouseWall);
 	playerWalls.push_back(leftHouseWall); playerWalls.push_back(rightHouseWall_1); playerWalls.push_back(rightHouseWall_2);
@@ -318,12 +324,15 @@ void Tutorial::initPauseMenu() {
 
 void Tutorial::initTextboxes() {
 	pickupCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Pick up: L", "fonts/GillSansUltraBold.ttf", 16, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
+	dropCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Drop: L", "fonts/GillSansUltraBold.ttf", 16, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
 	flexCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Flex: Space", "fonts/GillSansUltraBold.ttf", 16, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
 
 	pickupCommandTextbox->addToScene(this, 100);
+	dropCommandTextbox->addToScene(this, 100);
 	flexCommandTextbox->addToScene(this, 100);
 
 	pickupCommandTextbox->setVisible(false);
+	dropCommandTextbox->setVisible(false);
 	flexCommandTextbox->setVisible(false);
 }
 
@@ -486,9 +495,15 @@ void Tutorial::initKeyboardListener() {
 					}
 				}
 				else if (inventory.size() > 0) {
-					inventory[0]->setPosition(player->getPosition());
-					inventory[0]->setVelocity(player->getDirection().getNormalized() * 2000.0f);
-					items.push_back(inventory[0]);
+					if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
+						itemsCollected++;
+						inventory[0]->setVisible(false);
+					}
+					else {
+						inventory[0]->setPosition(player->getPosition());
+						inventory[0]->setVelocity(player->getDirection().getNormalized() * 2000.0f);
+						items.push_back(inventory[0]);
+					}
 					inventory.erase(inventory.begin());
 				}
 			}
@@ -673,6 +688,23 @@ void Tutorial::update(const float dt) {
 			upperWalls->setOpacity(255 * 0.25);
 		}
 
+		for (g3nts::PrimitiveRect wall : playerWalls) {
+			// Check player collision with walls
+			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
+				player->update(-dt);
+				//if (wall.getWidth() < wall.getHeight()) {
+				//	player->setPosition(player->getPosition() + Vec2(player->getDirection().x, 0) * player->getSpeed() * dt);
+				//}
+				//else if (wall.getWidth() > wall.getHeight()) {
+				//	player->setPosition(player->getPosition() + Vec2(0, player->getDirection().y) * player->getSpeed() * dt);
+				//}
+			}
+		}
+
+		if (g3nts::isColliding(player->getHitbox(), flexMobile->getHitbox())) {
+			player->update(-dt);
+		}
+
 		showPickupCommand = false;
 		for (g3nts::Item* item : items) {
 			// Update all items in the scene
@@ -702,25 +734,6 @@ void Tutorial::update(const float dt) {
 					}
 				}
 			}
-
-			if (g3nts::isColliding(item->getHitbox(), flexMobile->getHitbox())) {
-				itemsCollected++;
-				item->setVisible(false);
-				items.erase(std::find(items.begin(), items.end(), item));
-			}
-		}
-
-		for (g3nts::PrimitiveRect wall : playerWalls) {
-			// Check player collision with walls
-			if (g3nts::isColliding(player->getHitbox(), wall) && player->getDirection().getLengthSq() != 0) {
-				player->update(-dt);
-				//	if (wall.getWidth() <= 50) {
-				//		player->setDirection(Vec2(-player->getDirection().x, player->getDirection().y));
-				//	}
-				//	else if (wall.getHeight() <= 50) {
-				//		player->setDirection(Vec2(player->getDirection().x, -player->getDirection().y));
-				//	}
-			}
 		}
 
 		// Check item collision with walls
@@ -728,10 +741,10 @@ void Tutorial::update(const float dt) {
 			for (g3nts::PrimitiveRect wall : playerWalls) {
 				if (g3nts::isColliding(item->getHitbox(), wall)) {
 					if (wall.getWidth() < wall.getHeight()) {
-						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
+						item->setVelocity(Vec2(-item->getVelocity().x * 0.4f, item->getVelocity().y));
 					}
 					else if (wall.getWidth() > wall.getHeight()) {
-						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
+						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y * 0.4f));
 					}
 				}
 			}
@@ -739,13 +752,18 @@ void Tutorial::update(const float dt) {
 			for (g3nts::PrimitiveRect wall : itemWalls) {
 				if (g3nts::isColliding(item->getHitbox(), wall)) {
 					if (wall.getWidth() < wall.getHeight()) {
-						item->setVelocity(Vec2(-item->getVelocity().x, item->getVelocity().y));
+						item->setVelocity(Vec2(-item->getVelocity().x * 0.4f, item->getVelocity().y));
 					}
 					else if (wall.getWidth() > wall.getHeight()) {
-						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y));
+						item->setVelocity(Vec2(item->getVelocity().x, -item->getVelocity().y * 0.4f));
 					}
 				}
 			}
+		}
+
+		showDropCommand = false;
+		if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
+			if(inventory.size() > 0) showDropCommand = true;
 		}
 
 		showFlexCommand = false;
@@ -759,6 +777,14 @@ void Tutorial::update(const float dt) {
 		}
 		else {
 			pickupCommandTextbox->setVisible(false);
+		}
+
+		if (showDropCommand) {
+			dropCommandTextbox->setPosition(Vec2(player->getPosition().x - 60, player->getPosition().y + 120));
+			dropCommandTextbox->setVisible(true);
+		}
+		else {
+			dropCommandTextbox->setVisible(false);
 		}
 
 		if (showFlexCommand) {
@@ -792,6 +818,7 @@ void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
 	bathroomMirror->getHitbox().getNode()->setVisible(true);
 	flexMobile->getHitbox().getNode()->setVisible(true);
+	flexMobileDrop.getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : playerWalls) wall.getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : itemWalls) wall.getNode()->setVisible(true);
 	for (g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
