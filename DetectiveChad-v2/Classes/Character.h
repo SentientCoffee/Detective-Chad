@@ -20,6 +20,7 @@ namespace g3nts {
 
 		const int getZIndex() const;
 		const bool isFlexing() const;
+		const float getSpeed() const;
 		cocos2d::Sprite* getSprite() const;
 		cocos2d::Vec2 getPosition() const;
 		cocos2d::Vec2 getDirection() const;

@@ -10,20 +10,16 @@ g3nts::PrimitiveCapsule::PrimitiveCapsule() {}
 
 
 // CONSTRUCTORS WITH PARAMETERS
-g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
-: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour) 
+g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, const Color4F& colour, const bool filled)
+: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour), _filled(filled)
 {
-	_node->drawRect(startPos, endPos, colour);
-	
-	_node->drawLine(startPos, Vec2(startPos.x + 10, startPos.y), Color4F(0, 1, 0, 1));
-	_node->drawLine(startPos, Vec2(startPos.x, startPos.y + 10), Color4F(0, 1, 0, 1));
-	_node->drawLine(endPos, Vec2(endPos.x - 10, endPos.y), Color4F(0, 0, 1, 1));
-	_node->drawLine(endPos, Vec2(endPos.x, endPos.y - 10), Color4F(0, 0, 1, 1));
+	if (filled) {
+		_node->drawSolidRect(startPos, endPos, colour);
+	}
+	else {
+		_node->drawRect(startPos, endPos, colour);
+	}
 }
-
-g3nts::PrimitiveRect::PrimitiveRect(const int& garbage, const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
-: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour)
-{_node->drawSolidRect(startPos, endPos, colour); }
 
 Vec2 g3nts::PrimitiveRect::getStartPosition() const  { return _startPos; }
 Vec2 g3nts::PrimitiveRect::getEndPosition() const    { return _endPos; }
@@ -73,11 +69,13 @@ void g3nts::PrimitiveRect::setColour(Color4F& colour) {
 
 void g3nts::PrimitiveRect::redraw() {
 	_node->clear();
-	_node->drawRect(_startPos, _endPos, _colour);
-	_node->drawLine(_startPos, Vec2(_startPos.x + 10, _startPos.y), Color4F(0, 1, 0, 1));
-	_node->drawLine(_startPos, Vec2(_startPos.x, _startPos.y + 10), Color4F(0, 1, 0, 1));
-	_node->drawLine(_endPos, Vec2(_endPos.x - 10, _endPos.y), Color4F(0, 0, 1, 1));
-	_node->drawLine(_endPos, Vec2(_endPos.x, _endPos.y - 10), Color4F(0, 0, 1, 1));
+
+	if (_filled) {
+		_node->drawSolidRect(_startPos, _endPos, _colour);
+	}
+	else {
+		_node->drawRect(_startPos, _endPos, _colour);
+	}
 }
 
 
