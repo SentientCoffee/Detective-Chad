@@ -11,6 +11,7 @@
 #include "Mirror.h"
 #include "Primitives.h"
 #include "Textbox.h"
+#include "WinScreen.h"
 
 class Tutorial : public cocos2d::Scene {
 public:
@@ -90,6 +91,11 @@ private:
 	
 	unsigned int broken;
 	bool gameOver;
+	bool gameWin;
+	float time;
+
+	int mScore, eScore, tScore, aScore, sScore;
+	std::string rScore;
 
 	cocos2d::Sprite* inventory_bg;                    // inventory UI
 	std::vector<g3nts::Item*> inventory;

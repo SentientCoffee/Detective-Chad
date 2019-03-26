@@ -1,5 +1,6 @@
 #include "Tutorial.h"
 #include "GameOver.h"
+#include "WinScreen.h"
 #include "MainMenu.h"
 
 USING_NS_CC;
@@ -14,6 +15,8 @@ bool Tutorial::init() {
 	camera = this->getDefaultCamera();
 	gamePaused = false;
 	gameOver = false;
+	gameWin = false;
+	time = 0;
 
 	totalItems = 0u;
 	requiredItems = 1u;
@@ -429,6 +432,22 @@ void Tutorial::initKeyboardListener() {
 		}
 		else if (key == EventKeyboard::KeyCode::KEY_SPACE) {
 			if (!gameOver) {
+				if (gameWin && g3nts::isColliding(player->getHitbox(), flexMobileDrop) && inventory.size() < 1)
+				{
+					this->unscheduleUpdate();
+					if ((300 - floorf(time)) > 0) tScore += (300 - floorf(time));
+					else tScore = 0;
+					if (!bathroomMirror->isBroken()) mScore += 3000;
+					if (itemsCollected >= 3) eScore += 1500;
+					if (itemsCollected > 3) aScore += ((totalItems - 3) * 2500);
+					sScore = tScore + mScore + eScore + aScore;
+					if (sScore >= 10000) rScore = "A";
+					else if (sScore >= 8000) rScore = "B";
+					else if (sScore >= 6000) rScore = "C";
+					else rScore = "D";
+					Scene* gameWinScene = WinScreen::createScene(mScore, eScore, tScore, aScore, sScore, rScore);
+					director->replaceScene(TransitionFade::create(2, gameWinScene));
+				}
 				if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
 					if (!player->isFlexing()) {
 						player->setFlexing(true);
@@ -518,7 +537,7 @@ void Tutorial::initKeyboardListener() {
 }
 
 void Tutorial::update(const float dt) {
-
+	time += dt;
 	// CAMERA MOVEMENT (Camera follows the player)
 	if (player->isFlexing())
 	{
@@ -656,7 +675,12 @@ void Tutorial::update(const float dt) {
 		gameOver = true;
 	}
 
-	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale - 30, inventory_bg->getContentSize().height * UI_Scale / 2 + 10));
+	if (itemsCollected >= 3) {
+		gameWin = true;
+	}
+
+	inventory_bg->setPosition(camera->getPosition() + Vec2(visibleSize.width / 2 - inventory_bg->getContentSize().width / 2 * UI_Scale, inventory_bg->getContentSize().height * UI_Scale / 2));
+
 	for (g3nts::Item* inv : inventory) {
 		inv->setPosition(inventory_bg->getPosition());
 	}
