@@ -125,8 +125,8 @@ void Tutorial::initLevel() {
 
 void Tutorial::initItems() {
 
-	g3nts::Item* shirtTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/shirt.png"), true, "shirt");
-	g3nts::Item* magGlassTemplate = new g3nts::Item(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/evidence.png"), true, "evidence");
+	g3nts::Item* shirtTemplate = new g3nts::Item(Vec2::ZERO, spriteCache->getSpriteFrameByName("items/evidence/shirt.png"), true, "shirt");
+	g3nts::Item* magGlassTemplate = new g3nts::Item(Vec2::ZERO, spriteCache->getSpriteFrameByName("items/evidence/evidence.png"), true, "evidence");
 
 	g3nts::Item* shirt_1 = new g3nts::Item(*shirtTemplate);
 	g3nts::Item* shirt_2 = new g3nts::Item(*shirtTemplate);
@@ -155,18 +155,25 @@ void Tutorial::initItems() {
 		item->addToScene(this);
 	}
 
-	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirror.png"));
+	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2::ZERO, spriteCache->getSpriteFrameByName("items/mirrors/mirror.png"));
+	//g3nts::Mirror* mirrorTemplate2 = new g3nts::Mirror(Vec2::ZERO, spriteCache->getSpriteFrameByName("items/mirrors/mirror.png"));
 
 	bathroomMirror = new g3nts::Mirror(*mirrorTemplate1);
 	bathroomMirror->setPosition(Vec2(170, 800) * levelScale);
 	bathroomMirror->addToScene(this, 3);
 
-	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, "items/flexmobile.png");
-	//flexMobile->addAnimation();
-	flexMobile->getSprite()->setScale(2.0f);
+	hallwayMirror = new g3nts::Mirror(*mirrorTemplate1);
+	hallwayMirror->setPosition(Vec2(500, 530) * levelScale);
+	hallwayMirror->addToScene(this, 13);
+	hallwayMirror->getSprite()->setVisible(false);
+
+	mirrors.push_back(bathroomMirror); mirrors.push_back(hallwayMirror);
+
+	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/01.png"));
+	flexMobile->addAnimation("dropoff", "items/flexmobile/%02d.png", 7);
 	flexMobile->addToScene(this, 3);
 
-	flexMobileDrop = g3nts::PrimitiveRect(Vec2(1375, 410) * levelScale, Vec2(1475, 510) * levelScale);
+	flexMobileDrop = g3nts::PrimitiveRect(Vec2(1350, 410) * levelScale, Vec2(1450, 510) * levelScale);
 	this->addChild(flexMobileDrop.getNode(), 100);
 	flexMobileDrop.getNode()->setVisible(false);
 }
@@ -241,20 +248,19 @@ void Tutorial::initWalls() {
 }
 
 void Tutorial::initFoW() {
+	roomOne =    g3nts::PrimitiveRect(Vec2(0   , 510  ) * levelScale, Vec2(369 , 898 ) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomTwo =    g3nts::PrimitiveRect(Vec2(369 , 510  ) * levelScale, Vec2(1270, 898 ) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomThree =  g3nts::PrimitiveRect(Vec2(0   , 254  ) * levelScale, Vec2(1010, 510 ) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomFour =   g3nts::PrimitiveRect(Vec2(1010, 0    ) * levelScale, Vec2(1270, 510 ) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomFive =   g3nts::PrimitiveRect(Vec2(0   , 0    ) * levelScale, Vec2(1010, 254 ) * levelScale, Color4F(0, 0, 0, 1), true);
+	roomSix =    g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 1), true);
 
-	roomOne = g3nts::PrimitiveRect(Vec2(0, 510) * levelScale, Vec2(369, 898) * levelScale, Color4F(0, 0, 0, 1), true);
-	roomTwo = g3nts::PrimitiveRect(Vec2(369, 510) * levelScale, Vec2(1270, 898) * levelScale, Color4F(0, 0, 0, 1), true);
-	roomThree = g3nts::PrimitiveRect(Vec2(0, 254) * levelScale, Vec2(1010, 510) * levelScale, Color4F(0, 0, 0, 1), true);
-	roomFour = g3nts::PrimitiveRect(Vec2(1010, 0) * levelScale, Vec2(1270, 510) * levelScale, Color4F(0, 0, 0, 1), true);
-	roomFive = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1010, 254) * levelScale, Color4F(0, 0, 0, 1), true);
-	roomSix = g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 1), true);
-
-	sroomOne = g3nts::PrimitiveRect(Vec2(0, 510) * levelScale, Vec2(369, 898) * levelScale, Color4F(0, 0, 0, 0.6f), true);
-	sroomTwo = g3nts::PrimitiveRect(Vec2(369, 510) * levelScale, Vec2(1270, 898) * levelScale, Color4F(0, 0, 0, 0.6f), true);
-	sroomThree = g3nts::PrimitiveRect(Vec2(0, 254) * levelScale, Vec2(1010, 510) * levelScale, Color4F(0, 0, 0, 0.6f), true);
-	sroomFour = g3nts::PrimitiveRect(Vec2(1010, 0) * levelScale, Vec2(1270, 510) * levelScale, Color4F(0, 0, 0, 0.6f), true);
-	sroomFive = g3nts::PrimitiveRect(Vec2(0, 0) * levelScale, Vec2(1010, 254) * levelScale, Color4F(0, 0, 0, 0.6f), true);
-	sroomSix = g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomOne =   g3nts::PrimitiveRect(Vec2(0   , 510  ) * levelScale, Vec2(369 , 898 ) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomTwo =   g3nts::PrimitiveRect(Vec2(369 , 510  ) * levelScale, Vec2(1270, 898 ) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomThree = g3nts::PrimitiveRect(Vec2(0   , 254  ) * levelScale, Vec2(1010, 510 ) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomFour =  g3nts::PrimitiveRect(Vec2(1010, 0    ) * levelScale, Vec2(1270, 510 ) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomFive =  g3nts::PrimitiveRect(Vec2(0   , 0    ) * levelScale, Vec2(1010, 254 ) * levelScale, Color4F(0, 0, 0, 0.6f), true);
+	sroomSix =   g3nts::PrimitiveRect(Vec2(1270, -2500) * levelScale, Vec2(2000, 2500) * levelScale, Color4F(0, 0, 0, 0.6f), true);
 
 	FoW.push_back(roomOne);
 	FoW.push_back(roomTwo);
@@ -290,8 +296,6 @@ void Tutorial::initFoW() {
 			this->addChild(sFoW[i].getNode(), 25);
 		sFoW[i].getNode()->setVisible(false);
 	}
-
-
 }
 
 void Tutorial::initPauseMenu() {
@@ -437,7 +441,7 @@ void Tutorial::initKeyboardListener() {
 					for (g3nts::Item* item : items) {
 						if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
 							if (item->isBreakable()) {
-								item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + item->getTag() + ".png"));
+								item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + item->getTag() + ".png"));
 								item->setBreakable(false);
 
 								for (unsigned int i = 0; i < evidence_state.size(); ++i) {
@@ -455,7 +459,7 @@ void Tutorial::initKeyboardListener() {
 
 					for (g3nts::Item* inv : inventory) {
 						if (inv->isBreakable()) {
-							inv->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + inv->getTag() + ".png"));
+							inv->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + inv->getTag() + ".png"));
 							inv->setBreakable(false);
 
 							for (unsigned int i = 0; i < evidence_state.size(); ++i) {
@@ -475,7 +479,7 @@ void Tutorial::initKeyboardListener() {
 
 					if (!bathroomMirror->isBroken()) {
 						bathroomMirror->setBroken(true);
-						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-mirror.png"));
+						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/mirrors/broken-mirror.png"));
 					}
 				}
 			}
@@ -497,6 +501,7 @@ void Tutorial::initKeyboardListener() {
 				else if (inventory.size() > 0) {
 					if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
 						itemsCollected++;
+						flexMobile->runAnimation("dropoff");
 						inventory[0]->setVisible(false);
 					}
 					else {
@@ -539,7 +544,7 @@ void Tutorial::update(const float dt) {
 	for (unsigned int i = 0; i < FoW.size(); ++i)
 	{
 		if (player->getPosition().x >= FoW[i].getStartPosition().x &&
-			player->getPosition().y >= FoW[i].getStartPosition().y + 35 &&
+			player->getPosition().y >= FoW[i].getStartPosition().y + 25 &&
 			player->getPosition().x <= FoW[i].getEndPosition().x &&
 			player->getPosition().y <= FoW[i].getEndPosition().y)
 		{
@@ -556,7 +561,7 @@ void Tutorial::update(const float dt) {
 	for (unsigned int i = 0; i < sFoW.size(); ++i)
 	{
 		if (player->getPosition().x >= sFoW[i].getStartPosition().x &&
-			player->getPosition().y >= sFoW[i].getStartPosition().y + 35 &&
+			player->getPosition().y >= sFoW[i].getStartPosition().y + 25 &&
 			player->getPosition().x <= sFoW[i].getEndPosition().x &&
 			player->getPosition().y <= sFoW[i].getEndPosition().y)
 		{

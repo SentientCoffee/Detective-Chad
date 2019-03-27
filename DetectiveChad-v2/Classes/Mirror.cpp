@@ -17,7 +17,7 @@ g3nts::Mirror::Mirror(Vec2 position, Sprite* sprite) : _position(position), _spr
 }
 g3nts::Mirror::Mirror(Vec2 position, SpriteFrame* spriteFrame) : Mirror(position, Sprite::createWithSpriteFrame(spriteFrame)) {}
 g3nts::Mirror::Mirror(Vec2 position, string spritePath) : Mirror(position, Sprite::create(spritePath)) {}
-g3nts::Mirror::Mirror(const Mirror& mirror) : Mirror(mirror._position, mirror._sprite) {}
+g3nts::Mirror::Mirror(const Mirror& mirror) : Mirror(mirror._position, Sprite::createWithSpriteFrame(mirror._sprite->getSpriteFrame())) {}
 g3nts::Mirror::~Mirror() {}
 
 

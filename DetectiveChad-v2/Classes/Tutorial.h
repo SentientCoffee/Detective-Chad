@@ -70,10 +70,13 @@ private:
 	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
-	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
 	g3nts::Item* flexMobile;
 	g3nts::PrimitiveRect flexMobileDrop;
-											  
+	
+	std::vector<g3nts::Mirror*> mirrors;
+	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
+	g3nts::Mirror* hallwayMirror;
+
 	// UI									  
 	float UI_Scale;                           // Scaling of UI
 	float flexRefillTimer;					  
@@ -93,7 +96,6 @@ private:
 
 	cocos2d::Sprite* inventory_bg;                    // inventory UI
 	std::vector<g3nts::Item*> inventory;
-	unsigned int pickedUp;
 	
 	// Pause menu
 	cocos2d::Menu* pauseMenu;                  // Pause Menu object when the game is paused
@@ -155,8 +157,8 @@ private:
 	g3nts::PrimitiveRect vecticalLivingRoomWall_2;
 
 	// Fogs of War
-	std::vector<g3nts::PrimitiveRect> FoW; //container to hold solid fogs of war
-	std::vector<g3nts::PrimitiveRect> sFoW; //container to hold opaque fogs of war
+	std::vector<g3nts::PrimitiveRect> FoW;  // Container to hold solid fogs of war
+	std::vector<g3nts::PrimitiveRect> sFoW; // Container to hold opaque fogs of war
 
 	// -----------------------------------------------
 	// Tutorial level rooms
@@ -169,7 +171,7 @@ private:
 	g3nts::PrimitiveRect roomFive;
 	g3nts::PrimitiveRect roomSix;
 
-	// State Two (40% Opacity)
+	// State Two (60% Opacity)
 	g3nts::PrimitiveRect sroomOne;
 	g3nts::PrimitiveRect sroomTwo;
 	g3nts::PrimitiveRect sroomThree;

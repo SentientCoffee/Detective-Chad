@@ -39,9 +39,6 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src\AppDelegate</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src\Scenes\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\MainMenu.cpp">
       <Filter>src\Scenes\Source Files</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src\AppDelegate</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src\Scenes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainMenu.h">
       <Filter>src\Scenes\Header Files</Filter>
