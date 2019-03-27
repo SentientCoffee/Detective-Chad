@@ -45,19 +45,19 @@ void WinScreen::initMenu() {
 	Label* exitLabel = Label::createWithTTF("Back to\nMain Menu", "fonts/Marker Felt.ttf", 24, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	Label* nextLabel = Label::createWithTTF("Next\nLevel", "fonts/Marker Felt.ttf", 24, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 
-	Label* MirrorLabel = Label::createWithTTF("Mirrors remaining: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* EvidenceLabel = Label::createWithTTF("Evidence collected: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* TimeLabel = Label::createWithTTF("Time: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* AdditionalLabel = Label::createWithTTF("Extra evidence: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* scoreLabel = Label::createWithTTF("Final Score: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* RatingLabel = Label::createWithTTF("Rating: ", "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* MirrorLabel = Label::createWithTTF("Mirrors remaining: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* EvidenceLabel = Label::createWithTTF("Evidence collected: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* TimeLabel = Label::createWithTTF("Time: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* AdditionalLabel = Label::createWithTTF("Extra evidence: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* scoreLabel = Label::createWithTTF("Final Score: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* RatingLabel = Label::createWithTTF("Rating: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
 
-	Label* MirrorScoreLabel = Label::createWithTTF(std::to_string(mirrorScore), "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* EvidenceScoreLabel = Label::createWithTTF(std::to_string(evidenceScore), "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* TimeScoreLabel = Label::createWithTTF(std::to_string(timeScore), "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* AdditionalScoreLabel = Label::createWithTTF(std::to_string(additionalScore), "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* scoreScoreLabel = Label::createWithTTF(std::to_string(scoreScore), "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-	Label* RatingScoreLabel = Label::createWithTTF(ratingScore, "fonts/Gill Sans Ultra Bold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* MirrorScoreLabel = Label::createWithTTF(std::to_string(mirrorScore), "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* EvidenceScoreLabel = Label::createWithTTF(std::to_string(evidenceScore), "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* TimeScoreLabel = Label::createWithTTF(std::to_string(timeScore), "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* AdditionalScoreLabel = Label::createWithTTF(std::to_string(additionalScore), "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* scoreScoreLabel = Label::createWithTTF(std::to_string(scoreScore), "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+	Label* RatingScoreLabel = Label::createWithTTF(ratingScore, "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
 
 	//gameOverLabel->enableShadow();
 	restartLabel->enableShadow();

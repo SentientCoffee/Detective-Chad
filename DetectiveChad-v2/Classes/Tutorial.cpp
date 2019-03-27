@@ -2,6 +2,9 @@
 #include "GameOver.h"
 #include "WinScreen.h"
 #include "MainMenu.h"
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
 
 USING_NS_CC;
 
@@ -95,6 +98,8 @@ void Tutorial::initPlayer() {
 
 void Tutorial::initLevel() {
 	Vec2 offset = { -527, -513 };
+
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("sfx/tutorial.mp3", true);
 
 	// Floor plan sprite
 	houseBase = Sprite::create("backgrounds/chad-house-base.png");
@@ -458,7 +463,8 @@ void Tutorial::initKeyboardListener() {
 							if (item->isBreakable()) {
 								item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-" + item->getTag() + ".png"));
 								item->setBreakable(false);
-
+								SimpleAudioEngine::getInstance()->playEffect("sfx/evidence_break.mp3");
+								 
 								for (unsigned int i = 0; i < evidence_state.size(); ++i) {
 									if (evidence_state[i]) {
 										evidence_state[i] = false;
