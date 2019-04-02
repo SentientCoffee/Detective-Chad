@@ -34,6 +34,7 @@ bool Tutorial::init() {
 	initItems();
 	initLevel();
 	initFoW();
+	initFurniture();
 	initWalls();
 
 	initUI();
@@ -96,6 +97,44 @@ void Tutorial::initPlayer() {
 	player->addToScene(this, 2);
 }
 
+void Tutorial::initFurniture() {
+	kitchen = Sprite::create("furniture/kitchen.png");
+	toilet = Sprite::create("furniture/toilet.png");
+	bookshelf1 = Sprite::create("furniture/bookshelf1.png");
+	bookshelf2 = Sprite::create("furniture/bookshelf2.png");
+	bed = Sprite::create("furniture/bed.png");
+
+	bed->setPosition(Vec2(460,760)*levelScale);
+	toilet->setPosition(Vec2(310,780)*levelScale);
+	kitchen->setPosition(Vec2(600,560)*levelScale);
+	bookshelf1->setPosition(Vec2(800,280)*levelScale);
+	bookshelf2->setPosition(Vec2(760,790)*levelScale);
+
+	bed->setScale(.08);
+	toilet->setScale(.08);
+	kitchen->setScale(.115);
+	bookshelf1->setScale(.125);
+	bookshelf2->setScale(.125);
+
+	this->addChild(bed, 4);
+	this->addChild(toilet, 4);
+	this->addChild(kitchen, 14);
+	this->addChild(bookshelf1, 24);
+	this->addChild(bookshelf2, 4);
+
+	bed_wall = g3nts::PrimitiveRect(Vec2(410,800)*levelScale, Vec2(520,805)*levelScale);
+	kitchen_wall = g3nts::PrimitiveRect(Vec2(430,557)*levelScale, Vec2(740,560)*levelScale);
+	toilet_wall = g3nts::PrimitiveRect(Vec2(280,810)*levelScale, Vec2(360,815)*levelScale);
+	bookshelf1_wall = g3nts::PrimitiveRect(Vec2(755,290)*levelScale, Vec2(845,295)*levelScale);
+	bookshelf2_wall = g3nts::PrimitiveRect(Vec2(715,810)*levelScale, Vec2(805,815)*levelScale);
+
+	playerWalls.push_back(bed_wall);
+	playerWalls.push_back(kitchen_wall);
+	playerWalls.push_back(toilet_wall);
+	playerWalls.push_back(bookshelf1_wall);
+	playerWalls.push_back(bookshelf2_wall);
+}
+
 void Tutorial::initLevel() {
 	Vec2 offset = { -527, -513 };
 
@@ -144,10 +183,10 @@ void Tutorial::initItems() {
 	g3nts::Item* magGlass_2 = new g3nts::Item(*magGlassTemplate);
 
 	shirt_1->setPosition(Vec2(120, 720) * levelScale);
-	shirt_2->setPosition(Vec2(1050, 680) * levelScale);
+	shirt_2->setPosition(Vec2(150, 710) * levelScale);
 	shirt_3->setPosition(Vec2(620, 150) * levelScale);
 
-	magGlass_1->setPosition(Vec2(690, 420) * levelScale);
+	magGlass_1->setPosition(Vec2(690, 170) * levelScale);
 	magGlass_2->setPosition(Vec2(720, 180) * levelScale);
 
 	items.push_back(shirt_1);
@@ -163,11 +202,19 @@ void Tutorial::initItems() {
 		item->addToScene(this);
 	}
 
-	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirror.png"));
+	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), "items/bathroommirror.png");
+
+	g3nts::Mirror* mirrorTemplate2 = new g3nts::Mirror(Vec2(0, 0), "items/woodenmirror.png");
 
 	bathroomMirror = new g3nts::Mirror(*mirrorTemplate1);
-	bathroomMirror->setPosition(Vec2(170, 800) * levelScale);
+	bathroomMirror->getSprite()->setScale(.15);
+	bathroomMirror->setPosition(Vec2(170, 825) * levelScale);
 	bathroomMirror->addToScene(this, 3);
+
+	livingroomMirror = new g3nts::Mirror(*mirrorTemplate2);
+	livingroomMirror->getSprite()->setScale(.15);
+	livingroomMirror->setPosition(Vec2(1200, 540) * levelScale);
+	livingroomMirror->addToScene(this, 23);
 
 	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, "items/flexmobile.png");
 	//flexMobile->addAnimation();
@@ -443,6 +490,7 @@ void Tutorial::initKeyboardListener() {
 					if ((300 - floorf(time)) > 0) tScore += (300 - floorf(time));
 					else tScore = 0;
 					if (!bathroomMirror->isBroken()) mScore += 3000;
+					if (!livingroomMirror->isBroken()) mScore += 3000;
 					if (itemsCollected >= 3) eScore += 1500;
 					if (itemsCollected > 3) aScore += ((totalItems - 3) * 2500);
 					sScore = tScore + mScore + eScore + aScore;
@@ -500,7 +548,13 @@ void Tutorial::initKeyboardListener() {
 
 					if (!bathroomMirror->isBroken()) {
 						bathroomMirror->setBroken(true);
-						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-mirror.png"));
+						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-bathroom-mirror.png"));
+						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
+					}
+					if (!livingroomMirror->isBroken()) {
+						livingroomMirror->setBroken(true);
+						livingroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-wooden-mirror.png"));
+						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
 					}
 				}
 			}
@@ -522,6 +576,8 @@ void Tutorial::initKeyboardListener() {
 				else if (inventory.size() > 0) {
 					if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
 						itemsCollected++;
+						SimpleAudioEngine::getInstance()->playEffect("sfx/Object_in_Car.mp3");
+
 						inventory[0]->setVisible(false);
 					}
 					else {
@@ -798,7 +854,10 @@ void Tutorial::update(const float dt) {
 
 		showFlexCommand = false;
 		if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
-			if(!bathroomMirror->isBroken()) showFlexCommand = true;
+			if (!bathroomMirror->isBroken()) showFlexCommand = true;
+		}
+		if (livingroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
+			if (!livingroomMirror->isBroken()) showFlexCommand = true;
 		}
 
 		if (showPickupCommand) {
@@ -847,6 +906,7 @@ void Tutorial::togglePause() {
 void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
 	bathroomMirror->getHitbox().getNode()->setVisible(true);
+	livingroomMirror->getHitbox().getNode()->setVisible(true);
 	flexMobile->getHitbox().getNode()->setVisible(true);
 	flexMobileDrop.getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : playerWalls) wall.getNode()->setVisible(true);

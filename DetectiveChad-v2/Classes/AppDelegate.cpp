@@ -129,3 +129,4 @@ void AppDelegate::applicationWillEnterForeground() {
 
 int WinScreen::mirrorScore, WinScreen::evidenceScore, WinScreen::timeScore, WinScreen::additionalScore, WinScreen::scoreScore;
 std::string WinScreen::ratingScore;
+float Tutorial::time;
