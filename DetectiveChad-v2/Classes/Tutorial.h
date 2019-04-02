@@ -27,6 +27,7 @@ public:
 	void initSpriteCache();
 
 	void initPlayer();
+	void initFurniture();
 	void initLevel();
 	void initItems();
 	void initWalls();
@@ -60,6 +61,18 @@ private:
 	cocos2d::Sprite* lowerWalls;              // Sprites for just the lower walls
 											  
 											  
+	// Furniture Sprites
+	cocos2d::Sprite* bed;
+	cocos2d::Sprite* toilet;
+	cocos2d::Sprite* kitchen;
+	cocos2d::Sprite* bookshelf1;
+	cocos2d::Sprite* bookshelf2;
+	g3nts::PrimitiveRect bed_wall;
+	g3nts::PrimitiveRect toilet_wall;
+	g3nts::PrimitiveRect kitchen_wall;
+	g3nts::PrimitiveRect bookshelf1_wall;
+	g3nts::PrimitiveRect bookshelf2_wall;
+
 	// Player								  
 	g3nts::Character* player;                 // Player character (object controlled by user)
 	cocos2d::Vec2 playerPosition;             // Player's starting position
@@ -71,6 +84,7 @@ private:
 	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
+	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
 	g3nts::Item* flexMobile;
 	g3nts::PrimitiveRect flexMobileDrop;
 	
@@ -95,7 +109,7 @@ private:
 	unsigned int broken;
 	bool gameOver;
 	bool gameWin;
-	float time;
+	static float time;
 
 	int mScore, eScore, tScore, aScore, sScore;
 	std::string rScore;
@@ -192,3 +206,4 @@ private:
 };
 
 #endif
+											  
