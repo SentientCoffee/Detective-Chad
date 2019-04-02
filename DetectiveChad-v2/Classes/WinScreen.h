@@ -4,20 +4,16 @@
 #define __WINSCREEN_SCENE_H__
 
 #include "cocos2d.h"
-#include "Character.h"
-#include "Collision.h"
-#include "InputDevices.h"
-#include "Item.h"
-#include "Mirror.h"
-#include "Primitives.h"
-#include "Textbox.h"
-#include "Tutorial.h"
 
 class WinScreen : public cocos2d::Scene {
 public:
 
 	CREATE_FUNC(WinScreen);
-	static cocos2d::Scene* createScene(int newMirror, int newEvidence, int newTime, int newAdditional, int newScore, std::string newRating);
+	static cocos2d::Scene* createScene(
+		int newMirror, int newEvidence, 
+		int newTime, int newAdditional, 
+		int newScore, std::string newRating,
+		unsigned int levelID);
 
 	virtual bool init();
 	virtual void onEnter();
@@ -34,7 +30,7 @@ private:
 
 	cocos2d::Menu* menu;
 	cocos2d::Sprite* background;
-	static int mirrorScore, evidenceScore, timeScore, additionalScore, scoreScore;
+	static int mirrorScore, evidenceScore, timeScore, additionalScore, scoreScore, _levelID;
 	static std::string ratingScore;
 
 };

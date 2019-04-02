@@ -214,33 +214,63 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/mirrors/broken-mirror.png</key>
+            <key>items/mirrors/broken-default-mirror.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{84,150}</string>
+                <string>{60,75}</string>
                 <key>spriteSourceSize</key>
-                <string>{84,150}</string>
+                <string>{60,75}</string>
                 <key>textureRect</key>
-                <string>{{1753,460},{84,150}}</string>
+                <string>{{1753,460},{60,75}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/mirrors/mirror.png</key>
+            <key>items/mirrors/broken-wooden-mirror.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{84,150}</string>
+                <string>{81,130}</string>
                 <key>spriteSourceSize</key>
-                <string>{84,150}</string>
+                <string>{81,130}</string>
                 <key>textureRect</key>
-                <string>{{1837,460},{84,150}}</string>
+                <string>{{1813,460},{81,130}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/mirrors/default-mirror.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{60,75}</string>
+                <key>spriteSourceSize</key>
+                <string>{60,75}</string>
+                <key>textureRect</key>
+                <string>{{1894,460},{60,75}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/mirrors/wooden-mirror.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{81,130}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,130}</string>
+                <key>textureRect</key>
+                <string>{{1954,460},{81,130}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -258,7 +288,7 @@
             <key>size</key>
             <string>{2038,919}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:c2cad68bccbdf578efefd1bd95b9c89a:d146f3cb127caf2e716577cbfb6cd47e:9b2c40378ce3448cae3ca053079d3001$</string>
+            <string>$TexturePacker:SmartUpdate:11d52948dd0ff61687a2e89c9c1ea85f:f9e4b06818d07cdec4b24124d0497753:9b2c40378ce3448cae3ca053079d3001$</string>
             <key>textureFileName</key>
             <string>items.png</string>
         </dict>

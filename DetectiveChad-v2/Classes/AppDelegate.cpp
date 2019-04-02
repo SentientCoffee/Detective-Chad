@@ -2,6 +2,7 @@
 //#include "HelloWorldScene.h"
 #include "MainMenu.h"
 #include "Tutorial.h"
+#include "Level_1.h"
 #include "GameOver.h"
 #include "WinScreen.h"
 
@@ -92,7 +93,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // Create and run the main menu scene
 	cocos2d::Scene* mainMenuScene = MainMenu::createScene();
     director->runWithScene(mainMenuScene);
-
+	
+	//cocos2d::Scene* level1Scene = Level1::createScene();
+	//director->runWithScene(level1Scene);
+	
 	//cocos2d::Scene* tutorialScene = Tutorial::createScene();
 	//director->runWithScene(tutorialScene);
 
@@ -127,6 +131,11 @@ void AppDelegate::applicationWillEnterForeground() {
 }
 
 
-int WinScreen::mirrorScore, WinScreen::evidenceScore, WinScreen::timeScore, WinScreen::additionalScore, WinScreen::scoreScore;
+int WinScreen::mirrorScore, WinScreen::evidenceScore, WinScreen::timeScore, WinScreen::additionalScore, WinScreen::scoreScore, WinScreen::_levelID;
 std::string WinScreen::ratingScore;
+
 float Tutorial::time;
+float Level1::time;
+
+unsigned int Tutorial::levelID = 0;
+unsigned int Level1::levelID = 1;

@@ -24,6 +24,7 @@ g3nts::Mirror::~Mirror() {}
 Sprite* g3nts::Mirror::getSprite() const { return _sprite; }
 g3nts::PrimitiveRect g3nts::Mirror::getHitbox() const { return _hitbox; }
 Vec2 g3nts::Mirror::getPosition() const { return _position; }
+string g3nts::Mirror::getTag() const { return _tag; }
 bool g3nts::Mirror::isBroken() const { return _isBroken; }
 
 void g3nts::Mirror::addToScene(Scene* scene, const int zIndex) {
@@ -31,6 +32,8 @@ void g3nts::Mirror::addToScene(Scene* scene, const int zIndex) {
 	scene->addChild(_hitbox.getNode(), zIndex);
 	_hitbox.getNode()->setVisible(false);
 }
+
+void g3nts::Mirror::setTag(string tag) { _tag = tag; }
 
 void g3nts::Mirror::setPosition(const Vec2& position) {
 	_position = position;

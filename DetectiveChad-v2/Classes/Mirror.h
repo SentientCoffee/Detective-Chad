@@ -22,10 +22,12 @@ namespace g3nts {
 		cocos2d::Sprite* getSprite() const;
 		PrimitiveRect getHitbox() const;
 		cocos2d::Vec2 getPosition() const;
+		string getTag() const;
 		bool isBroken() const;
 
 		void setPosition(const cocos2d::Vec2& position);
 		void setBroken(const bool isBroken);
+		void setTag(string tag);
 		
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
 
@@ -36,6 +38,7 @@ namespace g3nts {
 		cocos2d::Vec2 _position;
 
 		bool _isBroken = false;
+		string _tag;
 	};
 }
 
