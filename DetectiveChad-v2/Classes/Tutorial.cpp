@@ -34,7 +34,7 @@ bool Tutorial::init() {
 	initItems();
 	initLevel();
 	initFoW();
-	initFurniture();
+	initProps();
 	initWalls();
 
 	initUI();
@@ -67,7 +67,6 @@ void Tutorial::initSpriteCache() {
 
 void Tutorial::initPlayer() {
 	playerPosition = Vec2(1080, 760) * levelScale;
-	//playerPosition = Vec2(1800, 760) * levelScale;
 	camera->setPosition(playerPosition);
 
 	// Playable character with animations
@@ -94,10 +93,10 @@ void Tutorial::initPlayer() {
 
 	player->addAnimation("flex", "chad/flex/%02d.png", 8);
 
-	player->addToScene(this, 2);
+	player->addToScene(this, 3);
 }
 
-void Tutorial::initFurniture() {
+void Tutorial::initProps() {
 	kitchen = Sprite::create("furniture/kitchen.png");
 	toilet = Sprite::create("furniture/toilet.png");
 	bookshelf1 = Sprite::create("furniture/bookshelf1.png");
@@ -110,11 +109,11 @@ void Tutorial::initFurniture() {
 	bookshelf1->setPosition(Vec2(800,280)*levelScale);
 	bookshelf2->setPosition(Vec2(760,790)*levelScale);
 
-	bed->setScale(.08);
-	toilet->setScale(.08);
-	kitchen->setScale(.115);
-	bookshelf1->setScale(.125);
-	bookshelf2->setScale(.125);
+	bed->setScale(0.08f);
+	toilet->setScale(0.08f);
+	kitchen->setScale(0.115f);
+	bookshelf1->setScale(0.125f);
+	bookshelf2->setScale(0.125f);
 
 	this->addChild(bed, 4);
 	this->addChild(toilet, 4);
@@ -137,7 +136,6 @@ void Tutorial::initFurniture() {
 
 void Tutorial::initLevel() {
 	Vec2 offset = { -527, -513 };
-
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sfx/tutorial.mp3", true);
 
 	// Floor plan sprite
@@ -202,20 +200,20 @@ void Tutorial::initItems() {
 		item->addToScene(this);
 	}
 
-	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirror.png"));
-	g3nts::Mirror* mirrorTemplate2 = new g3nts::Mirror(Vec2(0, 0), "items/woodenmirror.png");
+	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirrors/default-mirror.png"));
+	g3nts::Mirror* mirrorTemplate2 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirrors/wooden-mirror.png"));
 
 	bathroomMirror = new g3nts::Mirror(*mirrorTemplate1);
-	bathroomMirror->getSprite()->setScale(.15);
+	bathroomMirror->setTag("default");
 	bathroomMirror->setPosition(Vec2(170, 825) * levelScale);
 	bathroomMirror->addToScene(this, 3);
 
-	livingroomMirror = new g3nts::Mirror(*mirrorTemplate2);
-	livingroomMirror->getSprite()->setScale(.15);
-	livingroomMirror->setPosition(Vec2(1200, 540) * levelScale);
-	livingroomMirror->addToScene(this, 23);
+	livingRoomMirror = new g3nts::Mirror(*mirrorTemplate2);
+	livingRoomMirror->setTag("wooden");
+	livingRoomMirror->setPosition(Vec2(1200, 540) * levelScale);
+	livingRoomMirror->addToScene(this, 13);
 
-	mirrors.push_back(bathroomMirror); mirrors.push_back(livingroomMirror);
+	mirrors.push_back(bathroomMirror); mirrors.push_back(livingRoomMirror);
 
 	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/dropoff/01.png"));
 	flexMobile->addAnimation("dropoff", "items/flexmobile/dropoff/%02d.png", 7);
@@ -485,7 +483,7 @@ void Tutorial::initKeyboardListener() {
 		}
 		else if (key == EventKeyboard::KeyCode::KEY_SPACE) {
 			if (!gameOver) {
-				if (gameWin && g3nts::isColliding(player->getHitbox(), flexMobileDrop) && inventory.size() < 1)
+				if (gameWin && g3nts::isColliding(player->getHitbox(), flexMobileDrop) && inventory.size() == 0)
 				{
 					this->unscheduleUpdate();
 
@@ -498,10 +496,12 @@ void Tutorial::initKeyboardListener() {
 					if ((300 - floorf(time)) > 0) tScore += (300 - floorf(time));
 					else tScore = 0;
 					
-					if (!bathroomMirror->isBroken()) mScore += 3000;
-					if (!livingroomMirror->isBroken()) mScore += 3000;
-					if (itemsCollected >= 3) eScore += 1500;
-					if (itemsCollected > 3) aScore += ((totalItems - 3) * 2500);
+					for (g3nts::Mirror* mirror : mirrors) {
+						if (!mirror->isBroken()) mScore += 3000;
+					}
+
+					if (itemsCollected >= requiredItems) eScore += 1500;
+					if (itemsCollected > requiredItems) aScore += ((totalItems - requiredItems) * 2500);
 					
 					sScore = tScore + mScore + eScore + aScore;
 					
@@ -510,64 +510,61 @@ void Tutorial::initKeyboardListener() {
 					else if (sScore >= 6000) rScore = "C";
 					else rScore = "D";
 					
-					Scene* gameWinScene = WinScreen::createScene(mScore, eScore, tScore, aScore, sScore, rScore);
+					Scene* gameWinScene = WinScreen::createScene(mScore, eScore, tScore, aScore, sScore, rScore, levelID);
 					director->replaceScene(gameWinScene);
 				}
 
-				if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
-					if (!player->isFlexing()) {
-						player->setFlexing(true);
-					}
+				for (g3nts::Mirror* mirror : mirrors) {
+					if (mirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
+						if (!player->isFlexing()) {
+							player->setFlexing(true);
+						}
 
-					for (g3nts::Item* item : items) {
-						if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
-							if (item->isBreakable()) {
-								item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + item->getTag() + ".png"));
-								item->setBreakable(false);
-								SimpleAudioEngine::getInstance()->playEffect("sfx/evidence_break.mp3");
-								 
+						if (!mirror->isBroken()) {
+							mirror->setBroken(true);
+							mirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/mirrors/broken-" + mirror->getTag() + "-mirror.png"));
+							SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
+						}
+						
+						for (g3nts::Item* item : items) {
+							if (item->getPosition().getDistanceSq(player->getPosition()) <= 250 * 250) {
+								if (item->isBreakable()) {
+									item->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + item->getTag() + ".png"));
+									item->setBreakable(false);
+									SimpleAudioEngine::getInstance()->playEffect("sfx/evidence_break.mp3");
+
+									for (unsigned int i = 0; i < evidence_state.size(); ++i) {
+										if (evidence_state[i]) {
+											evidence_state[i] = false;
+											break;
+										}
+									}
+								}
+
+								Vec2 direction = item->getPosition() - player->getPosition();
+								item->setVelocity(direction.getNormalized() * 2500.0f);
+							}
+						}
+
+						for (g3nts::Item* inv : inventory) {
+							if (inv->isBreakable()) {
+								inv->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + inv->getTag() + ".png"));
+								inv->setBreakable(false);
+
 								for (unsigned int i = 0; i < evidence_state.size(); ++i) {
 									if (evidence_state[i]) {
 										evidence_state[i] = false;
 										break;
 									}
 								}
+
 							}
 
-							Vec2 direction = item->getPosition() - player->getPosition();
-							item->setVelocity(direction.getNormalized() * 2500.0f);
+							inv->setPosition(player->getPosition());
+							inv->setVelocity(player->getDirection().getNormalized() * 2000.0f);
+							items.push_back(inv);
+							inventory.erase(std::find(inventory.begin(), inventory.end(), inv));
 						}
-					}
-
-					for (g3nts::Item* inv : inventory) {
-						if (inv->isBreakable()) {
-							inv->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/evidence/broken-" + inv->getTag() + ".png"));
-							inv->setBreakable(false);
-
-							for (unsigned int i = 0; i < evidence_state.size(); ++i) {
-								if (evidence_state[i]) {
-									evidence_state[i] = false;
-									break;
-								}
-							}
-
-						}
-						
-						inv->setPosition(player->getPosition());
-						inv->setVelocity(player->getDirection().getNormalized() * 2000.0f);
-						items.push_back(inv);
-						inventory.erase(std::find(inventory.begin(), inventory.end(), inv));
-					}
-
-					if (!bathroomMirror->isBroken()) {
-						bathroomMirror->setBroken(true);
-						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-bathroom-mirror.png"));
-						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
-					}
-					if (!livingroomMirror->isBroken()) {
-						livingroomMirror->setBroken(true);
-						livingroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-wooden-mirror.png"));
-						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
 					}
 				}
 			}
@@ -818,18 +815,6 @@ void Tutorial::update(const float dt) {
 				if (item->isBreakable()){
 					if (player->getZIndex() == item->getZIndex() + 1) {
 						showPickupCommand = true;
-
-						//Vec2 direction = player->getDirection() + item->getPosition() - player->getPosition();
-						//if (item->getVelocity().getLengthSq() <= 50 * 50)
-						//	item->setVelocity(direction.getNormalized() * 500.0f);
-						//else {
-						//	if (player->getDirection().getLengthSq() == 0) {
-						//		item->setVelocity((item->getVelocity() + direction).getNormalized() * item->getVelocity().getLength() * 0.4f);
-						//	}
-						//	else {
-						//		item->setVelocity(direction.getNormalized() * 200.0f);
-						//	}
-						//}
 					}
 				}
 			}
@@ -869,11 +854,10 @@ void Tutorial::update(const float dt) {
 		}
 
 		showFlexCommand = false;
-		if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
-			if (!bathroomMirror->isBroken()) showFlexCommand = true;
-		}
-		if (livingroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
-			if (!livingroomMirror->isBroken()) showFlexCommand = true;
+		for (g3nts::Mirror* mirror : mirrors) {
+			if (mirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
+				if (!mirror->isBroken()) showFlexCommand = true;
+			}
 		}
 
 		if (showPickupCommand) {
@@ -929,13 +913,12 @@ void Tutorial::togglePause() {
 
 void Tutorial::showHitboxes() {
 	player->getHitbox().getNode()->setVisible(true);
-	bathroomMirror->getHitbox().getNode()->setVisible(true);
-	livingroomMirror->getHitbox().getNode()->setVisible(true);
 	flexMobile->getHitbox().getNode()->setVisible(true);
 	flexMobileDrop.getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : playerWalls) wall.getNode()->setVisible(true);
 	for (g3nts::PrimitiveRect wall : itemWalls) wall.getNode()->setVisible(true);
 	for (g3nts::Item* item : items) item->getHitbox().getNode()->setVisible(true);
+	for (g3nts::Mirror* mirror : mirrors) mirror->getHitbox().getNode()->setVisible(true);
 }
 
 void Tutorial::screenshake() {

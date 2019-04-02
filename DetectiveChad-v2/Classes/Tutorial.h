@@ -27,7 +27,7 @@ public:
 	void initSpriteCache();
 
 	void initPlayer();
-	void initFurniture();
+	void initProps();
 	void initLevel();
 	void initItems();
 	void initWalls();
@@ -84,13 +84,12 @@ private:
 	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
-	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
 	g3nts::Item* flexMobile;
 	g3nts::PrimitiveRect flexMobileDrop;
 	
 	std::vector<g3nts::Mirror*> mirrors;
 	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
-	g3nts::Mirror* livingroomMirror;
+	g3nts::Mirror* livingRoomMirror;
 
 	// UI									  
 	float UI_Scale;                           // Scaling of UI
@@ -110,6 +109,7 @@ private:
 	bool gameOver;
 	bool gameWin;
 	static float time;
+	static unsigned int levelID;
 
 	int mScore, eScore, tScore, aScore, sScore;
 	std::string rScore;

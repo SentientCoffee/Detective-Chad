@@ -31,6 +31,12 @@
     <Filter Include="src\Framework\Source Files">
       <UniqueIdentifier>{565de276-0a5e-4723-95ed-af2f0f6d8def}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scenes\Header Files\Levels">
+      <UniqueIdentifier>{7ee1b116-c13d-49fa-8cba-7a15b7c83495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Source Files\Levels">
+      <UniqueIdentifier>{4a82f052-9f8c-4eac-80f6-7ee8d4e5bb4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,9 +46,6 @@
       <Filter>src\AppDelegate</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainMenu.cpp">
-      <Filter>src\Scenes\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Tutorial.cpp">
       <Filter>src\Scenes\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Character.cpp">
@@ -69,8 +72,14 @@
     <ClCompile Include="..\Classes\WinScreen.cpp">
       <Filter>src\Scenes\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Tutorial.cpp">
+      <Filter>src\Scenes\Source Files\Levels</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\TutorialCutscene.cpp">
-      <Filter>src\Scenes\Source Files</Filter>
+      <Filter>src\Scenes\Source Files\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level_1.cpp">
+      <Filter>src\Scenes\Source Files\Levels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +90,6 @@
       <Filter>src\AppDelegate</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainMenu.h">
-      <Filter>src\Scenes\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Tutorial.h">
       <Filter>src\Scenes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Character.h">
@@ -113,8 +119,14 @@
     <ClInclude Include="..\Classes\WinScreen.h">
       <Filter>src\Scenes\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Tutorial.h">
+      <Filter>src\Scenes\Header Files\Levels</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\TutorialCutscene.h">
-      <Filter>src\Scenes\Header Files</Filter>
+      <Filter>src\Scenes\Header Files\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level_1.h">
+      <Filter>src\Scenes\Header Files\Levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

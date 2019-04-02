@@ -1,10 +1,11 @@
 #include "WinScreen.h"
 #include "MainMenu.h"
 #include "Tutorial.h"
+#include "Level_1.h"
 
 USING_NS_CC;
 
-Scene* WinScreen::createScene(int newMirror, int newEvidence, int newTime, int newAdditional, int newScore, std::string newRating) { 
+Scene* WinScreen::createScene(int newMirror, int newEvidence, int newTime, int newAdditional, int newScore, std::string newRating, unsigned int levelID) { 
 	
 	mirrorScore = newMirror;
 	evidenceScore = newEvidence;
@@ -12,6 +13,8 @@ Scene* WinScreen::createScene(int newMirror, int newEvidence, int newTime, int n
 	additionalScore = newAdditional;
 	scoreScore = newScore;
 	ratingScore = newRating;
+	_levelID = levelID;
+
 	return WinScreen::create(); 
 }
 
@@ -77,7 +80,6 @@ void WinScreen::initMenu() {
 	scoreScoreLabel->enableShadow();
 	RatingScoreLabel->enableShadow();
 
-	//MenuItemLabel* gameOverItem = MenuItemLabel::create(gameOverLabel);
 	MenuItemLabel* restartButton = MenuItemLabel::create(restartLabel, [&](Ref* sender) {
 		Scene* tutorialScene = Tutorial::createScene();
 		director->replaceScene(TransitionFade::create(2, tutorialScene));
@@ -87,15 +89,21 @@ void WinScreen::initMenu() {
 		director->replaceScene(TransitionFade::create(2, mainMenuScene));
 	});
 	MenuItemLabel* nextButton = MenuItemLabel::create(nextLabel, [&](Ref* sender) {
-		//Scene* warehouseScene = warehouse::createScene();
-		//director->replaceScene(TransitionFade::create(2, warehouseScene));
 		Scene* mainMenuScene = MainMenu::createScene();
-		director->replaceScene(TransitionFade::create(2, mainMenuScene));
+		Scene* level1Scene = Level1::createScene();
+
+		switch (_levelID) {
+		case 0:
+			director->replaceScene(TransitionFade::create(2, level1Scene));
+			break;
+		default:
+			director->replaceScene(TransitionFade::create(2, mainMenuScene));
+		}
 	});
 
 
 	//gameOverItem->setPosition(0, windowSize.y * 0.35);
-	restartButton->setPosition(windowSize.x * 0.025, -(windowSize.y * 0.25));
+	restartButton->setPosition(windowSize.x * 0.025, -(windowSize.y * 0.23));
 	exitButton->setPosition(windowSize.x * 0.065, -(windowSize.y * 0.35));
 	nextButton->setPosition(windowSize.x * 0.1, -(windowSize.y*0.24));
 
