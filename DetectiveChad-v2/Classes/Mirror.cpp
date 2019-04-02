@@ -3,7 +3,7 @@
 USING_NS_CC;
 
 g3nts::Mirror::Mirror() {}
-g3nts::Mirror::Mirror(Vec2& position, Sprite* sprite) : _position(position), _sprite(sprite) {
+g3nts::Mirror::Mirror(Vec2 position, Sprite* sprite) : _position(position), _sprite(sprite) {
 	_sprite->setPosition(_position);
 	_sprite->getTexture()->setAliasTexParameters();
 	_sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
@@ -15,8 +15,9 @@ g3nts::Mirror::Mirror(Vec2& position, Sprite* sprite) : _position(position), _sp
 			 _sprite->getPosition().y + (_sprite->getContentSize().height / 2.0f))
 	);
 }
-g3nts::Mirror::Mirror(Vec2& position, SpriteFrame* spriteFrame) : Mirror(position, Sprite::createWithSpriteFrame(spriteFrame)) {}
-g3nts::Mirror::Mirror(Vec2& position, string spritePath) : Mirror(position, Sprite::create(spritePath)) {}
+g3nts::Mirror::Mirror(Vec2 position, SpriteFrame* spriteFrame) : Mirror(position, Sprite::createWithSpriteFrame(spriteFrame)) {}
+g3nts::Mirror::Mirror(Vec2 position, string spritePath) : Mirror(position, Sprite::create(spritePath)) {}
+g3nts::Mirror::Mirror(const Mirror& mirror) : Mirror(mirror._position, Sprite::createWithSpriteFrame(mirror._sprite->getSpriteFrame())) {}
 g3nts::Mirror::~Mirror() {}
 
 
@@ -31,4 +32,9 @@ void g3nts::Mirror::addToScene(Scene* scene, const int zIndex) {
 	_hitbox.getNode()->setVisible(false);
 }
 
+void g3nts::Mirror::setPosition(const Vec2& position) {
+	_position = position;
+	_sprite->setPosition(position);
+	_hitbox.setPosition(_position);
+}
 void g3nts::Mirror::setBroken(const bool isBroken) { _isBroken = isBroken; }

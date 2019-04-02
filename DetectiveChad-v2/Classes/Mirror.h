@@ -13,9 +13,10 @@ namespace g3nts {
 	public:
 
 		Mirror();
-		Mirror(cocos2d::Vec2& position, cocos2d::Sprite* sprite);
-		Mirror(cocos2d::Vec2& position, cocos2d::SpriteFrame* spriteFrame);
-		Mirror(cocos2d::Vec2& position, string spritePath);
+		Mirror(cocos2d::Vec2 position, cocos2d::Sprite* sprite);
+		Mirror(cocos2d::Vec2 position, cocos2d::SpriteFrame* spriteFrame);
+		Mirror(cocos2d::Vec2 position, string spritePath);
+		Mirror(const Mirror& mirror);
 		~Mirror();
 
 		cocos2d::Sprite* getSprite() const;
@@ -23,6 +24,7 @@ namespace g3nts {
 		cocos2d::Vec2 getPosition() const;
 		bool isBroken() const;
 
+		void setPosition(const cocos2d::Vec2& position);
 		void setBroken(const bool isBroken);
 		
 		void addToScene(cocos2d::Scene* scene, const int zIndex = 0);
@@ -31,7 +33,7 @@ namespace g3nts {
 
 		cocos2d::Sprite* _sprite;
 		PrimitiveRect _hitbox;
-		const cocos2d::Vec2 _position;
+		cocos2d::Vec2 _position;
 
 		bool _isBroken = false;
 	};

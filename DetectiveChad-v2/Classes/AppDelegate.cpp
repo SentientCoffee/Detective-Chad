@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "Tutorial.h"
 #include "GameOver.h"
+#include "WinScreen.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -124,3 +125,8 @@ void AppDelegate::applicationWillEnterForeground() {
 //    SimpleAudioEngine::getInstance()->resumeAllEffects();
 //#endif
 }
+
+
+int WinScreen::mirrorScore, WinScreen::evidenceScore, WinScreen::timeScore, WinScreen::additionalScore, WinScreen::scoreScore;
+std::string WinScreen::ratingScore;
+float Tutorial::time;

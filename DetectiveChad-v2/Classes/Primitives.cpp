@@ -10,16 +10,29 @@ g3nts::PrimitiveCapsule::PrimitiveCapsule() {}
 
 
 // CONSTRUCTORS WITH PARAMETERS
-g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, const Color4F& colour)
-: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour) 
-{ _node->drawRect(startPos, endPos, colour); }
+g3nts::PrimitiveRect::PrimitiveRect(const Vec2& startPos, const Vec2& endPos, const Color4F& colour, const bool filled)
+: _node(DrawNode::create()), _startPos(startPos), _endPos(endPos), _colour(colour), _filled(filled)
+{
+	if (filled) {
+		_node->drawSolidRect(startPos, endPos, colour);
+	}
+	else {
+		_node->drawRect(startPos, endPos, colour);
+	}
+}
 
 Vec2 g3nts::PrimitiveRect::getStartPosition() const  { return _startPos; }
 Vec2 g3nts::PrimitiveRect::getEndPosition() const    { return _endPos; }
 Vec2 g3nts::PrimitiveRect::getCentrePosition() const { return _startPos + (_endPos - _startPos) / 2.0f; }
 
-float g3nts::PrimitiveRect::getWidth() const  { return _endPos.x - _startPos.x; }
-float g3nts::PrimitiveRect::getHeight() const { return _endPos.y - _startPos.y; }
+float g3nts::PrimitiveRect::getWidth() const  {
+	float width = _endPos.x - _startPos.x;
+	return width > 0.0f ? width : -width;
+}
+float g3nts::PrimitiveRect::getHeight() const {
+	float height = _endPos.y - _startPos.y;
+	return height > 0.0f ? height : -height;
+}
 
 void g3nts::PrimitiveRect::setStartPosition(Vec2& startPos) {
 	_startPos = startPos;
@@ -56,7 +69,13 @@ void g3nts::PrimitiveRect::setColour(Color4F& colour) {
 
 void g3nts::PrimitiveRect::redraw() {
 	_node->clear();
-	_node->drawRect(_startPos, _endPos, _colour);
+
+	if (_filled) {
+		_node->drawSolidRect(_startPos, _endPos, _colour);
+	}
+	else {
+		_node->drawRect(_startPos, _endPos, _colour);
+	}
 }
 
 

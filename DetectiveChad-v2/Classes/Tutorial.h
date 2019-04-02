@@ -11,6 +11,7 @@
 #include "Mirror.h"
 #include "Primitives.h"
 #include "Textbox.h"
+#include "WinScreen.h"
 
 class Tutorial : public cocos2d::Scene {
 public:
@@ -26,9 +27,11 @@ public:
 	void initSpriteCache();
 
 	void initPlayer();
+	void initFurniture();
 	void initLevel();
 	void initItems();
 	void initWalls();
+	void initFoW();
 	
 	void initUI();
 	void initTextboxes();
@@ -57,9 +60,19 @@ private:
 	cocos2d::Sprite* middleWalls;             // Sprites for just the middle walls
 	cocos2d::Sprite* lowerWalls;              // Sprites for just the lower walls
 											  
-	float levelScale;                         // Scaling of the level
-	std::vector<g3nts::PrimitiveRect> walls;  // Container to hold all the boundaries
 											  
+	// Furniture Sprites
+	cocos2d::Sprite* bed;
+	cocos2d::Sprite* toilet;
+	cocos2d::Sprite* kitchen;
+	cocos2d::Sprite* bookshelf1;
+	cocos2d::Sprite* bookshelf2;
+	g3nts::PrimitiveRect bed_wall;
+	g3nts::PrimitiveRect toilet_wall;
+	g3nts::PrimitiveRect kitchen_wall;
+	g3nts::PrimitiveRect bookshelf1_wall;
+	g3nts::PrimitiveRect bookshelf2_wall;
+
 	// Player								  
 	g3nts::Character* player;                 // Player character (object controlled by user)
 	cocos2d::Vec2 playerPosition;             // Player's starting position
@@ -67,13 +80,18 @@ private:
 											  
 	// Items in the scene					  
 	std::vector<g3nts::Item*> items;          // Container to hold all the items in the level
-	std::vector<g3nts::Item*> itemTemps;	  
-	unsigned int totalItems;				  
+	unsigned int totalItems;
+	unsigned int requiredItems;
 	unsigned int itemsCollected;			  
 											  
 	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
-	g3nts::Item* flexMobile;				  
-											  
+	g3nts::Item* flexMobile;
+	g3nts::PrimitiveRect flexMobileDrop;
+	
+	std::vector<g3nts::Mirror*> mirrors;
+	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
+	g3nts::Mirror* livingroomMirror;
+
 	// UI									  
 	float UI_Scale;                           // Scaling of UI
 	float flexRefillTimer;					  
@@ -90,25 +108,37 @@ private:
 	
 	unsigned int broken;
 	bool gameOver;
+	bool gameWin;
+	static float time;
+
+	int mScore, eScore, tScore, aScore, sScore;
+	std::string rScore;
 
 	cocos2d::Sprite* inventory_bg;                    // inventory UI
 	std::vector<g3nts::Item*> inventory;
-	std::unordered_map<string, bool> inventory_state;
-	unsigned int pickedUp;
 	
 	// Pause menu
 	cocos2d::Menu* pauseMenu;                  // Pause Menu object when the game is paused
 	bool gamePaused;                           // Bool to check if the game is paused
 
 	// Textboxes
+	bool showDropCommand;
 	bool showPickupCommand;
 	bool showFlexCommand;
+	bool showExitCommand;
+
+	g3nts::Textbox* dropCommandTextbox;
 	g3nts::Textbox* pickupCommandTextbox;
 	g3nts::Textbox* flexCommandTextbox;
+	g3nts::Textbox* exitCommandTextbox;
 
 	// Keyboard struct with listener
 	Input::Keyboard keyboard;
 	cocos2d::EventListenerKeyboard* keyboardListener;
+
+	float levelScale;                         // Scaling of the level
+	std::vector<g3nts::PrimitiveRect> playerWalls;  // Container to hold all the boundaries
+	std::vector<g3nts::PrimitiveRect> itemWalls;
 
 	// ALL THE BOUNDARIES IN THE LEVEL
 	// ---------------------------------------------------
@@ -118,6 +148,9 @@ private:
 	g3nts::PrimitiveRect leftBoundary;
 	g3nts::PrimitiveRect rightBoundary;
 
+	g3nts::PrimitiveRect topHedge;
+	g3nts::PrimitiveRect bottomHedge;
+
 	// Outer house walls
 	g3nts::PrimitiveRect upperHouseWall;
 	g3nts::PrimitiveRect lowerHouseWall;
@@ -125,18 +158,52 @@ private:
 	g3nts::PrimitiveRect rightHouseWall_1;
 	g3nts::PrimitiveRect rightHouseWall_2;
 
-	// Inner horizontal house walls
+	g3nts::PrimitiveRect iUpperHouseWall;
+
+	// Inner horizontal house walls (for Chad)
 	g3nts::PrimitiveRect bathroomDoorway_1;
 	g3nts::PrimitiveRect bathroomDoorway_2;
 	g3nts::PrimitiveRect bedroomDoorway;
 	g3nts::PrimitiveRect livingRoomDoorway_1;
 	g3nts::PrimitiveRect livingRoomDoorway_2;
 
+	// Inner horizontal house walls (for items)
+	g3nts::PrimitiveRect iBathroomDoorway_1;
+	g3nts::PrimitiveRect iBathroomDoorway_2;
+	g3nts::PrimitiveRect iBedroomDoorway;
+	g3nts::PrimitiveRect iLivingRoomDoorway_1;
+	g3nts::PrimitiveRect iLivingRoomDoorway_2;
+
 	// Inner vertical house walls
 	g3nts::PrimitiveRect verticalBathroomWall;
 	g3nts::PrimitiveRect vecticalLivingRoomWall_1;
 	g3nts::PrimitiveRect vecticalLivingRoomWall_2;
-	
+
+	// Fogs of War
+	std::vector<g3nts::PrimitiveRect> FoW;  // Container to hold solid fogs of war
+	std::vector<g3nts::PrimitiveRect> sFoW; // Container to hold opaque fogs of war
+
+	// -----------------------------------------------
+	// Tutorial level rooms
+
+	// State One (100% Opacity)
+	g3nts::PrimitiveRect roomOne;
+	g3nts::PrimitiveRect roomTwo;
+	g3nts::PrimitiveRect roomThree;
+	g3nts::PrimitiveRect roomFour;
+	g3nts::PrimitiveRect roomFive;
+	g3nts::PrimitiveRect roomSix;
+
+	// State Two (60% Opacity)
+	g3nts::PrimitiveRect sroomOne;
+	g3nts::PrimitiveRect sroomTwo;
+	g3nts::PrimitiveRect sroomThree;
+	g3nts::PrimitiveRect sroomFour;
+	g3nts::PrimitiveRect sroomFive;
+	g3nts::PrimitiveRect sroomSix;
+
+	// -----------------------------------------------
 };
 
 #endif
+											  
