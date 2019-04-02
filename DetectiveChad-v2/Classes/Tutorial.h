@@ -90,7 +90,7 @@ private:
 	
 	std::vector<g3nts::Mirror*> mirrors;
 	g3nts::Mirror* bathroomMirror;            // Bathroom mirror for Chad to flex in front of
-	g3nts::Mirror* hallwayMirror;
+	g3nts::Mirror* livingroomMirror;
 
 	// UI									  
 	float UI_Scale;                           // Scaling of UI

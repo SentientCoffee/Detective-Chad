@@ -183,7 +183,7 @@ void Tutorial::initItems() {
 	g3nts::Item* magGlass_2 = new g3nts::Item(*magGlassTemplate);
 
 	shirt_1->setPosition(Vec2(120, 720) * levelScale);
-	shirt_2->setPosition(Vec2(1050, 680) * levelScale);
+	shirt_2->setPosition(Vec2(150, 710) * levelScale);
 	shirt_3->setPosition(Vec2(620, 150) * levelScale);
 
 	magGlass_1->setPosition(Vec2(690, 170) * levelScale);
@@ -203,7 +203,6 @@ void Tutorial::initItems() {
 	}
 
 	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), spriteCache->getSpriteFrameByName("items/mirror.png"));
-
 	g3nts::Mirror* mirrorTemplate2 = new g3nts::Mirror(Vec2(0, 0), "items/woodenmirror.png");
 
 	bathroomMirror = new g3nts::Mirror(*mirrorTemplate1);
@@ -211,9 +210,16 @@ void Tutorial::initItems() {
 	bathroomMirror->setPosition(Vec2(170, 825) * levelScale);
 	bathroomMirror->addToScene(this, 3);
 
-	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, "items/flexmobile.png");
-	//flexMobile->addAnimation();
-	flexMobile->getSprite()->setScale(2.0f);
+	livingroomMirror = new g3nts::Mirror(*mirrorTemplate2);
+	livingroomMirror->getSprite()->setScale(.15);
+	livingroomMirror->setPosition(Vec2(1200, 540) * levelScale);
+	livingroomMirror->addToScene(this, 23);
+
+	mirrors.push_back(bathroomMirror); mirrors.push_back(livingroomMirror);
+
+	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/dropoff/01.png"));
+	flexMobile->addAnimation("dropoff", "items/flexmobile/dropoff/%02d.png", 7);
+	flexMobile->addAnimation("levelEnd", "items/flexmobile/level-end/%02d.png", 3);
 	flexMobile->addToScene(this, 3);
 
 	flexMobileDrop = g3nts::PrimitiveRect(Vec2(1350, 410) * levelScale, Vec2(1450, 510) * levelScale);
@@ -555,7 +561,8 @@ void Tutorial::initKeyboardListener() {
 
 					if (!bathroomMirror->isBroken()) {
 						bathroomMirror->setBroken(true);
-						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-mirror.png"));
+						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-bathroom-mirror.png"));
+						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
 					}
 					if (!livingroomMirror->isBroken()) {
 						livingroomMirror->setBroken(true);
@@ -583,6 +590,8 @@ void Tutorial::initKeyboardListener() {
 					if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
 						itemsCollected++;
 						inventory[0]->setVisible(false);
+						flexMobile->runAnimation("dropoff");
+						SimpleAudioEngine::getInstance()->playEffect("sfx/Object_in_Car.mp3");
 					}
 					else {
 						inventory[0]->setPosition(player->getPosition());
@@ -945,21 +954,3 @@ void Tutorial::screenshake() {
 		camera->setPosition(camera->getPosition() + Vec2(offsetX, offsetY));
 	}
 }
-	shirt_2->setPosition(Vec2(150, 710) * levelScale);
-	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2(0, 0), "items/bathroommirror.png");
-	g3nts::Mirror* mirrorTemplate1 = new g3nts::Mirror(Vec2::ZERO, spriteCache->getSpriteFrameByName("items/mirrors/mirror.png"));
-	livingroomMirror = new g3nts::Mirror(*mirrorTemplate2);
-	livingroomMirror->getSprite()->setScale(.15);
-	livingroomMirror->setPosition(Vec2(1200, 540) * levelScale);
-	livingroomMirror->addToScene(this, 23);
-
-	mirrors.push_back(bathroomMirror); mirrors.push_back(hallwayMirror);
-
-	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/dropoff/01.png"));
-	flexMobile->addAnimation("dropoff", "items/flexmobile/dropoff/%02d.png", 7);
-	flexMobile->addAnimation("levelEnd", "items/flexmobile/level-end/%02d.png", 3);
-						bathroomMirror->getSprite()->setSpriteFrame(spriteCache->getSpriteFrameByName("items/broken-bathroom-mirror.png"));
-						SimpleAudioEngine::getInstance()->playEffect("sfx/Glass_Shatter.mp3");
-						SimpleAudioEngine::getInstance()->playEffect("sfx/Object_in_Car.mp3");
-
-						flexMobile->runAnimation("dropoff");
