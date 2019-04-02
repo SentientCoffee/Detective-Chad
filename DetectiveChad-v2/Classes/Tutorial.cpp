@@ -2,10 +2,10 @@
 #include "GameOver.h"
 #include "WinScreen.h"
 #include "MainMenu.h"
+#include "TutorialCutscene.h"
 #include "SimpleAudioEngine.h"
 
 using namespace CocosDenshion;
-
 USING_NS_CC;
 
 Scene* Tutorial::createScene() { return Tutorial::create(); }
@@ -42,8 +42,8 @@ bool Tutorial::init() {
 
 	initKeyboardListener();
 
-	showHitboxes();
-
+	//showHitboxes();
+	
 	this->scheduleUpdate();
 	return true;
 }
@@ -144,7 +144,7 @@ void Tutorial::initItems() {
 	g3nts::Item* magGlass_2 = new g3nts::Item(*magGlassTemplate);
 
 	shirt_1->setPosition(Vec2(120, 720) * levelScale);
-	shirt_2->setPosition(Vec2(1050, 680) * levelScale);
+	shirt_2->setPosition(Vec2(130, 680) * levelScale);
 	shirt_3->setPosition(Vec2(620, 150) * levelScale);
 
 	magGlass_1->setPosition(Vec2(690, 420) * levelScale);
@@ -177,8 +177,9 @@ void Tutorial::initItems() {
 
 	mirrors.push_back(bathroomMirror); mirrors.push_back(hallwayMirror);
 
-	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/01.png"));
-	flexMobile->addAnimation("dropoff", "items/flexmobile/%02d.png", 7);
+	flexMobile = new g3nts::Item(Vec2(1550, 460) * levelScale, spriteCache->getSpriteFrameByName("items/flexmobile/dropoff/01.png"));
+	flexMobile->addAnimation("dropoff", "items/flexmobile/dropoff/%02d.png", 7);
+	flexMobile->addAnimation("levelEnd", "items/flexmobile/level-end/%02d.png", 3);
 	flexMobile->addToScene(this, 3);
 
 	flexMobileDrop = g3nts::PrimitiveRect(Vec2(1350, 410) * levelScale, Vec2(1450, 510) * levelScale);
@@ -338,14 +339,17 @@ void Tutorial::initTextboxes() {
 	pickupCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Pick up: L", "fonts/GillSansUltraBold.ttf", 16, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
 	dropCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Drop: L", "fonts/GillSansUltraBold.ttf", 16, Color4F(0.0f, 0.0f, 0.0f, 1.0f), Color4F(1.0f, 1.0f, 1.0f, 0.8f));
 	flexCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Flex: Space", "fonts/GillSansUltraBold.ttf", 16, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
+	exitCommandTextbox = new g3nts::Textbox(Vec2::ZERO, "Exit: Space", "fonts/GillSansUltraBold.ttf", 16, Color4F(1.0f, 1.0f, 1.0f, 1.0f), Color4F(0.0f, 0.0f, 0.0f, 1.0f));
 
 	pickupCommandTextbox->addToScene(this, 100);
 	dropCommandTextbox->addToScene(this, 100);
 	flexCommandTextbox->addToScene(this, 100);
+	exitCommandTextbox->addToScene(this, 100);
 
 	pickupCommandTextbox->setVisible(false);
 	dropCommandTextbox->setVisible(false);
 	flexCommandTextbox->setVisible(false);
+	exitCommandTextbox->setVisible(false);
 }
 
 void Tutorial::initUI() {
@@ -444,19 +448,31 @@ void Tutorial::initKeyboardListener() {
 				if (gameWin && g3nts::isColliding(player->getHitbox(), flexMobileDrop) && inventory.size() < 1)
 				{
 					this->unscheduleUpdate();
+
+					player->getSprite()->setVisible(false);
+					flexMobile->runAnimation("levelEnd");
+					
+					MoveTo* move = MoveTo::create(2.0f, Vec3(flexMobile->getPosition().x, 1200, 0));
+					flexMobile->getSprite()->runAction(move);
+
 					if ((300 - floorf(time)) > 0) tScore += (300 - floorf(time));
 					else tScore = 0;
+					
 					if (!bathroomMirror->isBroken()) mScore += 3000;
 					if (itemsCollected >= 3) eScore += 1500;
 					if (itemsCollected > 3) aScore += ((totalItems - 3) * 2500);
+					
 					sScore = tScore + mScore + eScore + aScore;
+					
 					if (sScore >= 10000) rScore = "A";
 					else if (sScore >= 8000) rScore = "B";
 					else if (sScore >= 6000) rScore = "C";
 					else rScore = "D";
+					
 					Scene* gameWinScene = WinScreen::createScene(mScore, eScore, tScore, aScore, sScore, rScore);
-					director->replaceScene(TransitionFade::create(2, gameWinScene));
+					director->replaceScene(gameWinScene);
 				}
+
 				if (bathroomMirror->getPosition().getDistanceSq(player->getPosition()) <= 200 * 200) {
 					if (!player->isFlexing()) {
 						player->setFlexing(true);
@@ -686,7 +702,7 @@ void Tutorial::update(const float dt) {
 		gameOver = true;
 	}
 
-	if (itemsCollected >= 3) {
+	if (itemsCollected >= requiredItems) {
 		gameWin = true;
 	}
 
@@ -796,9 +812,12 @@ void Tutorial::update(const float dt) {
 			}
 		}
 
-		showDropCommand = false;
+		showDropCommand = false; showExitCommand = false;
 		if (g3nts::isColliding(player->getHitbox(), flexMobileDrop)) {
 			if(inventory.size() > 0) showDropCommand = true;
+			else {
+				if (gameWin) showExitCommand = true;
+			}
 		}
 
 		showFlexCommand = false;
@@ -828,6 +847,14 @@ void Tutorial::update(const float dt) {
 		}
 		else {
 			flexCommandTextbox->setVisible(false);
+		}
+
+		if (showExitCommand) {
+			exitCommandTextbox->setPosition(Vec2(player->getPosition().x + 60, player->getPosition().y + 120));
+			exitCommandTextbox->setVisible(true);
+		}
+		else {
+			exitCommandTextbox->setVisible(false);
 		}
 	}
 }

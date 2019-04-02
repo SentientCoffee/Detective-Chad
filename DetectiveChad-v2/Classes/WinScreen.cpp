@@ -40,10 +40,9 @@ void WinScreen::initMenu() {
 	background = Sprite::create("ui/winscreen.png");
 	background->setPosition(windowSize.x / 2, windowSize.y / 2);
 
-	//Label* gameOverLabel = Label::createWithTTF("GAME OVER", "fonts/Marker Felt.ttf", 72, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* restartLabel = Label::createWithTTF("Restart", "fonts/Marker Felt.ttf", 24, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* exitLabel = Label::createWithTTF("Back to\nMain Menu", "fonts/Marker Felt.ttf", 24, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-	Label* nextLabel = Label::createWithTTF("Next\nLevel", "fonts/Marker Felt.ttf", 24, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* restartLabel = Label::createWithTTF("Restart", "fonts/GillSansUltraBold.ttf", 16, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* exitLabel = Label::createWithTTF("Back to\nMain Menu", "fonts/GillSansUltraBold.ttf", 16, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	Label* nextLabel = Label::createWithTTF("Next\nLevel", "fonts/GillSansUltraBold.ttf", 16, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 
 	Label* MirrorLabel = Label::createWithTTF("Mirrors remaining: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
 	Label* EvidenceLabel = Label::createWithTTF("Evidence collected: ", "fonts/GillSansUltraBold.ttf", 24, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
@@ -96,7 +95,7 @@ void WinScreen::initMenu() {
 
 
 	//gameOverItem->setPosition(0, windowSize.y * 0.35);
-	restartButton->setPosition(windowSize.x * 0.025, -(windowSize.y * 0.24));
+	restartButton->setPosition(windowSize.x * 0.025, -(windowSize.y * 0.25));
 	exitButton->setPosition(windowSize.x * 0.065, -(windowSize.y * 0.35));
 	nextButton->setPosition(windowSize.x * 0.1, -(windowSize.y*0.24));
 

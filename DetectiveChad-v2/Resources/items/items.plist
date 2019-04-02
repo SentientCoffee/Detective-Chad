@@ -15,7 +15,7 @@
                 <key>spriteSourceSize</key>
                 <string>{93,60}</string>
                 <key>textureRect</key>
-                <string>{{348,0},{93,60}}</string>
+                <string>{{0,0},{93,60}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -30,7 +30,7 @@
                 <key>spriteSourceSize</key>
                 <string>{70,94}</string>
                 <key>textureRect</key>
-                <string>{{110,0},{70,94}}</string>
+                <string>{{93,0},{70,94}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -45,7 +45,7 @@
                 <key>spriteSourceSize</key>
                 <string>{46,75}</string>
                 <key>textureRect</key>
-                <string>{{0,0},{46,75}}</string>
+                <string>{{163,0},{46,75}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -60,11 +60,11 @@
                 <key>spriteSourceSize</key>
                 <string>{64,87}</string>
                 <key>textureRect</key>
-                <string>{{46,0},{64,87}}</string>
+                <string>{{209,0},{64,87}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/01.png</key>
+            <key>items/flexmobile/dropoff/01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -75,11 +75,11 @@
                 <key>spriteSourceSize</key>
                 <string>{342,447}</string>
                 <key>textureRect</key>
-                <string>{{441,0},{342,447}}</string>
+                <string>{{273,0},{342,447}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/02.png</key>
+            <key>items/flexmobile/dropoff/02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -90,11 +90,11 @@
                 <key>spriteSourceSize</key>
                 <string>{352,453}</string>
                 <key>textureRect</key>
-                <string>{{0,900},{352,453}}</string>
+                <string>{{615,0},{352,453}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/03.png</key>
+            <key>items/flexmobile/dropoff/03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -105,11 +105,11 @@
                 <key>spriteSourceSize</key>
                 <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{0,1360},{357,460}}</string>
+                <string>{{967,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/04.png</key>
+            <key>items/flexmobile/dropoff/04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -120,11 +120,11 @@
                 <key>spriteSourceSize</key>
                 <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{357,1360},{357,460}}</string>
+                <string>{{1324,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/05.png</key>
+            <key>items/flexmobile/dropoff/05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -135,11 +135,11 @@
                 <key>spriteSourceSize</key>
                 <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{352,900},{357,460}}</string>
+                <string>{{1681,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/06.png</key>
+            <key>items/flexmobile/dropoff/06.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -150,11 +150,11 @@
                 <key>spriteSourceSize</key>
                 <string>{352,453}</string>
                 <key>textureRect</key>
-                <string>{{342,447},{352,453}}</string>
+                <string>{{0,460},{352,453}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>items/flexmobile/07.png</key>
+            <key>items/flexmobile/dropoff/07.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -165,7 +165,52 @@
                 <key>spriteSourceSize</key>
                 <string>{342,447}</string>
                 <key>textureRect</key>
-                <string>{{0,447},{342,447}}</string>
+                <string>{{352,460},{342,447}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/flexmobile/level-end/01.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{694,460},{353,459}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/flexmobile/level-end/02.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{1047,460},{353,459}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/flexmobile/level-end/03.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{1400,460},{353,459}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -180,7 +225,7 @@
                 <key>spriteSourceSize</key>
                 <string>{84,150}</string>
                 <key>textureRect</key>
-                <string>{{264,0},{84,150}}</string>
+                <string>{{1753,460},{84,150}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -195,7 +240,7 @@
                 <key>spriteSourceSize</key>
                 <string>{84,150}</string>
                 <key>textureRect</key>
-                <string>{{180,0},{84,150}}</string>
+                <string>{{1837,460},{84,150}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -211,9 +256,9 @@
             <key>realTextureFileName</key>
             <string>items.png</string>
             <key>size</key>
-            <string>{783,1820}</string>
+            <string>{2038,919}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:d02ebedc5df795b4f35c4ae8d48ff74b:26f1d545c125316b9732f46cc00d4b90:9b2c40378ce3448cae3ca053079d3001$</string>
+            <string>$TexturePacker:SmartUpdate:c2cad68bccbdf578efefd1bd95b9c89a:d146f3cb127caf2e716577cbfb6cd47e:9b2c40378ce3448cae3ca053079d3001$</string>
             <key>textureFileName</key>
             <string>items.png</string>
         </dict>

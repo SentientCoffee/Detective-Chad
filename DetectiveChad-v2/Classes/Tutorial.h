@@ -111,9 +111,12 @@ private:
 	bool showDropCommand;
 	bool showPickupCommand;
 	bool showFlexCommand;
+	bool showExitCommand;
+
 	g3nts::Textbox* dropCommandTextbox;
 	g3nts::Textbox* pickupCommandTextbox;
 	g3nts::Textbox* flexCommandTextbox;
+	g3nts::Textbox* exitCommandTextbox;
 
 	// Keyboard struct with listener
 	Input::Keyboard keyboard;

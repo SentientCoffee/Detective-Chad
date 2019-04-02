@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>evidence/broken-evidence.png</key>
+            <key>items/evidence/broken-evidence.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -15,11 +15,11 @@
                 <key>spriteSourceSize</key>
                 <string>{93,60}</string>
                 <key>textureRect</key>
-                <string>{{348,0},{93,60}}</string>
+                <string>{{0,0},{93,60}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>evidence/broken-shirt.png</key>
+            <key>items/evidence/broken-shirt.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -30,11 +30,11 @@
                 <key>spriteSourceSize</key>
                 <string>{70,94}</string>
                 <key>textureRect</key>
-                <string>{{110,0},{70,94}}</string>
+                <string>{{93,0},{70,94}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>evidence/evidence.png</key>
+            <key>items/evidence/evidence.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -45,11 +45,11 @@
                 <key>spriteSourceSize</key>
                 <string>{46,75}</string>
                 <key>textureRect</key>
-                <string>{{0,0},{46,75}}</string>
+                <string>{{163,0},{46,75}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>evidence/shirt.png</key>
+            <key>items/evidence/shirt.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -60,116 +60,161 @@
                 <key>spriteSourceSize</key>
                 <string>{64,87}</string>
                 <key>textureRect</key>
-                <string>{{46,0},{64,87}}</string>
+                <string>{{209,0},{64,87}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/01.png</key>
+            <key>items/flexmobile/dropoff/01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{342,447}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{342,447}</string>
                 <key>textureRect</key>
-                <string>{{441,0},{403,491}}</string>
+                <string>{{273,0},{342,447}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/02.png</key>
+            <key>items/flexmobile/dropoff/02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{352,453}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{352,453}</string>
                 <key>textureRect</key>
-                <string>{{1247,0},{403,491}}</string>
+                <string>{{615,0},{352,453}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/03.png</key>
+            <key>items/flexmobile/dropoff/03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{806,491},{403,491}}</string>
+                <string>{{967,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/04.png</key>
+            <key>items/flexmobile/dropoff/04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{403,491},{403,491}}</string>
+                <string>{{1324,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/05.png</key>
+            <key>items/flexmobile/dropoff/05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{357,460}</string>
                 <key>textureRect</key>
-                <string>{{1209,491},{403,491}}</string>
+                <string>{{1681,0},{357,460}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/06.png</key>
+            <key>items/flexmobile/dropoff/06.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{352,453}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{352,453}</string>
                 <key>textureRect</key>
-                <string>{{0,491},{403,491}}</string>
+                <string>{{0,460},{352,453}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>flexmobile/07.png</key>
+            <key>items/flexmobile/dropoff/07.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{403,491}</string>
+                <string>{342,447}</string>
                 <key>spriteSourceSize</key>
-                <string>{403,491}</string>
+                <string>{342,447}</string>
                 <key>textureRect</key>
-                <string>{{844,0},{403,491}}</string>
+                <string>{{352,460},{342,447}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>mirrors/broken-mirror.png</key>
+            <key>items/flexmobile/level-end/01.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{694,460},{353,459}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/flexmobile/level-end/02.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{1047,460},{353,459}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/flexmobile/level-end/03.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{353,459}</string>
+                <key>spriteSourceSize</key>
+                <string>{353,459}</string>
+                <key>textureRect</key>
+                <string>{{1400,460},{353,459}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>items/mirrors/broken-mirror.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -180,11 +225,11 @@
                 <key>spriteSourceSize</key>
                 <string>{84,150}</string>
                 <key>textureRect</key>
-                <string>{{264,0},{84,150}}</string>
+                <string>{{1753,460},{84,150}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>mirrors/mirror.png</key>
+            <key>items/mirrors/mirror.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -195,7 +240,7 @@
                 <key>spriteSourceSize</key>
                 <string>{84,150}</string>
                 <key>textureRect</key>
-                <string>{{180,0},{84,150}}</string>
+                <string>{{1837,460},{84,150}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -211,9 +256,9 @@
             <key>realTextureFileName</key>
             <string>items.png</string>
             <key>size</key>
-            <string>{1650,982}</string>
+            <string>{2038,919}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:6280f4faaf2ee7feb8b31fef71582872:6583a57f8974f45ec995f6549ae9c648:9b2c40378ce3448cae3ca053079d3001$</string>
+            <string>$TexturePacker:SmartUpdate:c2cad68bccbdf578efefd1bd95b9c89a:d146f3cb127caf2e716577cbfb6cd47e:9b2c40378ce3448cae3ca053079d3001$</string>
             <key>textureFileName</key>
             <string>items.png</string>
         </dict>

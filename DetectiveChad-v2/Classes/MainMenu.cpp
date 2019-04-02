@@ -1,5 +1,5 @@
 #include "MainMenu.h"
-#include "Tutorial.h"
+#include "TutorialCutscene.h"
 
 USING_NS_CC;
 
@@ -36,8 +36,8 @@ void MainMenu::initMenu() {
 	exitLabel->enableShadow();
 
 	MenuItemLabel* startButton = MenuItemLabel::create(startLabel, [&](Ref* sender) {
-		Scene* tutorialScene = Tutorial::createScene();
-		director->replaceScene(TransitionFade::create(2, tutorialScene));
+		Scene* tutorialCutscene = TutorialCS::createScene();
+		director->replaceScene(TransitionFade::create(2, tutorialCutscene));
 	});
 	MenuItemLabel* exitButton = MenuItemLabel::create(exitLabel, [&](Ref* sender) {
 		director->end();
