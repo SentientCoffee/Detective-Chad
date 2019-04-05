@@ -43,7 +43,7 @@ bool Level1::init() {
 
 	initKeyboardListener();
 
-	showHitboxes();
+	//showHitboxes();
 
 	this->scheduleUpdate();
 	return true;
